@@ -1,0 +1,319 @@
+{% load static %}
+{% include 'admin_navbar.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Timesheet - Rowther</title>
+  <link rel="icon" href="{% static 'logo.jpg' %}">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script> <!-- Add SheetJS Library -->
+  <style>
+    .table th, .table td {
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+  <main id="main" class="main">
+  <div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center">
+      <h3 class="card-title">ALL TIMESHEETS</h3>
+      <form method="get" id="filterForm" class="mb-4 d-flex align-items-center">
+        <div class="d-flex">
+          <div class="input-group me-3">
+            <span class="input-group-text" id="from-date-prefix">From</span>
+            <input type="date" name="from_date" id="from_date" class="form-control">
+          </div>
+          <div class="input-group me-3">
+            <span class="input-group-text" id="to-date-prefix">To</span>
+            <input type="date" name="to_date" id="to_date" class="form-control">
+          </div>
+          <button type="submit" class="btn btn-primary me-2">Filter</button>
+          <button type="button" id="clearFilter" class="btn btn-secondary">Clear</button>
+        </div>
+      </form>
+      
+      <script>
+        window.addEventListener('DOMContentLoaded', () => {
+          const fromInput = document.getElementById('from_date');
+          const toInput = document.getElementById('to_date');
+          const defaultApplied = sessionStorage.getItem('dateDefaultApplied');
+      
+          // Apply default range only once per session
+          if (!fromInput.value && !toInput.value && !defaultApplied) {
+            const today = new Date();
+            const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+      
+            fromInput.value = firstDay.toISOString().split('T')[0];
+            toInput.value = today.toISOString().split('T')[0];
+      
+            sessionStorage.setItem('dateDefaultApplied', 'true');
+          }
+      
+          // Clear Filter button: clears inputs and removes session flag
+          document.getElementById('clearFilter').addEventListener('click', () => {
+            fromInput.value = '';
+            toInput.value = '';
+            sessionStorage.removeItem('dateDefaultApplied');
+            document.getElementById('filterForm').submit(); // Optional: auto-submit
+          });
+        });
+      </script>
+      
+    
+      <div class="mb-4 text-end d-flex align-items-center">
+        <a href="{% url 'all_view_timesheet_admin' %}"class="btn btn-primary me-3">Exit</a>
+        <button class="btn btn-success" id="export-excel">Export to Excel</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="card-body p-4">
+      <!-- Header -->
+      <div class="mb-2" id="timesheet-details">
+        <h5 class="mb-2">ADMIN REPORT</h5>
+        <table class="table-bordered" style="border-collapse: collapse; font-size: 14px;">
+          <tr>
+            <th style="background-color: #D3EEFF; text-align: left; padding: 6px;width: 20%; ">Admin Name</th>
+            <td style="padding: 6px;">{{ bok.First_name }}</td>
+          </tr>
+          <tr>
+            <th style="background-color: #D3EEFF; text-align: left; padding: 6px;width: 20%; ">Admin ID</th>
+            <td style="padding: 6px;">{{ bok.Emp_Id }}</td>
+          </tr>
+          <tr>
+            <th style="background-color: #D3EEFF; text-align: left; padding: 6px;width: 20%; ">Location</th>
+            <td style="padding: 6px;">{{ bok.Location }}</td>
+          </table>
+      </div>
+
+<div class="card mb-3">
+
+    <table class="table table-bordered table-striped align-middle text-left" id="timesheet-table" style="font-size: 13px;">
+
+      <thead>
+        <tr id="timesheet-header">
+          <th style="background-color: #D3EEFF;color:black;">Project Name</th>
+          <th style="background-color: #D3EEFF;color:black;">Project No</th>
+          <!-- Staff names will be inserted here as <th> -->
+        </tr>
+      </thead>
+      <tbody id="timesheet-body" style="font-size: 0.8rem;">
+        {% for month, entries in monthly_timesheets.items %}
+          {% for entry in entries %}
+            <tr>
+              <td>{{ entry.project_name }}</td>
+              <td>{{ entry.project_no }}</td>
+              <td style="background-color: #D3EEFF;color:black;">{{ entry.staff_name }}</td>
+              <td>{{ entry.total }}</td>
+            </tr>
+          {% endfor %}
+        {% endfor %}
+      </tbody>
+      
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          const rows = document.querySelectorAll("#timesheet-body tr");
+          const groupedData = {};
+          const staffSet = new Set();
+      
+          // Group data and collect all staff names
+          rows.forEach(row => {
+            const projectName = row.children[0].textContent.trim();
+            const projectNo = row.children[1].textContent.trim();
+            const staffName = row.children[2].textContent.trim();
+            const totalHours = parseFloat(row.children[3].textContent.trim()) || 0;
+      
+            staffSet.add(staffName);
+      
+            if (!groupedData[projectNo]) {
+              groupedData[projectNo] = {
+                projectName,
+                staffHours: {}
+              };
+            }
+      
+            if (!groupedData[projectNo].staffHours[staffName]) {
+              groupedData[projectNo].staffHours[staffName] = 0;
+            }
+      
+            groupedData[projectNo].staffHours[staffName] += totalHours;
+          });
+      
+          // Sort staff names alphabetically for consistent column order
+          const staffList = Array.from(staffSet).sort();
+      
+          // Update table header with staff names and a new "Hours" column
+          const headerRow = document.getElementById("timesheet-header");
+          
+          // Clear existing header row before adding new headers
+          headerRow.innerHTML = '';
+      
+          // Add the "Project" and "Project No" headers
+          headerRow.innerHTML += `<th style="background-color:#D3EEFF;">Project</th><th style="background-color:#D3EEFF;">Project No</th>`;
+      
+          // Add headers for each staff member
+          staffList.forEach(staff => {
+            const th = document.createElement("th");
+            th.textContent = staff;
+            headerRow.appendChild(th);
+          });
+      
+          // Add a new "Hours" column header
+          const thHours = document.createElement("th");
+          thHours.textContent = "Hours on each project";
+          headerRow.appendChild(thHours);
+      
+          // Clear old tbody and render new table body
+          const tbody = document.getElementById("timesheet-body");
+          tbody.innerHTML = "";
+      
+          Object.entries(groupedData).forEach(([projectNo, data]) => {
+            const tr = document.createElement("tr");
+      
+            // Base project info
+            tr.innerHTML = `<td>${data.projectName}</td><td>${projectNo}</td>`;
+      
+            let rowTotal = 0; // Initialize a variable to calculate the total for the row
+      
+            // Add staff totals
+            staffList.forEach(staff => {
+              const hours = data.staffHours[staff] || 0;
+              rowTotal += hours; // Add each staff's hours to the row total
+              tr.innerHTML += `<td class="fw-bold total-hours">${hours ? Math.round(hours) : ""}</td>`;
+            });
+      
+            // Add the row total for "Hours"
+            tr.innerHTML += `<td class="fw-bold total-hours">${Math.round(rowTotal)}</td>`;
+      
+            tbody.appendChild(tr);
+          });
+        });
+      </script>
+      
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          const data = JSON.parse(document.getElementById("timesheet-data").textContent);
+          const tbody = document.getElementById("timesheet-body");
+          let allEntries = [];
+      
+          // Collect all entries
+          for (const month in data) {
+            const entries = data[month];
+            if (Array.isArray(entries)) {
+              allEntries.push(...entries);
+            }
+          }
+      
+          // Sort by date descending (LIFO)
+          allEntries.sort((a, b) => new Date(b.date) - new Date(a.date));
+      
+          if (allEntries.length === 0) {
+            const row = document.createElement("tr");
+            row.innerHTML = `<td colspan="9">No timesheet data available.</td>`;
+            tbody.appendChild(row);
+            return;
+          }
+      
+          allEntries.forEach((entry, index) => {
+            const row = document.createElement("tr");
+      
+            const dayRows = [];
+            if (entry.hours?.mon) dayRows.push("Mon");
+            if (entry.hours?.tue) dayRows.push("Tue");
+            if (entry.hours?.wed) dayRows.push("Wed");
+            if (entry.hours?.thu) dayRows.push("Thu");
+            if (entry.hours?.fri) dayRows.push("Fri");
+            if (entry.hours?.sat) dayRows.push("Sat");
+            if (entry.hours?.sun) dayRows.push("Sun");
+      
+            const daysHtml = `
+              <table style="width: 100%; padding: 2px;">
+                <tbody style="font-size: 0.8rem;">
+                  ${dayRows.map(day => `<tr><td>${day}</td></tr>`).join('')}
+                </tbody>
+              </table>`;
+      
+            const formattedDate = new Date(entry.date).toLocaleDateString('en-GB');
+      
+            row.innerHTML = `
+              <td style="width: 50px;">${index + 1}</td>
+              <td style="width: 50px;">${formattedDate}</td>
+              <td >${entry.staff_name || ''}</td>
+              <td>${daysHtml}</td>
+              <td>${entry.project_no || ''}</td>
+              <td>${entry.project_name || ''}</td>
+              <td>${entry.remarks || ''}</td>
+              <td class="fw-bold total-hours" style="font-size: 14px;">${entry.total || 0}</td>
+              <td>${entry.week_label || ''}</td>
+            `;
+      
+            tbody.appendChild(row);
+          });
+        });
+      </script>
+      
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // Export to Excel functionality
+    document.getElementById('export-excel').addEventListener('click', function () {
+      const exportArea = document.querySelector('.card-body').cloneNode(true);
+
+      // Optional: remove the date filter form from export
+      const form = exportArea.querySelector('form');
+      if (form) form.remove();
+
+      const htmlContent = `
+        <html>
+          <head>
+            <meta charset="UTF-8">
+            <style>
+              body {
+                font-family: Arial, sans-serif;
+              }
+              h4 {
+                margin-bottom: 8px;
+              }
+              table {
+                border-collapse: collapse;
+                width: 100%;
+                margin-bottom: 20px;
+              }
+              th, td {
+                border: 1px solid #000;
+                padding: 8px;
+                text-align: center;
+                vertical-align: middle;
+              }
+              th {
+                background-color: #D3EEFF;
+                font-weight: bold;
+                text-align: left;
+              }
+            </style>
+          </head>
+          <body>
+            ${exportArea.innerHTML}
+          </body>
+        </html>
+      `;
+
+      const blob = new Blob([htmlContent], { type: "application/vnd.ms-excel" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "kochi_Timesheet.xls";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+  </script>
+</body>
+</html>
+

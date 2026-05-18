@@ -1,0 +1,219 @@
+{% include 'header.html' %}
+
+<section class="bg-slate-950 text-white overflow-hidden">
+
+  <!-- ================= HEADING ================= -->
+  <div class="page-heading">
+    <h2>Mobile App Development</h2>
+  </div>
+
+  <!-- ================= INTRO ================= -->
+  <section class="py-20 px-6 md:px-16 text-center fade-up">
+    <h3 class="text-3xl md:text-4xl font-bold mb-4">
+      Build Powerful & User-Friendly Mobile Apps
+    </h3>
+    <p class="text-gray-400 max-w-3xl mx-auto">
+      At Codexler Technologies, we design and develop high-performance mobile applications 
+      for Android and iOS. Our apps are fast, secure, and built to deliver exceptional user experiences.
+    </p>
+  </section>
+
+  <!-- ================= SERVICES ================= -->
+  <section class="relative py-20 px-6 md:px-16">
+
+    <!-- Glow -->
+    <div class="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-500 to-indigo-500 opacity-10 blur-3xl"></div>
+
+    <div class="relative max-w-7xl mx-auto grid md:grid-cols-3 gap-8">
+
+      <div class="service-card fade-up">
+        <h4>Android App Development</h4>
+        <p>Custom Android applications built for performance and scalability.</p>
+      </div>
+
+      <div class="service-card fade-up">
+        <h4>iOS App Development</h4>
+        <p>Elegant and high-quality iOS apps tailored for Apple devices.</p>
+      </div>
+
+      <div class="service-card fade-up">
+        <h4>Cross-Platform Apps</h4>
+        <p>Develop once and run everywhere using modern frameworks.</p>
+      </div>
+
+      <div class="service-card fade-up">
+        <h4>UI/UX Design</h4>
+        <p>Clean, intuitive, and engaging mobile app interfaces.</p>
+      </div>
+
+      <div class="service-card fade-up">
+        <h4>App Testing</h4>
+        <p>Thorough testing to ensure performance, security, and reliability.</p>
+      </div>
+
+      <div class="service-card fade-up">
+        <h4>Maintenance & Updates</h4>
+        <p>Regular updates, bug fixes, and feature enhancements.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= PROCESS ================= -->
+  <section class="py-20 px-6 md:px-16 text-center">
+
+    <h3 class="text-3xl font-bold mb-12 fade-up">Our App Development Process</h3>
+
+    <div class="grid md:grid-cols-4 gap-8 max-w-6xl mx-auto">
+
+      <div class="process-card fade-up">
+        <span>01</span>
+        <h4>Ideation</h4>
+        <p>Understanding your app idea and business goals.</p>
+      </div>
+
+      <div class="process-card fade-up">
+        <span>02</span>
+        <h4>Design</h4>
+        <p>Crafting user-friendly and visually appealing interfaces.</p>
+      </div>
+
+      <div class="process-card fade-up">
+        <span>03</span>
+        <h4>Development</h4>
+        <p>Building secure and scalable mobile applications.</p>
+      </div>
+
+      <div class="process-card fade-up">
+        <span>04</span>
+        <h4>Launch</h4>
+        <p>Testing, deployment, and app store submission.</p>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ================= CTA ================= -->
+  <section class="py-20 text-center fade-up">
+    <h3 class="text-3xl font-bold mb-4">Have an App Idea?</h3>
+    <p class="text-gray-400 mb-6">Let’s build something amazing together.</p>
+    <a href="{% url 'contact' %}" class="cta-btn">Start Your Project →</a>
+  </section>
+
+</section>
+
+<!-- ================= STYLES ================= -->
+<style>
+
+/* Heading */
+.page-heading {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.page-heading h2 {
+  font-size: 42px;
+  font-weight: 700;
+  position: relative;
+  display: inline-block;
+}
+
+.page-heading h2::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -8px;
+  width: 0%;
+  height: 3px;
+  background: linear-gradient(90deg, #a855f7, #ff2fb3);
+  transform: translateX(-50%);
+  animation: underlineGrow 1s ease forwards;
+}
+
+@keyframes underlineGrow {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+
+/* Service Cards */
+.service-card {
+  padding: 20px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.05);
+  transition: 0.3s;
+}
+
+.service-card:hover {
+  transform: translateY(-8px);
+  background: rgba(255,255,255,0.08);
+}
+
+.service-card h4 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+/* Process Cards */
+.process-card {
+  padding: 20px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.05);
+}
+
+.process-card span {
+  font-size: 24px;
+  font-weight: bold;
+  color: #a855f7;
+}
+
+.process-card h4 {
+  margin-top: 10px;
+  font-weight: 600;
+}
+
+/* CTA */
+.cta-btn {
+  padding: 12px 28px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #a855f7, #ff2fb3);
+  transition: 0.3s;
+}
+
+.cta-btn:hover {
+  transform: scale(1.05);
+}
+
+/* Animation */
+.fade-up {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.8s ease;
+}
+
+.fade-up.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+</style>
+
+<!-- ================= JS ================= -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const elements = document.querySelectorAll('.fade-up');
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('show');
+      }
+    });
+  });
+
+  elements.forEach(el => observer.observe(el));
+});
+</script>
+
+{% include 'footer.html' %}

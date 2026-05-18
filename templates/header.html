@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google Tag Manager -->
+<script>
+(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5DVBG73F');
+</script>
+<!-- End Google Tag Manager -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Primary SEO -->
+  <title>Codexler Technologies | Web Development, Mobile Apps, AI & Software Solutions</title>
+  <meta name="title" content="Codexler Technologies | Web Development, Mobile Apps, AI & Software Solutions">
+  <meta name="description" content="Codexler Technologies offers web development, mobile app development, digital marketing, AI solutions, ERP & CRM software, and cloud integration services. Build scalable, secure, and high-performance software solutions for your business.">
+  
+  <meta name="keywords" content="
+  Web Development Company,
+  Mobile App Development,
+  Software Development Company,
+  AI Solutions Company,
+  ERP CRM Development,
+  Cloud Integration Services,
+  Digital Marketing Company,
+  Custom Software Development,
+  Django Development,
+  Python Development,
+  React Development,
+  IT Company India,
+  Business Automation Software,
+  SaaS Development,
+  Website Development Company,
+  Android iOS App Development,
+  SEO Digital Marketing,
+  IT Consulting Company,
+  Enterprise Software Solutions,
+  Codexler Technologies
+  ">
+
+  <meta name="robots" content="index, follow">
+  <meta name="language" content="English">
+  <meta name="author" content="Codexler Technologies">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.codexlertechnologies.com/">
+  <meta property="og:title" content="Codexler Technologies | Software Development & AI Solutions">
+  <meta property="og:description" content="Web Development, Mobile Apps, Digital Marketing, ERP CRM, Cloud & AI Solutions. Build scalable software with Codexler Technologies.">
+  <meta property="og:image" content="https://www.codexlertechnologies.com/static/assets/img/logo_transparent.png">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Codexler Technologies | Software & AI Development Company">
+  <meta name="twitter:description" content="Custom web apps, mobile apps, AI solutions, cloud deployment, ERP & CRM software development services.">
+  <meta name="twitter:image" content="https://www.codexlertechnologies.com/static/assets/img/logo_transparent.png">
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://www.codexlertechnologies.com/">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="https://www.codexlertechnologies.com/static/assets/img/logo_transparent.png">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+
+  <style>
+    body { font-family: 'Poppins', sans-serif; }
+
+    :root {
+      --main-gradient: linear-gradient(90deg, #ff2fb3 0%, #a855f7 50%, #6a5cff 100%);
+    }
+
+    .bg-gradient-custom {
+      background: var(--main-gradient);
+    }
+
+    .mobile-menu {
+      transition: transform 0.3s ease-in-out;
+    }
+  </style>
+</head>
+
+<body class="bg-slate-950 text-white">
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5DVBG73F"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<!-- ================= TOP BAR ================= -->
+<div class="bg-gray-100 text-gray-600 text-sm border-b">
+  <div class="max-w-7xl mx-auto px-4 py-2 flex justify-between items-center text-xs sm:text-sm">
+    
+    <div class="flex gap-4">
+      <a href="mailto:info@codexlertechnologies.com" class="hover:text-purple-600">
+        ✉ info@codexlertechnologies.com
+      </a>
+      <a href="tel:+919446144277" class="hover:text-purple-600">
+        📞 +91 9446144277
+      </a>
+    </div>
+
+    <div class="hidden md:block">
+      📍 Kakkanad, Ernakulam
+    </div>
+
+  </div>
+</div>
+
+<!-- ================= STICKY NAVBAR ================= -->
+<nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-lg shadow">
+  <div class="max-w-7xl mx-auto px-3 sm:px-6 py-3 flex items-center justify-between flex-nowrap">
+
+    <!-- Logo -->
+    <a href="#" class="flex items-center gap-2 whitespace-nowrap flex-shrink-0">
+      <img src="/static/assets/img/logo_transparent.png" class="w-10 h-10 object-contain">
+      <span class="font-bold text-lg text-purple-600">CODEXLER</span>
+    </a>
+
+    <!-- Menu -->
+    <ul class="hidden md:flex items-center gap-6 text-gray-700 font-medium whitespace-nowrap">
+<li><a href="{% url 'home' %}" class="hover:text-purple-600">Home</a></li>
+<li><a href="{% url 'about' %}" class="hover:text-purple-600">About</a></li>
+<li><a href="{% url 'services' %}" class="hover:text-purple-600">Services</a></li>
+<li><a href="{% url 'careers' %}" class="hover:text-purple-600">Careers</a></li>
+<li><a href="{% url 'contact' %}" class="hover:text-purple-600">Contact</a></li>
+    </ul>
+
+    <!-- Right Actions -->
+    <div class="flex items-center gap-3 flex-nowrap">
+
+      <!-- Search -->
+      <div class="hidden lg:flex items-center bg-gray-100 px-2 py-1 rounded-lg">
+        <span class="mr-1 text-gray-500">🔍</span>
+        <input type="text" placeholder="Search..." class="bg-transparent outline-none text-sm text-black w-28">
+      </div>
+
+      <!-- CTA -->
+      <a href="tel:+919446144277"
+         class="hidden sm:inline-block px-4 py-2 rounded-lg text-white font-semibold shadow bg-gradient-custom text-sm whitespace-nowrap">
+        Get in Touch
+      </a>
+
+      <!-- Mobile Button -->
+      <button id="menuBtn" class="md:hidden text-2xl text-black">
+        ☰
+      </button>
+
+    </div>
+
+  </div>
+</nav>
+
+<!-- ================= MOBILE MENU ================= -->
+<div id="mobileMenu"
+     class="fixed inset-0 bg-white z-[999] mobile-menu translate-x-full md:hidden flex flex-col">
+
+  <div class="flex justify-between items-center p-5 border-b">
+    <span class="font-bold text-xl text-purple-600">CODEXLER</span>
+    <button id="closeMenu" class="text-3xl text-black">✕</button>
+  </div>
+
+  <div class="flex flex-col gap-6 p-6 text-lg font-medium text-black">
+<li><a href="{% url 'home' %}" class="hover:text-purple-600">Home</a></li>
+<li><a href="{% url 'about' %}" class="hover:text-purple-600">About</a></li>
+<li><a href="{% url 'services' %}" class="hover:text-purple-600">Services</a></li>
+<li><a href="{% url 'careers' %}" class="hover:text-purple-600">Careers</a></li>
+<li><a href="{% url 'contact' %}" class="hover:text-purple-600">Contact</a></li>
+
+    <a href="tel:+919446144277"
+       class="mt-6 px-6 py-3 rounded-lg text-white bg-gradient-custom text-center">
+      Get in Touch
+    </a>
+  </div>
+</div>
+
+<!-- ================= SCRIPT ================= -->
+<script>
+  const menuBtn = document.getElementById("menuBtn");
+  const mobileMenu = document.getElementById("mobileMenu");
+  const closeMenu = document.getElementById("closeMenu");
+
+  menuBtn.addEventListener("click", () => {
+    mobileMenu.classList.remove("translate-x-full");
+  });
+
+  closeMenu.addEventListener("click", () => {
+    mobileMenu.classList.add("translate-x-full");
+  });
+</script>
+
+  <script type="module">
+    import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
+    import { gsap } from 'https://cdn.jsdelivr.net/npm/gsap@3.12.5/index.js';
+    import { ScrollTrigger } from 'https://cdn.jsdelivr.net/npm/gsap@3.12.5/ScrollTrigger.js';
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    const canvas = document.getElementById("webgl");
+    const heroContent = document.querySelector(".hero-content");
+    const floatingCard = document.querySelector(".floating-card");
+    const scrollIndicator = document.querySelector(".scroll-indicator");
+
+    const scene = new THREE.Scene();
+
+    const sizes = {
+      width: window.innerWidth,
+      height: window.innerHeight
+    };
+
+    const camera = new THREE.PerspectiveCamera(45, sizes.width / sizes.height, 0.1, 100);
+    scene.add(camera);
+
+    const renderer = new THREE.WebGLRenderer({
+      canvas,
+      antialias: true,
+      alpha: true
+    });
+
+    renderer.setSize(sizes.width, sizes.height);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
+    scene.add(ambientLight);
+
+    const directionalLight1 = new THREE.DirectionalLight(0xffffff, 2.2);
+    directionalLight1.position.set(4, 5, 6);
+    scene.add(directionalLight1);
+
+    const directionalLight2 = new THREE.DirectionalLight(0xff4ecd, 1.8);
+    directionalLight2.position.set(-4, -2, 4);
+    scene.add(directionalLight2);
+
+    const group = new THREE.Group();
+    scene.add(group);
+
+    const mainGeometry = new THREE.TorusKnotGeometry(1.15, 0.34, 220, 32);
+    const mainMaterial = new THREE.MeshStandardMaterial({
+      color: 0xa855f7,
+      metalness: 0.7,
+      roughness: 0.18
+    });
+    const mainMesh = new THREE.Mesh(mainGeometry, mainMaterial);
+    group.add(mainMesh);
+
+    const ringGeometry = new THREE.TorusGeometry(2.2, 0.04, 16, 100);
+    const ringMaterial = new THREE.MeshStandardMaterial({
+      color: 0xff2fb3,
+      metalness: 0.8,
+      roughness: 0.2
+    });
+    const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+    ring.rotation.x = Math.PI / 2.4;
+    group.add(ring);
+
+    const particlesGeometry = new THREE.BufferGeometry();
+    const particlesCount = 200;
+    const positions = new Float32Array(particlesCount * 3);
+
+    for (let i = 0; i < particlesCount * 3; i++) {
+      positions[i] = (Math.random() - 0.5) * 14;
+    }
+
+    particlesGeometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+
+    const particlesMaterial = new THREE.PointsMaterial({
+      size: 0.03,
+      color: 0xffffff
+    });
+
+    const particles = new THREE.Points(particlesGeometry, particlesMaterial);
+    scene.add(particles);
+
+    function setScenePosition() {
+      const isMobile = window.innerWidth <= 768;
+
+      if (isMobile) {
+        camera.position.set(0, 0, 8.4);
+        group.position.set(0, 0.4, 0);
+        group.scale.set(0.78, 0.78, 0.78);
+      } else {
+        camera.position.set(0, 0, 7);
+        group.position.set(2.8, 0.4, 0);
+        group.scale.set(1, 1, 1);
+      }
+    }
+
+    setScenePosition();
+
+    function createScrollAnimation() {
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+
+      const isMobile = window.innerWidth <= 768;
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".scroll-scene",
+          start: "top top",
+          end: "bottom top",
+          scrub: 1.1
+        }
+      });
+
+      tl.to(group.rotation, {
+        x: Math.PI * 2.2,
+        y: Math.PI * 3.8,
+        z: Math.PI * 1.25,
+        ease: "none"
+      }, 0);
+
+      tl.to(group.position, {
+        x: isMobile ? 0 : -5.3,
+        y: isMobile ? -0.5 : -1.35,
+        ease: "none"
+      }, 0);
+
+      tl.to(camera.position, {
+        z: isMobile ? 7.1 : 4.2,
+        ease: "none"
+      }, 0);
+
+      tl.to(ring.rotation, {
+        z: Math.PI * 2,
+        ease: "none"
+      }, 0);
+
+      tl.to(heroContent, {
+        x: isMobile ? 0 : -160,
+        y: isMobile ? -40 : 0,
+        opacity: 0,
+        ease: "none"
+      }, 0.08);
+
+      tl.to(floatingCard, {
+        x: isMobile ? 0 : 140,
+        y: isMobile ? 35 : 0,
+        opacity: 0,
+        ease: "none"
+      }, 0.12);
+
+      tl.to(scrollIndicator, {
+        opacity: 0,
+        y: 30,
+        ease: "none"
+      }, 0.1);
+    }
+
+    createScrollAnimation();
+
+    gsap.to(group.rotation, {
+      y: "+=" + Math.PI * 2,
+      duration: 8,
+      repeat: -1,
+      ease: "none"
+    });
+
+    gsap.to(particles.rotation, {
+      y: Math.PI * 2,
+      duration: 20,
+      repeat: -1,
+      ease: "none"
+    });
+
+    const clock = new THREE.Clock();
+
+    function animate() {
+      const elapsedTime = clock.getElapsedTime();
+      const floatY = Math.sin(elapsedTime * 1.2) * 0.08;
+
+      mainMesh.rotation.x += 0.003;
+      mainMesh.rotation.y += 0.004;
+      ring.rotation.x += 0.0015;
+
+      const targetY = window.innerWidth <= 768 ? 0.4 + floatY : 0.4 + floatY;
+      group.position.y += (targetY - group.position.y) * 0.04;
+
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    window.addEventListener("resize", () => {
+      sizes.width = window.innerWidth;
+      sizes.height = window.innerHeight;
+
+      camera.aspect = sizes.width / sizes.height;
+      camera.updateProjectionMatrix();
+
+      renderer.setSize(sizes.width, sizes.height);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+      setScenePosition();
+      createScrollAnimation();
+      ScrollTrigger.refresh();
+    });
+  </script>
+</body>
+</html>

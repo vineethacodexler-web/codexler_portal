@@ -1,0 +1,266 @@
+{% include 'admin_navbar.html' %}
+<main id="main" class="main">
+    <nav style="margin-top: -90px;">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="" style="color:black;">Home</a></li>
+            <li class="breadcrumb-item active" style="color:black;">View Time Sheets</li>
+        </ol>
+    </nav>
+    {% if messages %}
+            <div class="alert alert-success">
+                {% for msg in messages %}
+                    {{ msg }}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .breadcrumb {
+            background-color: transparent;
+            padding: 0;
+            font-size: 16px;
+        }
+
+        .breadcrumb-item {
+            font-weight: bold;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+
+        .table th,
+        .table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .table th {
+            background-color: #497280;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        .table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .table td a {
+            text-decoration: none;
+            color: #3498db;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .table td a:hover {
+            text-decoration: underline;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .add-timesheet-btn {
+            padding: 10px 15px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+
+        .add-timesheet-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .confirmation-dialog {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .confirmation-dialog:hover {
+            background-color: #c0392b;
+        }
+
+        @media (max-width: 768px) {
+            .table th, .table td {
+                padding: 8px;
+            }
+        }
+    </style>
+
+<a class="btn btn-primary" style="position: absolute; margin-top: -10px; right: 20px; padding: 8px 16px; background-color: green; color: white; border: none; cursor: pointer;" href="{% url 'all_view_timesheet'   %}">View Details</a>
+<br><br>
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Sl No</th>
+                    <th>Project No</th>
+                    <th>Project Name</th>
+                    <th>Start Date</th>
+                    <th>Due Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for timesheet in timesheets %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ timesheet.project_no }}</td>
+                    <td>{{ timesheet.project_name }}</td>
+                    <td>{{ timesheet.start_datetime }}</td>
+                    <td>{{ timesheet.end_datetime }}</td>
+                    <td>
+                        <div class="d-flex gap-2">
+                            <a class="btn btn-primary text-white" href="{% url 'view_timesheet' timesheet.id %}">View </a>
+                             <button type="button" class="btn btn-primary edit-timesheet-btn" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#editTimesheetModal" 
+                                data-url="{% url 'update_timesheet' timesheet.id %}"
+                                data-project-no="{{ timesheet.project_no }}"
+                                data-project-name="{{ timesheet.project_name }}"
+                                data-start-date="{{ timesheet.start_date|date:'Y-m-d' }}"
+                                data-due-date="{{ timesheet.due_date|date:'Y-m-d' }}"
+                                data-remarks="{{ timesheet.remarks }}">
+                                Edit
+                            </button>
+                            <a href="{% url 'delete_timesheet' timesheet.id %}" class="btn btn-danger text-white" onclick="return confirm('Are you sure?')">Delete</a>
+                           
+                        </div>
+                        
+<!-- Edit Timesheet Modal -->
+<div class="modal fade" id="editTimesheetModal" tabindex="-1" aria-labelledby="editTimesheetModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editTimesheetModalLabel">Edit Timesheet</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" id="editTimesheetForm">
+                    {% csrf_token %}
+
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="form-label">Project No:</label>
+                                <input type="text" id="modalProjectNo" name="project_no" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Project Name:</label>
+                                <input type="text" id="modalProjectName" name="project_name" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Start Date:</label>
+                                <input type="date" id="modalStartDate" name="start_date" class="form-control" >
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Due Date:</label>
+                                <input type="date" id="modalDueDate" name="due_date" class="form-control" >
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <label class="form-label">Remarks:</label>
+                                <textarea id="modalRemarks" name="remarks" class="form-control"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                 
+                                <input type="hidden" id="modalStaffList" name="staff_list" class="form-control" required>
+                            
+                    
+                                <input type="hidden" id="modalWeekNo" name="week_no" class="form-control" required>
+                          
+
+                        <div class="row mt-3">
+               
+                                <input type="hidden" id="modalLocation" name="location" class="form-control" required>
+                            </div>
+                           
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-md-12 text-end">
+                                <button type="submit" class="btn btn-primary">Update Timesheet</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".edit-timesheet-btn").forEach(button => {
+            button.addEventListener("click", function () {
+                // Get Data from Button
+                let projectNo = this.getAttribute("data-project-no");
+                let projectName = this.getAttribute("data-project-name");
+                let startDate = this.getAttribute("data-start-date");
+                let dueDate = this.getAttribute("data-due-date");
+                let remarks = this.getAttribute("data-remarks");
+                let staffList = this.getAttribute("data-staff-list");
+                let weekNo = this.getAttribute("data-week-no");
+                let modalLocation = this.getAttribute("data-modalLocation");
+                let updateUrl = this.getAttribute("data-url");
+    
+                // Populate Form Fields
+                document.getElementById("modalProjectNo").value = projectNo;
+                document.getElementById("modalProjectName").value = projectName;
+                document.getElementById("modalStartDate").value = startDate;
+                document.getElementById("modalDueDate").value = dueDate;
+                document.getElementById("modalRemarks").value = remarks;
+                document.getElementById("modalStaffList").value = staffList;
+                document.getElementById("modalWeekNo").value = weekNo;
+                document.getElementById("modalLocation").value = modalLocation;
+    
+                // Set Form Action URL
+                document.getElementById("editTimesheetForm").action = updateUrl;
+            });
+        });
+    });
+    </script>
+                    
+                            </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+      
+    </div>
+</main>
+{% include 'footer.html' %}

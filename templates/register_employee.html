@@ -1,0 +1,241 @@
+{% include 'admin_navbar.html' %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register Employee</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    
+    <style>
+        .error-text { color: red; }
+        .alert-wrapper { margin-top: 10px; }
+    </style>
+</head>
+
+<body>
+<main id="main" class="main">
+
+      <h3 class="card-title mb-4">ADD STAFFS</h3>
+      {% if messages %}
+      <div id="popup-alert-container" class="popup-alert-container">
+          {% for message in messages %}
+          <div class="popup-alert {% if 'success' in message.tags %}popup-success{% else %}popup-error{% endif %}
+          {% if 'delete' in message.text %} popup-deleted {% endif %}">
+              {{ message }}
+          </div>
+          {% endfor %}
+      </div>
+      {% endif %}
+      
+      <style>
+      .popup-alert-container {
+          position: fixed;
+          top: 50px;
+          left: 20%;
+          z-index: 1050;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+      }
+      
+      .popup-alert {
+          padding: 12px 20px;
+          border-radius: 5px;
+          color: #fff;
+          min-width: 250px;
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+          opacity: 0.95;
+          animation: fadeout 0.5s ease-in-out forwards;
+          animation-delay: 3s;
+      }
+      
+      .popup-success {
+          background-color: #28a745;
+      }
+      
+      .popup-error {
+          background-color: #dc3545;
+      }
+      
+      .popup-deleted {
+          background-color: #dc3545; /* Red background for deleted messages */
+      }
+      
+      @keyframes fadeout {
+          to {
+              opacity: 0;
+              transform: translateY(-10px);
+              pointer-events: none;
+          }
+      }
+      </style>
+      
+      <script>
+      document.addEventListener("DOMContentLoaded", function () {
+          const alertContainer = document.getElementById("popup-alert-container");
+          if (alertContainer) {
+              const seen = new Set();
+              const alerts = alertContainer.querySelectorAll(".popup-alert");
+      
+              alerts.forEach(alert => {
+                  const text = alert.textContent.trim();
+                  if (seen.has(text)) {
+                      alert.classList.add("popup-deleted"); // Add red background before removal
+                      setTimeout(() => {
+                          alert.remove();
+                      }, 1000); // Delay before removing it (after showing red)
+                  } else {
+                      seen.add(text);
+                      // Remove each alert after 4s
+                      setTimeout(() => {
+                          alert.remove();
+                      }, 4000);
+                  }
+              });
+          }
+      });
+      </script>
+      
+      
+    <div class="container">
+        <form method="post" action="{% url 'register_employee' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="photo" style="color:black;">Upload Photo</label>
+                <input type="file" id="photo" name="photo" class="form-control" accept="image/*" required>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 form-group">
+                    <label>Staff ID: <span style="color:red;">*</span></label>
+                    <input type="text" name="emp_id" class="form-control" required>
+                </div>
+
+                <div class="col-md-6 form-group">
+                    <label>Staff Name: <span style="color:red;">*</span></label>
+                    <input type="text" name="first_name" class="form-control" required>
+                </div>
+            </div>
+
+            <input type="hidden" name="employee" value="employee">
+
+            <div class="row">
+                <div class="col-md-6 form-group">
+                    <label>Login ID: <span style="color:red;">*</span></label>
+                    <input type="text" name="user_name" class="form-control" required>
+                </div>
+
+                <div class="col-md-6 form-group">
+                    <label>Contact Number: <span style="color:red;">*</span></label>
+                    <input type="text" name="mobile_number" class="form-control" pattern="^(?!000)[0-9]{10}$" title="Enter valid 10-digit number" required>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 form-group">
+                    <label>Email: <span style="color:red;">*</span></label>
+                    <input type="email" name="email" class="form-control" required>
+                </div>
+
+                <div class="col-md-6 form-group">
+                    <label>Location: <span style="color:red;">*</span></label>
+                    <input type="text" name="location" class="form-control" required>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 form-group">
+                    <label>Address: <span style="color:red;">*</span></label>
+                    <input type="text" name="ua" class="form-control" required>
+                </div>
+
+                <div class="col-md-6 form-group">
+                    <label>Designation: <span style="color:red;">*</span></label>
+                    <input type="text" name="designation" class="form-control" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Gender:</label><br>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="gender" id="male" value="male" checked>
+                    <label class="form-check-label" for="male">Male</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="gender" id="female" value="female">
+                    <label class="form-check-label" for="female">Female</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="gender" id="others" value="others">
+                    <label class="form-check-label" for="others">Others</label>
+                </div>
+            </div>
+
+            <input type="hidden" name="adminn1" value="admin">
+
+            <div class="row">
+                <div class="col-md-6 form-group">
+                    <label>Password: <span style="color:red;">*</span></label>
+                    <input type="password" name="psw" class="form-control" id="newPassword" oninput="validatePassword()" 
+                        pattern="^(?=.*[A-Z])(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}|:;<>,.?[\]\-]).{8,}$"
+                        title="Password must be at least 8 characters long and include uppercase, lowercase, number, and special character" 
+                        required>
+                </div>
+
+                <div class="col-md-6 form-group">
+                    <label>Re-enter Password: <span style="color:red;">*</span></label>
+                    <input type="password" class="form-control" id="renewPassword" oninput="validatePassword()" 
+                        pattern="^(?=.*[A-Z])(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}|:;<>,.?[\]\-]).{8,}$"
+                        title="Passwords must match and meet complexity rules" required>
+                    <small id="passwordHelp" class="form-text"></small>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" id="changePasswordBtn" class="btn btn-primary" disabled>Sign Up</button>
+                <a href="{% url 'login' %}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+
+</main>
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    // Alert auto close
+    setTimeout(function () {
+        const alertContainer = document.getElementById('alert-container');
+        if (alertContainer) {
+            alertContainer.style.display = 'none';
+        }
+    }, 4000);
+
+    // Password validation
+    function validatePassword() {
+        const newPassword = document.getElementById("newPassword").value;
+        const renewPassword = document.getElementById("renewPassword").value;
+        const passwordHelp = document.getElementById("passwordHelp");
+        const changePasswordBtn = document.getElementById("changePasswordBtn");
+
+        if (newPassword === renewPassword && newPassword.length >= 8) {
+            passwordHelp.textContent = "Passwords match!";
+            passwordHelp.style.color = "green";
+            changePasswordBtn.disabled = false;
+        } else {
+            passwordHelp.textContent = "Passwords do not match.";
+            passwordHelp.style.color = "red";
+            changePasswordBtn.disabled = true;
+        }
+    }
+</script>
+
+</body>
+</html>

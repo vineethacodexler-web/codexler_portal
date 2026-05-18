@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Logout</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<script>
+    window.onload = function() {
+        Swal.fire({
+            title: "Check out Successful!",
+            html: `
+                <h3>Employee Details</h3>
+                <p><strong>Name:</strong> {{ bok.First_name }}</p>
+                <p><strong>Emp Id:</strong> {{ bok.Emp_Id }}</p>
+
+                <h3>Attendance Details</h3>
+                <p><strong>Check-in Time:</strong> {{ latest_attendance.check_in_time }}</p>
+                <p><strong>Check-out Time:</strong> {{ latest_attendance.check_out_time }}</p>
+
+        
+            `,
+            icon: "success",
+            confirmButtonText: "OK",
+            allowOutsideClick: false
+        }).then(() => {
+            window.location.href = "{% url 'login' %}";
+        });
+    };
+</script>
+
+</body>
+</html>

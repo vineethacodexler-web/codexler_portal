@@ -1,0 +1,284 @@
+{% include 'admin_navbar.html' %}
+<main id="main" class="main">
+
+    <style>
+        h1 {
+            margin-bottom: 30px;
+            color: #007bff;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .add-product-btn {
+            margin-top: 10px;
+        }
+
+        .submit-btn {
+            margin-top: 20px;
+        }
+
+        .error {
+            color: red;
+            margin-bottom: 10px;
+        }
+
+        .form-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            max-width: 100%;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            flex: 1 1 calc(50% - 15px);
+        }
+
+        .full-width {
+            flex: 1 1 100%;
+        }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .dropdown-content {
+            position: absolute;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .dropdown-item {
+            padding: 10px;
+            font-size: 14px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background 0.2s ease-in-out;
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f8f9fa;
+            color: #007bff;
+        }
+    </style>
+
+    <body style="background-color: #f5f5f5;">
+
+        <h3 class="card-title">Create Time Sheet</h3>
+<h2 ></h2>
+
+
+{% if messages %}
+<div id="popup-alert-container" class="popup-alert-container">
+    {% for message in messages %}
+    <div class="popup-alert {% if 'success' in message.tags %}popup-success{% else %}popup-error{% endif %}">
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<style>
+.popup-alert-container {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1050;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.popup-alert {
+    padding: 12px 20px;
+    border-radius: 5px;
+    color: #fff;
+    min-width: 250px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    opacity: 0.95;
+    animation: fadeout 0.5s ease-in-out forwards;
+    animation-delay: 3s;
+}
+
+.popup-success {
+    background-color: #28a745;
+}
+
+.popup-error {
+    background-color: #dc3545;
+}
+
+@keyframes fadeout {
+    to {
+        opacity: 0;
+        transform: translateY(-10px);
+        pointer-events: none;
+    }
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const alertContainer = document.getElementById("popup-alert-container");
+    if (alertContainer) {
+        const seen = new Set();
+        const alerts = alertContainer.querySelectorAll(".popup-alert");
+
+        alerts.forEach(alert => {
+            const text = alert.textContent.trim();
+            if (seen.has(text)) {
+                alert.remove();
+            } else {
+                seen.add(text);
+                // Remove each alert after 4s
+                setTimeout(() => {
+                    alert.remove();
+                }, 4000);
+            }
+        });
+    }
+});
+</script>
+
+
+        <form action="{% url 'add_timesheet_admin' %}" method="post" class="form" novalidate >
+            {% csrf_token %}
+
+            <input type="hidden" id="staff_name" class="form-control" value="{{ request.user.first_name }} {{ request.user.last_name }}" readonly />
+            <input type="hidden" id="staff_list" value="{{ user.id }}" name="staff_list">
+
+            <div class="table-responsive mt-3" style="background-color: #f8f8f8;">
+                <table class="table table-bordered table-hover" id="timesheet-table" >
+                    <thead class="table-dark">
+                        <tr>
+                            <th style="background-color: #D3EEFF;color:black">Project No</th>
+                            <th style="background-color: #D3EEFF;color:black">Project Name / Absence Code</th>
+                            <th style="background-color: #D3EEFF;color:black">Description</th>
+                            <th style="background-color: #D3EEFF;color:black">Start </th>
+                            <th style="background-color: #D3EEFF;color:black">End </th>
+                            <th style="background-color: #D3EEFF;color:black"> Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="timesheet-lines">
+                        <tr>
+                            <td>
+                                <input type="text" class="project-search" name="project_no" style="width:100px" placeholder="Search Code"  required>
+                                <div class="search-results dropdown-content"></div>
+                            </td>
+                            <td><input type="text" class="project-name" name="project_name" placeholder="Project Name" style="width:100%;" ></td>
+                            <td><input class="remarks" name="remarks" placeholder="Description" style="width:100%;"></td>
+                            <td>
+                                <input type="datetime-local" id="start_datetime" style="width:200px;" name="start_datetime" required>
+                            </td>
+                            <td>
+                                <input type="datetime-local" id="end_datetime" style="width:200px;" name="end_datetime" required>
+                            </td>
+                            <td><button type="button" class="btn btn-danger" onclick="removeRow(this)">Remove</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="d-flex">
+                <button type="button" class="btn btn-primary " onclick="addTimesheetLine()">Add More</button>&nbsp;&nbsp;
+                <button type="submit" class="btn btn-success ">Submit</button>
+            </div>
+            
+        </form>
+
+        <script>
+            function addTimesheetLine() {
+                const table = document.getElementById('timesheet-lines');
+                const row = document.createElement('tr');
+
+                row.innerHTML = `
+                <td>
+                                <input type="text" class="project-search" name="project_no" style="width:100px" placeholder="Search Code"  required>
+                                <div class="search-results dropdown-content"></div>
+                            </td>
+                            <td><input type="text" class="project-name" name="project_name" placeholder="Project Name" style="width:100%;" ></td>
+                            <td><input class="remarks" name="remarks" placeholder="Description" style="width:100%;"></td>
+                            <td>
+                                <input type="datetime-local" id="start_datetime" style="width:200px;" name="start_datetime" required>
+                            </td>
+                            <td>
+                                <input type="datetime-local" id="end_datetime" style="width:200px;" name="end_datetime" required>
+                            </td>
+                            <td><button type="button" class="btn btn-danger" onclick="removeRow(this)">Remove</button></td>
+                `;
+
+                table.appendChild(row);
+            }
+
+            function removeRow(button) {
+                button.closest('tr').remove();
+            }
+
+            document.addEventListener("DOMContentLoaded", function () {
+                document.addEventListener("input", function (event) {
+                    if (event.target.classList.contains("project-search")) {
+                        let searchInput = event.target;
+                        let searchResults = searchInput.nextElementSibling;
+                        let query = searchInput.value.trim();
+
+                        if (query.length > 0) {
+                            fetch(`/api/projects/?q=${query}`)
+                                .then(response => response.json())
+                                .then(data => {
+                                    searchResults.innerHTML = "";
+                                    if (data.length > 0) {
+                                        data.forEach(project => {
+                                            let item = document.createElement("div");
+                                            item.innerHTML = `
+                                                <strong>${project.project_name} (${project.project_no})</strong><br>
+                                                <small>Remarks: ${project.remarks}</small>
+                                            `;
+                                            item.classList.add("dropdown-item");
+                                            item.addEventListener("click", function () {
+                                                searchInput.value = project.project_no;
+                                                let row = searchInput.closest("tr");
+                                                row.querySelector(".project-name").value = project.project_name;
+                                                row.querySelector(".remarks").value = project.remarks; // Updated to fill the remarks
+                                                searchResults.innerHTML = "";
+                                                searchResults.style.display = "none";
+                                            });
+                                            searchResults.appendChild(item);
+                                        });
+                                        searchResults.style.display = "block";
+                                    } else {
+                                        searchResults.style.display = "none";
+                                    }
+                                })
+                                .catch(error => console.error("Error fetching projects:", error));
+                        } else {
+                            searchResults.innerHTML = "";
+                            searchResults.style.display = "none";
+                        }
+                    }
+                });
+            });
+        </script>
+    </body>
+</main>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Codexler Technologies - Login</title>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="static/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="static/assets/css/style.css" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #007BFF, #f58232);
+    }
+    .login-container {
+      max-width: 400px;
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .form-control:focus {
+      box-shadow: none;
+      border-color: #007bff;
+    }
+    .btn-primary {
+      background-color: #007bff;
+      border: none;
+    }
+    .btn-primary:hover {
+      background-color: #0056b3;
+    }
+    .text-center a {
+      color: #007bff;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="d-flex vh-100 justify-content-center align-items-center">
+    <div class="login-container">
+      <div class="text-center mb-4">
+        <img src="/static/logo_c.png" alt="Company Logo" class="mb-2" style="max-width: 100px;">
+        <h4 class="fw-bold">Codexler Technologies</h4>
+        <p class="text-muted">Login to Your Account</p>
+    </div>
+    
+
+      <div style="color:red; text-align:center;">
+        {% if messages %}
+          {% for msg in messages %}
+            {{ msg }}
+          {% endfor %}
+        {% endif %}
+      </div>
+
+      <form action="{% url 'login' %}" method="post" class="needs-validation" novalidate>
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="username" class="form-label">Username</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="fas fa-user"></i></span>
+            <input type="text" name="user_name" class="form-control" id="username" required>
+          </div>
+          <div class="invalid-feedback">Please enter your username.</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+            <input type="password" name="pword" class="form-control" id="password" required>
+          </div>
+          <div class="form-check mt-2">
+            <input class="form-check-input" type="checkbox" id="showPasswordToggle">
+            <label class="form-check-label" for="showPasswordToggle">Show Password</label>
+          </div>
+          <div class="invalid-feedback">Please enter your password.</div>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Login</button>
+      </form>
+
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('showPasswordToggle').addEventListener('change', function() {
+      var passwordInput = document.getElementById('password');
+      passwordInput.type = this.checked ? 'text' : 'password';
+    });
+  </script>
+
+  <script src="static/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

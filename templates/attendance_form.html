@@ -1,0 +1,71 @@
+{% include 'admin_nav.html' %}
+<main id="main" class="main">
+    <nav style="margin-top: -90px;">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="" style="color:black;">Home</a></li>
+          <li class="breadcrumb-item active" style="color:black;">Attendance</li>
+        </ol>
+    </nav>
+    <h1 style="color:black;">Attendance&nbsp;&nbsp;&nbsp;<span style="color:green;">
+        {% if messages %}
+          {% for msg in messages %}{{ msg }}{% endfor %}
+        {% endif %}
+    </span></h1>
+
+    <!-- Attendance Form -->
+ 
+
+    <!-- Attendance Summary -->
+    <div class="mt-4 p-4 shadow-sm rounded bg-white">
+        <h4 class="mb-3">Attendance Summary</h4>
+        <ul class="list-group">
+            <li class="list-group-item"><strong>Total Working Days:</strong> {{ total_working_days }}</li>
+            <li class="list-group-item"><strong>Total Working Minutes:</strong> {{ total_working_minutes }} mins</li>
+        </ul>
+    </div>
+
+    <!-- Success or Warning Messages -->
+    {% if messages %}
+    <div class="alert alert-success mt-4">
+        <ul>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+</main>
+
+<style>
+    .container {
+        max-width: 800px;
+    }
+    .btn-primary {
+        font-weight: bold;
+        padding: 12px;
+    }
+    .form-label {
+        font-weight: bold;
+    }
+    .shadow-sm {
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    }
+    .list-group-item {
+        font-size: 1.1rem;
+    }
+    .alert {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    .mb-4, .my-5 {
+        margin-bottom: 30px !important;
+    }
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+</style>

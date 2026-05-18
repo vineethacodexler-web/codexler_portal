@@ -1,0 +1,152 @@
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEJ2QFfK+v+XskcJZtH5zjDFMJKrBx9E1KXUsXw7v0z8VhT6J8INc9k2b9t5R" crossorigin="anonymous">
+
+<!-- Custom CSS -->
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f7f7f7;
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+        color: black;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    h1 span {
+        color: green;
+        font-size: 1.2rem;
+        display: block;
+        margin-top: 10px;
+    }
+
+    .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-label {
+        font-weight: bold;
+        color: #555;
+    }
+
+    .form-control {
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        box-shadow: none;
+        padding: 10px;
+        font-size: 1rem;
+    }
+
+    .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        padding: 10px 20px;
+        font-size: 1.1rem;
+        border-radius: 4px;
+        width: 100%;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #004085;
+    }
+
+    .row {
+        margin-bottom: 15px;
+    }
+
+    textarea.form-control {
+        height: 150px;
+        resize: none;
+    }
+
+    /* 4-column grid for form */
+    .form-row-4col {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+    }
+</style>
+
+<h1>View Time Sheets
+    <span style="color:green;">
+        {% if messages %}
+            {% for msg in messages %}
+                <div>{{ msg }}</div>
+            {% endfor %}
+        {% endif %}
+    </span>
+</h1>
+
+<!-- Edit Timesheet Form -->
+<form method="POST">
+    {% csrf_token %}
+    
+    <div class="container">
+        <!-- 4-Column Grid Layout -->
+        <div class="form-row-4col">
+            <!-- Project No -->
+            <div>
+                <label for="project_no" class="form-label">Project No:</label><br>
+                <br>
+                <input type="text" name="project_no" value="{{ timesheet.project_no }}" class="form-control" required>
+            </div>
+
+            <!-- Project Name -->
+            <div>
+                <label for="project_name" class="form-label">Project Name:</label><br>
+                <input type="text" name="project_name" value="{{ timesheet.project_name }}" class="form-control" required>
+            </div>
+
+            <!-- Start Date -->
+            <div>
+                <label for="start_date" class="form-label">Start Date:</label><br>
+                <input type="date" name="start_date" value="{{ timesheet.start_date|date:'Y-m-d' }}" class="form-control" required>
+            </div>
+
+            <!-- Due Date -->
+            <div>
+                <label for="due_date" class="form-label">Due Date:</label><br>
+                <input type="date" name="due_date" value="{{ timesheet.due_date|date:'Y-m-d' }}" class="form-control" required>
+            </div>
+        </div>
+        <br><br>
+        <div class="form-row-4col">
+            <!-- Remarks -->
+            <div>
+                <label for="remarks" class="form-label">Remarks:</label><br>
+                <textarea name="remarks" class="form-control">{{ timesheet.remarks }}</textarea>
+            </div>
+
+            <!-- Staff List -->
+            <div>
+                <label for="staff_list" class="form-label">Staff List (comma separated):</label>
+                <input type="text" name="staff_list" value="{{ timesheet.staff_list|join:', ' }}" class="form-control" required>
+            </div>
+
+  
+            <!-- Empty column to maintain 4-column layout -->
+            <div></div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="row">
+            <div class="col-md-12">
+                <button type="submit" class="btn btn-primary" style="color: white;">Update Timesheet</button>
+            </div>
+        </div>
+    </div>
+</form>

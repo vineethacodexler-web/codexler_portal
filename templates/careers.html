@@ -1,0 +1,59 @@
+{% load static %}
+{% include 'header.html' %}
+<link rel="stylesheet" href="{% static 'css/careers.css' %}">
+<script src="{% static 'js/careers.js' %}"></script>
+
+<section class="bg-slate-950 text-white overflow-hidden">
+
+  <!-- ================= CAREERS HEADING ================= -->
+  <div class="careers-heading">
+    <h2>Careers</h2>
+  </div>
+
+ 
+
+  <!-- ================= CAREERS CONTENT ================= -->
+  <section id="careers" class="relative py-24 px-6 md:px-16">
+
+    <!-- Background Glow -->
+    <div class="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-500 to-indigo-500 opacity-10 blur-3xl"></div>
+
+    <div class="max-w-4xl mx-auto text-center relative z-10 fade-up">
+
+      <!-- Icon -->
+      <div class="text-6xl mb-6">💼</div>
+
+      <!-- Title -->
+      <h3 class="text-2xl md:text-4xl font-bold mb-4">
+        Join Our Team
+      </h3>
+
+      <!-- Message -->
+      <p class="text-gray-400 mb-6">
+        We’re always looking for talented people to join 
+        <span class="text-purple-400 font-medium">Codexler Technologies</span>.  
+        Stay tuned for exciting opportunities.
+      </p>
+
+      <!-- No Openings Box -->
+      <div class="no-openings">
+        🚫 Currently No Openings Available
+      </div>
+
+      <!-- Optional CTA -->
+      <p class="text-gray-500 mt-6 text-sm">
+        You can still send your resume to 
+        <span class="text-purple-400">	career@codexlertechnologies.com</span>
+      </p>
+
+    </div>
+
+  </section>
+
+</section>
+
+
+
+
+
+{% include 'footer.html' %}

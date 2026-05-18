@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registration Form</title>
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="d-flex justify-content-center py-4">
+    <a href="" class="logo d-flex align-items-center w-auto">
+      <img src="" alt="">
+      <span class="d-none d-lg-block" style="font-size:20px;color:black;"></span>
+      <div style="color:red; text-align:center;font-size:20px;">
+        {% if messages %}
+            {% for msg in messages %}
+                    {{ msg }}
+            {% endfor %}
+        {% endif %}
+        </div>
+
+    </a>
+  </div>
+  <div class="container">
+  <h2 class="mt-4 mb-4" style="font-size:19px;"> Administrator Registration Form</h2>
+    <form method="post" action="{% url 'register_accounts' %}" enctype="multipart/form-data"  >
+      {% csrf_token %}
+      <label style="color:black;" for="photo">Upload Photo</label>
+      <input type="file" name="photo" required><br><br>
+      <div class="row">
+
+        <div class="col-md-6">
+           <div class="form-group">
+            <label for="firstName">Admin Id:<span style="color:red;">*</span></label>
+            <input type="text"  name="admin_id"  class="form-control" title="Please enter Admin Id" required>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="firstName">Name:</label>
+            <input type="text"  name="first_name"  class="form-control"   required>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="email">User Name:</label>
+            <input type="text" name="user_name" class="form-control"   required>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="password">Contact Number:</label>
+            <input type="text" name="mobile_number" class="form-control"  pattern="^(?!000)[0-9]{10}$" title="Please enter a valid 10-digit mobile number" required>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="email">Email </label>
+           <input type="email" name="email" class="form-control" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" required>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="password">Designation:</label>
+            <input type="text" name="designation" class="form-control"   required>
+          </div>
+        </div>
+</div>
+
+<label for="password">Address:<span style="color:red;">*</span></label>
+<textarea rows="7" class="form-control" name="useragreement" type="text"  required></textarea>
+
+    <br>
+    <div class="col-md-6">
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Gender</label>
+        <div class="col-sm-10">
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="gender" id="male" value="male" checked>
+            <label class="form-check-label" for="male">Male</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input class="form-check-input" type="radio" name="gender" id="female" value="female">
+            <label class="form-check-label" for="female">Female</label>
+          </div>
+
+
+
+        </div>
+      </div>
+
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="location">Location:</label>
+        <input type="text" name="location" class="form-control"   required>
+      </div>
+    </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="city">Password:</label>
+            <input name="psw" type="text" class="form-control" id="newPassword" oninput="validatePassword()"  pattern="^(?=.*[A-Z])(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}|:;<>,.?[\]\-]).{8,}$" title="Password must be at least 8 characters long and include atleast one Uppercase and Lowercase, special characters and numbers" required>
+            <input type="hidden"  name="adminn1" value="accounts">
+
+          </div>
+
+          <script>
+            function validateForm() {
+
+              return true;
+            }
+          </script>
+
+                     <script>
+                      function togglePassword() {
+                        var passwordInput = document.getElementById('password');
+                        var toggleButton = document.querySelector('.toggle-password');
+
+                        if (passwordInput.type === 'password') {
+                          passwordInput.type = 'text';
+                          toggleButton.textContent = 'Hide';
+                        } else {
+                          passwordInput.type = 'password';
+                          toggleButton.textContent = 'Show';
+                        }
+                      }
+                    </script>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="state">Re enter Password:</label>
+            <input name="psw"  type="password" class="form-control" id="renewPassword" oninput="validatePassword()"  pattern="^(?=.*[A-Z])(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}|:;<>,.?[\]\-]).{8,}$" title="Password must be at least 8 characters long and include atleast one Uppercase and Lowercase, special characters and numbers" required>
+            <small id="passwordHelp" class="form-text text-muted"></small>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+      <div class="col-12">
+
+      <div class="form-group">
+       <center> <button type="submit" class="btn btn-primary" id="changePasswordBtn" disabled>Save Details</button></center>
+      </div>
+    </form>
+
+    <div class="col-12">
+      <p class="small mb-0" style="font-size:17px;">Already have an account? <a href='{% url 'login' %}'>Log in</a></p>
+    </div>
+  </div>
+  <script>
+    function validatePassword() {
+        var newPassword = document.getElementById("newPassword").value;
+        var renewPassword = document.getElementById("renewPassword").value;
+        var passwordHelp = document.getElementById("passwordHelp");
+        var changePasswordBtn = document.getElementById("changePasswordBtn");
+
+        if (newPassword === renewPassword) {
+            passwordHelp.textContent = "Passwords match!";
+            passwordHelp.style.color = "green";
+            changePasswordBtn.disabled = false;
+        } else {
+            passwordHelp.textContent = "Passwords do not match.";
+            passwordHelp.style.setProperty('color', 'red');
+
+            changePasswordBtn.disabled = true;
+        }
+    }
+    passwordHelp.classList.add('error-text');
+</script>
+
+
+<style>
+  .error-text {
+  color: red;
+}
+
+
+
+</style>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

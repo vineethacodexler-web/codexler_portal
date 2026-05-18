@@ -1,0 +1,308 @@
+<!-- templates/payroll_reports.html -->
+
+{% include 'admin_navbar.html' %}
+
+<main id="main" class="main">
+<div class="container-fluid mt-4">
+
+    <!-- Report Cards -->
+
+    <div class="row">
+
+        <div class="col-md-3 mb-4">
+
+            <div class="card shadow-sm border-0 bg-primary text-white">
+
+                <div class="card-body">
+
+                    <h6>
+
+                        Total Salary Paid
+
+                    </h6>
+
+                    <h3>
+
+                        ₹ {{ total_salary }}
+
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3 mb-4">
+
+            <div class="card shadow-sm border-0 bg-danger text-white">
+
+                <div class="card-body">
+
+                    <h6>
+
+                        Total PF
+
+                    </h6>
+
+                    <h3>
+
+                        ₹ {{ total_pf }}
+
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3 mb-4">
+
+            <div class="card shadow-sm border-0 bg-warning text-dark">
+
+                <div class="card-body">
+
+                    <h6>
+
+                        Total ESI
+
+                    </h6>
+
+                    <h3>
+
+                        ₹ {{ total_esi }}
+
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3 mb-4">
+
+            <div class="card shadow-sm border-0 bg-success text-white">
+
+                <div class="card-body">
+
+                    <h6>
+
+                        Total Deduction
+
+                    </h6>
+
+                    <h3>
+
+                        ₹ {{ total_deduction }}
+
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Payroll Report Table -->
+
+    <div class="card shadow-sm border-0">
+
+        <div class="card-header bg-dark text-white">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <h4 class="mb-0">
+
+                    <i class="bi bi-bar-chart-fill"></i>
+
+                    Payroll Reports
+
+                </h4>
+
+            </div>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered table-hover align-middle">
+
+                    <thead class="table-dark">
+
+                        <tr>
+
+                            <th>#</th>
+
+                            <th>Employee</th>
+
+                            <th>Month</th>
+
+                            <th>Year</th>
+
+                            <th>Gross Salary</th>
+
+                            <th>PF</th>
+
+                            <th>ESI</th>
+
+                            <th>Total Deduction</th>
+
+                            <th>Net Salary</th>
+
+                            <th>Status</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for payroll in payrolls %}
+
+                        <tr>
+
+                            <td>
+
+                                {{ forloop.counter }}
+
+                            </td>
+
+                            <td>
+
+                                <div class="d-flex align-items-center">
+
+                                    {% if payroll.employee.Image %}
+
+                                    <img src="{{ payroll.employee.Image.url }}"
+                                         width="40"
+                                         height="40"
+                                         class="rounded-circle me-2">
+
+                                    {% endif %}
+
+                                    <div>
+
+                                        <strong>
+
+                                            {{ payroll.employee.First_name }}
+
+                                        </strong>
+
+                                        <br>
+
+                                        <small class="text-muted">
+
+                                            {{ payroll.employee.Emp_Id }}
+
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+                            <td>
+
+                                {{ payroll.month }}
+
+                            </td>
+
+                            <td>
+
+                                {{ payroll.year }}
+
+                            </td>
+
+                            <td>
+
+                                ₹ {{ payroll.gross_salary }}
+
+                            </td>
+
+                            <td>
+
+                                ₹ {{ payroll.pf_amount }}
+
+                            </td>
+
+                            <td>
+
+                                ₹ {{ payroll.esi_amount }}
+
+                            </td>
+
+                            <td>
+
+                                ₹ {{ payroll.total_deduction }}
+
+                            </td>
+
+                            <td>
+
+                                <strong>
+
+                                    ₹ {{ payroll.net_salary }}
+
+                                </strong>
+
+                            </td>
+
+                            <td>
+
+                                {% if payroll.payment_status == 'Paid' %}
+
+                                    <span class="badge bg-success">
+
+                                        Paid
+
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-warning text-dark">
+
+                                        Pending
+
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td colspan="10"
+                                class="text-center text-muted">
+
+                                No payroll reports available
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</main>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manage Users</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th,
+    td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+    
+    .container {
+        position: relative;
+        width: 80%;
+        margin: 50px auto;
+        background-color: #f2f2f2;
+        padding: 20px;
+        box-shadow: 5px 5px 10px #888888;
+    }
+
+    .button-container {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+
+    .button {
+        padding: 10px;
+        background-color: #4154f1;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+</style>
+</head>
+<body>
+
+<section id="manage">
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12" id="history">
+                <h5 class="card-title">
+                    <center>Registered Users</h5></center>
+                    <div style="color:red; text-align:center;">
+                        {% if messages %}
+                            {% for msg in messages %}
+                                    {{ msg }}
+                            {% endfor %}
+                        {% endif %}
+                        </div>
+                <div class="card">
+
+                    <div class="search-container">
+                        <label for="search">Search:</label>
+                        <input type="text" id="search" placeholder="Enter search query">
+                        <button class="btn btn-primary" onclick="filterBySearch()">Search</button>
+                    </div>
+<style>
+.search-container {
+display: flex;
+align-items: center;
+justify-content: flex-end; 
+}
+
+.search-container label,
+.search-container input,
+.search-container button {
+margin-left: 5px; 
+}
+
+</style>   
+                    <div class="card-body">
+
+                        <label for="fromDate">From Date:</label>
+                        <input type="text" id="fromDate" class="datepicker" placeholder="Pick From Date">
+
+                        <label for="toDate">To Date:</label>
+                        <input type="text" id="toDate" class="datepicker" placeholder="Pick To Date">
+
+                        <button class="btn btn-primary" onclick="filterTable()">Search by date</button>
+                        <button class="btn btn-primary" onclick="showAllRows()">Show All</button>&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+             
+                        <button class="btn btn-success" onclick="exportToExcel()">Export to Excel</button>
+   
+
+                        <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+                        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+<script>
+    function exportToExcel() {
+    var filteredData = [];
+    $("#dataTable tbody tr:visible").each(function () {
+        var rowData = [];
+        $(this).find("td").each(function () {
+            rowData.push($(this).text());
+        });
+        filteredData.push(rowData);
+    });
+
+    var wb = XLSX.utils.book_new();
+    wb.SheetNames.push("Filtered Data");
+    var ws = XLSX.utils.aoa_to_sheet(filteredData);
+    wb.Sheets["Filtered Data"] = ws;
+    var wbout = XLSX.write(wb, { bookType: "xlsx", type: "binary" });
+
+    function s2ab(s) {
+        var buf = new ArrayBuffer(s.length);
+        var view = new Uint8Array(buf);
+        for (var i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xff;
+        return buf;
+    }
+
+    saveAs(
+        new Blob([s2ab(wbout)], { type: "application/octet-stream" }),
+        "Paid Customers.xlsx"
+    );
+}
+
+</script>
+
+<script>
+    function filterBySearch() {
+    var query = $("#search").val().toLowerCase();
+
+    $("#dataTable tbody tr").each(function () {
+        var found = false;
+        $(this).find("td").each(function () {
+            var cellData = $(this).text().toLowerCase();
+            if (cellData.includes(query)) {
+                found = true;
+                return false; 
+            }
+        });
+        if (found) {
+            $(this).show();
+        } else {
+            $(this).hide();
+        }
+    });
+}
+
+</script>
+
+                        <h5 class="card-title"></h5>
+                        <div class="text-end" >
+                         
+                         
+
+
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table datatable" id="dataTable">
+                                <thead>
+                                    <tr>
+                                        <th>Image</th>
+                                        <th>Name</th>
+                                        <th>Mobile Number</th>
+                                        <th>Email</th>
+                                        <th>Login Id</th>
+                                        <th>Password</th>
+                                        <th>Registration Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% block content %}
+                                    {% for user in all_users %}
+                                    <tr>
+                                        <td><img src="/media/{{ user.Image }}" style="max-width: 50px; max-height: 50px;"></td>
+                                        <td>{{ user.First_name }}{{ user.Last_name }}</td>
+                                        <td>{{ user.Mobile_Number }}</td>
+                                        <td>{{ user.Email }}</td>
+                                        <td>{{ user.user }}</td>
+                                        <td>{{ user.Password }}</td>
+                                        <td>{{ user.Registration_date }}</td>
+                                        <td>
+                                            <a href="{% url 'del_employee' id=user.id %}" class="btn btn-danger">Delete</a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            <center>
+                            <a href="#" onclick="history.go(-1)" class="btn btn-secondary">Back</a>
+                        </center>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $(".datepicker").datepicker({
+            dateFormat: 'M. dd, yy',
+        });
+    });
+
+    function filterTable() {
+        var fromDate = $("#fromDate").val();
+        var toDate = $("#toDate").val();
+
+        $("#dataTable tbody tr").each(function () {
+            var dateCell = $(this).find("td:eq(3)").text();
+            var fromDateObj = new Date(fromDate);
+            var toDateObj = new Date(toDate);
+            var dateObj = new Date(dateCell);
+            if (dateObj >= fromDateObj && dateObj <= toDateObj) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    }
+
+    function showAllRows() {
+        $("#dataTable tbody tr").show();
+    }
+</script>
+{% endblock %}
+</body>
+</html>

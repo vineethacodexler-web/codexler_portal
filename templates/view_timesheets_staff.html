@@ -1,0 +1,709 @@
+{% load static %}
+{% include 'admin_nav.html' %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rowther | Manage Timesheets</title>
+
+  <link rel="icon" href="{% static 'logo.jpg' %}">
+
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|Nunito:300,400,600,700|Poppins:300,400,500,600,700" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}">
+  <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <style>
+    body,
+    table,
+    input,
+    select,
+    textarea,
+    button,
+    label,
+    .form-control,
+    .btn,
+    .dataTables_wrapper {
+      font-size: 12px !important;
+    }
+
+    .card-title {
+      font-size: 16px !important;
+      font-weight: 600;
+    }
+
+    .btn-sm {
+      font-size: 11px !important;
+      padding: 3px 7px;
+    }
+
+    .btn {
+      padding: 4px 10px;
+    }
+
+    .form-control {
+      height: 30px;
+      padding: 3px 7px;
+    }
+
+    textarea.form-control {
+      height: auto;
+    }
+
+    .modal-header {
+      background-color: #007bff;
+      color: white;
+      padding: 8px 14px;
+    }
+
+    .modal-title {
+      font-size: 15px;
+    }
+
+    .modal-content {
+      border-radius: 10px;
+    }
+
+    .modal-body {
+      max-height: 400px;
+      overflow-y: auto;
+      padding: 12px;
+    }
+
+    .modal-footer {
+      padding: 8px 12px;
+    }
+
+    .compact-table th,
+    .compact-table td {
+      padding: 4px 6px !important;
+      font-size: 11px !important;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
+    .compact-table input {
+      height: 26px;
+      font-size: 11px !important;
+      padding: 2px 5px;
+    }
+
+    .timesheet-row {
+      transition: background-color 0.2s ease;
+    }
+
+    .timesheet-row:hover {
+      cursor: pointer;
+      background-color: #D3EEFF !important;
+    }
+
+    .scrollable-table-box {
+      max-height: 200px;
+      overflow-y: auto;
+      overflow-x: auto;
+      border: 1px solid #dee2e6;
+    }
+
+    .scrollable-table-box table {
+      margin-bottom: 0;
+    }
+
+    .scrollable-table-box thead th {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+
+    .filter-box {
+      background: #f8f9fa;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 8px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+
+    .filter-box label {
+      margin-bottom: 3px;
+      font-size: 11px !important;
+      font-weight: 600;
+    }
+
+    .popup-alert-container {
+      position: fixed;
+      top: 50px;
+      left: 20%;
+      z-index: 1050;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .popup-alert {
+      padding: 10px 16px;
+      border-radius: 5px;
+      color: #fff;
+      min-width: 250px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      opacity: 0.95;
+      animation: fadeout 0.5s ease-in-out forwards;
+      animation-delay: 3s;
+    }
+
+    .popup-success {
+      background-color: #28a745;
+    }
+
+    .popup-error,
+    .popup-deleted {
+      background-color: #dc3545;
+    }
+
+    @keyframes fadeout {
+      to {
+        opacity: 0;
+        transform: translateY(-10px);
+        pointer-events: none;
+      }
+    }
+
+    #searchResults div {
+      border-bottom: 1px solid #ccc;
+      padding: 8px 0;
+    }
+
+    .btn-close {
+      background-color: white;
+      border: 1px solid #ccc;
+    }
+
+    #searchResults div:hover {
+      background-color: #e0f7fa;
+      cursor: pointer;
+    }
+
+    .dataTables_length,
+    .dataTables_filter,
+    .dataTables_info,
+    .dataTables_paginate {
+      font-size: 11px !important;
+      margin-bottom: 5px;
+    }
+
+    .page-link {
+      padding: 3px 7px;
+      font-size: 11px;
+    }
+  </style>
+</head>
+
+<body>
+
+<main id="main" class="main">
+
+  {% if messages %}
+  <div id="popup-alert-container" class="popup-alert-container">
+    {% for message in messages %}
+    <div class="popup-alert {% if 'success' in message.tags %}popup-success{% else %}popup-error{% endif %}">
+      {{ message }}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="d-flex justify-content-between align-items-center mt-0">
+    <h3 class="card-title">MY TIMESHEET</h3>
+    <button type="button" class="btn btn-primary" onclick="location.href='{% url 'view_all_timesheets' %}'">
+      ALL TIMESHEETS
+    </button>
+  </div>
+
+  <div class="filter-box">
+    <div class="row g-2 align-items-end">
+      <div class="col-md-3">
+        <label class="form-label">Filter By Date</label>
+        <select id="dateFilter" class="form-control">
+          <option value="">All</option>
+          <option value="today" selected>Today</option>
+          <option value="yesterday">Yesterday</option>
+          <option value="weekly">This Week</option>
+          <option value="monthly">This Month</option>
+          <option value="yearly">This Year</option>
+          <option value="custom">Custom Date</option>
+        </select>
+      </div>
+
+      <div class="col-md-3 custom-date-box" style="display:none;">
+        <label class="form-label">From Date</label>
+        <input type="date" id="fromDate" class="form-control">
+      </div>
+
+      <div class="col-md-3 custom-date-box" style="display:none;">
+        <label class="form-label">To Date</label>
+        <input type="date" id="toDate" class="form-control">
+      </div>
+
+      <div class="col-md-3 d-flex gap-2">
+        <button type="button" id="applyCustomFilter" class="btn btn-primary custom-date-box" style="display:none;">
+          Filter
+        </button>
+
+        <button type="button" id="resetDateFilter" class="btn btn-secondary">
+          Reset
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-responsive mt-2 scrollable-table-box">
+    <table id="projectTable" class="table table-striped table-bordered compact-table">
+      <thead>
+        <tr>
+          <th style="background-color:#D3EEFF;color:black;">Sl No</th>
+          <th style="background-color:#D3EEFF;color:black;">Date</th>
+          <th style="background-color:#D3EEFF;color:black;">Project No</th>
+          <th style="background-color:#D3EEFF;color:black;">Project Name</th>
+          <th style="background-color:#D3EEFF;color:black;">Description</th>
+          <th style="background-color:#D3EEFF;color:black;">Total Hours</th>
+          <th style="background-color:#D3EEFF;color:black;">Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for timesheet in timesheets|dictsortreversed:"id" %}
+        <tr class="timesheet-row">
+          <td>{{ forloop.counter }}</td>
+          <td>{{ timesheet.date|date:"d-m-Y" }}</td>
+          <td>{{ timesheet.project_no }}</td>
+          <td>{{ timesheet.project_name }}</td>
+          <td>{{ timesheet.remarks }}</td>
+          <td>{{ timesheet.total_hours_taken }}</td>
+          <td>
+            <div class="d-flex gap-2">
+              <button
+                type="button"
+                class="btn btn-success btn-sm edit-timesheet-btn"
+                data-bs-toggle="modal"
+                data-bs-target="#editTimesheetModal"
+                data-url="{% url 'update_timesheet' timesheet.id %}"
+                data-date="{{ timesheet.date|date:'Y-m-d' }}"
+                data-project-no="{{ timesheet.project_no|escape }}"
+                data-project-name="{{ timesheet.project_name|escape }}"
+                data-total-hours-taken="{{ timesheet.total_hours_taken }}"
+                data-remarks="{{ timesheet.remarks|default_if_none:''|escape }}"
+                data-staff-list="{{ timesheet.staff_list.id }}"
+                data-week-no="{{ timesheet.week_no|default:'' }}"
+                data-location="{{ timesheet.location|default:''|escape }}">
+                Edit
+              </button>
+
+              <button
+                type="button"
+                class="btn btn-danger btn-sm"
+                onclick="confirmDelete('{% url 'delete_timesheet_staff' timesheet.id %}')">
+                Delete
+              </button>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td class="text-center">No timesheets available</td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="modal fade" id="editTimesheetModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Timesheet</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          <form method="POST" id="editTimesheetForm">
+            {% csrf_token %}
+
+            <div class="mb-2">
+              <label>Date:</label>
+              <input type="date" id="modalDate" class="form-control" name="date" required>
+            </div>
+
+            <div class="mb-2">
+              <label>Project No:</label>
+              <input type="text" id="modalProjectNo" name="project_no" class="form-control" required>
+            </div>
+
+            <div class="mb-2">
+              <label>Project Name:</label>
+              <input type="text" id="modalProjectName" name="project_name" class="form-control" required>
+            </div>
+
+            <div class="mb-2">
+              <label>Total Hours Taken:</label>
+              <input type="number" step="0.1" id="modalTotalHoursTaken" name="total_hours_taken" class="form-control">
+            </div>
+
+            <div class="mb-2">
+              <label>Remarks:</label>
+              <textarea id="modalRemarks" name="remarks" class="form-control"></textarea>
+            </div>
+
+            <input type="hidden" id="modalStaffList" name="staff_list">
+            <input type="hidden" id="modalWeekNo" name="week_no">
+            <input type="hidden" id="modalLocation" name="location">
+
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary">Update Timesheet</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <h3 class="card-title mt-3">Create Time Sheet</h3>
+
+  <form action="{% url 'add_timesheet_staff' %}" method="post" class="form" novalidate>
+    {% csrf_token %}
+
+    <input type="hidden" id="staff_name" class="form-control" value="{{ request.user.first_name }} {{ request.user.last_name }}" readonly>
+    <input type="hidden" id="staff_list" value="{{ request.user.id }}" name="staff_list">
+
+    <div class="table-responsive mt-1 scrollable-table-box" style="background-color:#f8f8f8;">
+      <table class="table table-bordered table-hover compact-table" id="timesheet-table">
+        <thead>
+          <tr>
+            <th style="background-color:#D3EEFF;color:black;">Date</th>
+            <th style="background-color:#D3EEFF;color:black;">Project No</th>
+            <th style="background-color:#D3EEFF;color:black;">Project Name / Absence Code</th>
+            <th style="background-color:#D3EEFF;color:black;">Description</th>
+            <th style="background-color:#D3EEFF;color:black;width:100px;">Total (Hrs)</th>
+            <th style="background-color:#D3EEFF;color:black;">Action</th>
+          </tr>
+        </thead>
+
+        <tbody id="timesheet-lines">
+          <tr>
+            <td><input type="date" name="date" required></td>
+            <td><input type="text" class="project-search" name="project_no" placeholder="Search Code" required></td>
+            <td><input type="text" class="project-name" name="project_name" placeholder="Project Name" style="width:100%;"></td>
+            <td><input class="remarks" name="remarks" placeholder="Description" style="width:100%;"></td>
+            <td><input type="text" name="total_hours_taken" style="width:100%;" required></td>
+            <td><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Remove</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="d-flex mt-2">
+      <button type="button" class="btn btn-primary" onclick="addTimesheetLine()">Add More</button>
+      &nbsp;&nbsp;
+      <button type="submit" class="btn btn-success">Submit</button>
+    </div>
+  </form>
+
+  <div class="modal fade" id="searchModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title">Select Project</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          <div id="searchResults"></div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+
+<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+  let projectDataTable;
+
+  function parseTableDate(dateText) {
+    const parts = dateText.split("-");
+    if (parts.length !== 3) return null;
+
+    const day = parseInt(parts[0], 10);
+    const month = parseInt(parts[1], 10) - 1;
+    const year = parseInt(parts[2], 10);
+
+    return new Date(year, month, day);
+  }
+
+  function clearTime(date) {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  }
+
+  $.fn.dataTable.ext.search.push(function (settings, data) {
+    if (settings.nTable.id !== "projectTable") {
+      return true;
+    }
+
+    const filterType = $("#dateFilter").val();
+    const tableDateText = data[1];
+    const rowDate = parseTableDate(tableDateText);
+
+    if (!filterType) {
+      return true;
+    }
+
+    if (!rowDate) {
+      return false;
+    }
+
+    const today = clearTime(new Date());
+    const row = clearTime(rowDate);
+
+    if (filterType === "today") {
+      return row.getTime() === today.getTime();
+    }
+
+    if (filterType === "yesterday") {
+      const yesterday = new Date(today);
+      yesterday.setDate(today.getDate() - 1);
+      return row.getTime() === yesterday.getTime();
+    }
+
+    if (filterType === "weekly") {
+      const startOfWeek = new Date(today);
+      startOfWeek.setDate(today.getDate() - today.getDay());
+
+      const endOfWeek = new Date(startOfWeek);
+      endOfWeek.setDate(startOfWeek.getDate() + 6);
+
+      return row >= startOfWeek && row <= endOfWeek;
+    }
+
+    if (filterType === "monthly") {
+      return row.getMonth() === today.getMonth() &&
+             row.getFullYear() === today.getFullYear();
+    }
+
+    if (filterType === "yearly") {
+      return row.getFullYear() === today.getFullYear();
+    }
+
+    if (filterType === "custom") {
+      const fromDateValue = $("#fromDate").val();
+      const toDateValue = $("#toDate").val();
+
+      if (!fromDateValue || !toDateValue) {
+        return true;
+      }
+
+      const fromDate = clearTime(new Date(fromDateValue));
+      const toDate = clearTime(new Date(toDateValue));
+
+      return row >= fromDate && row <= toDate;
+    }
+
+    return true;
+  });
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const alertContainer = document.getElementById("popup-alert-container");
+
+    if (alertContainer) {
+      const seen = new Set();
+      const alerts = alertContainer.querySelectorAll(".popup-alert");
+
+      alerts.forEach(alert => {
+        const text = alert.textContent.trim();
+
+        if (seen.has(text)) {
+          alert.classList.add("popup-deleted");
+          setTimeout(() => alert.remove(), 1000);
+        } else {
+          seen.add(text);
+          setTimeout(() => alert.remove(), 4000);
+        }
+      });
+    }
+
+    if ($.fn.DataTable.isDataTable("#projectTable")) {
+      $("#projectTable").DataTable().destroy();
+    }
+
+    projectDataTable = $("#projectTable").DataTable({
+      paging: true,
+      searching: true,
+      info: true,
+      ordering: true,
+      pageLength: 10,
+      lengthChange: true,
+      autoWidth: false,
+      columnDefs: [
+        { orderable: false, targets: 6 }
+      ]
+    });
+
+    $("#dateFilter").val("today");
+    projectDataTable.draw();
+
+    $("#dateFilter").on("change", function () {
+      if ($(this).val() === "custom") {
+        $(".custom-date-box").show();
+      } else {
+        $(".custom-date-box").hide();
+        $("#fromDate").val("");
+        $("#toDate").val("");
+        projectDataTable.draw();
+      }
+    });
+
+    $("#applyCustomFilter").on("click", function () {
+      projectDataTable.draw();
+    });
+
+    $("#resetDateFilter").on("click", function () {
+      $("#dateFilter").val("today");
+      $("#fromDate").val("");
+      $("#toDate").val("");
+      $(".custom-date-box").hide();
+      projectDataTable.draw();
+    });
+
+    document.addEventListener("input", function (event) {
+      if (event.target.classList.contains("project-search")) {
+        let searchInput = event.target;
+        let query = searchInput.value.trim();
+
+        if (query.length > 0) {
+          fetch(`/api/projects/?q=${encodeURIComponent(query)}`)
+            .then(response => response.json())
+            .then(data => {
+              const searchResults = document.getElementById("searchResults");
+              searchResults.innerHTML = "";
+
+              if (data.length > 0) {
+                data.forEach(project => {
+                  let item = document.createElement("div");
+
+                  item.innerHTML = `
+                    <strong>${project.project_no} (${project.project_name})</strong><br>
+                  `;
+
+                  item.classList.add("dropdown-item");
+
+                  item.addEventListener("click", function () {
+                    searchInput.value = project.project_no;
+
+                    let row = searchInput.closest("tr");
+                    row.querySelector(".project-name").value = project.project_name;
+
+                    const modalEl = document.getElementById("searchModal");
+                    const modal = bootstrap.Modal.getInstance(modalEl);
+
+                    if (modal) {
+                      modal.hide();
+                    }
+                  });
+
+                  searchResults.appendChild(item);
+                });
+
+                const searchModal = new bootstrap.Modal(document.getElementById("searchModal"));
+                searchModal.show();
+              } else {
+                searchResults.innerHTML = "<p>No results found</p>";
+              }
+            })
+            .catch(error => console.error("Error fetching projects:", error));
+        }
+      }
+    });
+  });
+
+  $(document).on("click", ".edit-timesheet-btn", function () {
+    const button = $(this);
+
+    $("#editTimesheetForm").attr("action", button.attr("data-url"));
+    $("#modalDate").val(button.attr("data-date") || "");
+    $("#modalProjectNo").val(button.attr("data-project-no") || "");
+    $("#modalProjectName").val(button.attr("data-project-name") || "");
+    $("#modalTotalHoursTaken").val(button.attr("data-total-hours-taken") || "");
+    $("#modalRemarks").val(button.attr("data-remarks") || "");
+    $("#modalStaffList").val(button.attr("data-staff-list") || "");
+    $("#modalWeekNo").val(button.attr("data-week-no") || "");
+    $("#modalLocation").val(button.attr("data-location") || "");
+  });
+
+  function confirmDelete(deleteUrl) {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "This action cannot be undone!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = deleteUrl;
+      }
+    });
+  }
+
+  function addTimesheetLine() {
+    const table = document.getElementById("timesheet-lines");
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+      <td><input type="date" name="date" required></td>
+      <td><input type="text" class="project-search" name="project_no" placeholder="Search Code" required></td>
+      <td><input type="text" class="project-name" name="project_name" placeholder="Project Name" style="width:100%;"></td>
+      <td><input class="remarks" name="remarks" placeholder="Description" style="width:100%;"></td>
+      <td><input type="text" name="total_hours_taken" style="width:100%;" required></td>
+      <td><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Remove</button></td>
+    `;
+
+    table.appendChild(row);
+  }
+
+  function removeRow(button) {
+    const tbody = document.getElementById("timesheet-lines");
+
+    if (tbody.rows.length > 1) {
+      button.closest("tr").remove();
+    }
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,220 @@
+{% include 'header.html' %}
+
+<section class="bg-slate-950 text-white overflow-hidden">
+
+  <!-- ================= HEADING ================= -->
+  <div class="page-heading">
+    <h2>Digital Marketing</h2>
+  </div>
+
+  <!-- ================= INTRO ================= -->
+  <section class="py-20 px-6 md:px-16 text-center fade-up">
+    <h3 class="text-3xl md:text-4xl font-bold mb-4">
+      Grow Your Business with Smart Digital Marketing
+    </h3>
+    <p class="text-gray-400 max-w-3xl mx-auto">
+      At Codexler Technologies, we help businesses build a strong online presence 
+      through data-driven digital marketing strategies. From SEO to social media, 
+      we ensure your brand reaches the right audience at the right time.
+    </p>
+  </section>
+
+  <!-- ================= SERVICES ================= -->
+  <section class="relative py-20 px-6 md:px-16">
+
+    <!-- Glow -->
+    <div class="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-500 to-indigo-500 opacity-10 blur-3xl"></div>
+
+    <div class="relative max-w-7xl mx-auto grid md:grid-cols-3 gap-8">
+
+      <div class="service-card fade-up">
+        <h4>Search Engine Optimization (SEO)</h4>
+        <p>Improve your website ranking and drive organic traffic from search engines.</p>
+      </div>
+
+      <div class="service-card fade-up">
+        <h4>Social Media Marketing</h4>
+        <p>Grow your audience and engagement across platforms like Instagram and Facebook.</p>
+      </div>
+
+      <div class="service-card fade-up">
+        <h4>Google Ads & PPC</h4>
+        <p>Targeted advertising campaigns that deliver measurable results.</p>
+      </div>
+
+      <div class="service-card fade-up">
+        <h4>Content Marketing</h4>
+        <p>High-quality content to attract, engage, and convert your audience.</p>
+      </div>
+
+      <div class="service-card fade-up">
+        <h4>Email Marketing</h4>
+        <p>Personalized email campaigns to nurture leads and boost conversions.</p>
+      </div>
+
+      <div class="service-card fade-up">
+        <h4>Analytics & Reporting</h4>
+        <p>Track performance and optimize campaigns with real-time insights.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= STRATEGY ================= -->
+  <section class="py-20 px-6 md:px-16 text-center">
+
+    <h3 class="text-3xl font-bold mb-12 fade-up">Our Marketing Strategy</h3>
+
+    <div class="grid md:grid-cols-4 gap-8 max-w-6xl mx-auto">
+
+      <div class="process-card fade-up">
+        <span>01</span>
+        <h4>Research</h4>
+        <p>Understanding your market, audience, and competitors.</p>
+      </div>
+
+      <div class="process-card fade-up">
+        <span>02</span>
+        <h4>Planning</h4>
+        <p>Creating a customized digital marketing strategy.</p>
+      </div>
+
+      <div class="process-card fade-up">
+        <span>03</span>
+        <h4>Execution</h4>
+        <p>Running campaigns across multiple digital channels.</p>
+      </div>
+
+      <div class="process-card fade-up">
+        <span>04</span>
+        <h4>Optimization</h4>
+        <p>Analyzing results and improving performance continuously.</p>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ================= CTA ================= -->
+  <section class="py-20 text-center fade-up">
+    <h3 class="text-3xl font-bold mb-4">Ready to Grow Your Business?</h3>
+    <p class="text-gray-400 mb-6">Let’s take your brand to the next level.</p>
+    <a href="{% url 'contact' %}" class="cta-btn">Start Marketing →</a>
+  </section>
+
+</section>
+
+<!-- ================= STYLES ================= -->
+<style>
+
+/* Heading */
+.page-heading {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.page-heading h2 {
+  font-size: 42px;
+  font-weight: 700;
+  position: relative;
+  display: inline-block;
+}
+
+.page-heading h2::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -8px;
+  width: 0%;
+  height: 3px;
+  background: linear-gradient(90deg, #a855f7, #ff2fb3);
+  transform: translateX(-50%);
+  animation: underlineGrow 1s ease forwards;
+}
+
+@keyframes underlineGrow {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+
+/* Service Cards */
+.service-card {
+  padding: 20px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.05);
+  transition: 0.3s;
+}
+
+.service-card:hover {
+  transform: translateY(-8px);
+  background: rgba(255,255,255,0.08);
+}
+
+.service-card h4 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+/* Process Cards */
+.process-card {
+  padding: 20px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.05);
+}
+
+.process-card span {
+  font-size: 24px;
+  font-weight: bold;
+  color: #a855f7;
+}
+
+.process-card h4 {
+  margin-top: 10px;
+  font-weight: 600;
+}
+
+/* CTA */
+.cta-btn {
+  padding: 12px 28px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #a855f7, #ff2fb3);
+  transition: 0.3s;
+}
+
+.cta-btn:hover {
+  transform: scale(1.05);
+}
+
+/* Animation */
+.fade-up {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.8s ease;
+}
+
+.fade-up.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+</style>
+
+<!-- ================= JS ================= -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const elements = document.querySelectorAll('.fade-up');
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('show');
+      }
+    });
+  });
+
+  elements.forEach(el => observer.observe(el));
+});
+</script>
+
+{% include 'footer.html' %}

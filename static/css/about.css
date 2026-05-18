@@ -1,0 +1,121 @@
+.about-heading {
+    text-align: center;
+    margin-top: 40px;
+  }
+  
+  /* Heading Style */
+  .about-heading h2 {
+    color: white;
+    font-size: 40px;
+    font-weight: 700;
+    position: relative;
+    display: inline-block;
+  }
+  
+  /* Animated Underline */
+  .about-heading h2::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -8px;
+    width: 0%;
+    height: 3px;
+    background: linear-gradient(90deg, #a855f7, #ff2fb3);
+    transform: translateX(-50%);
+    transition: width 0.6s ease;
+  }
+  
+  /* Hover Effect */
+  .about-heading h2:hover::after {
+    width: 100%;
+  }
+  .about-heading h2::after {
+    animation: underlineGrow 1s ease forwards;
+  }
+  
+  @keyframes underlineGrow {
+    from {
+      width: 0%;
+    }
+    to {
+      width: 100%;
+    }
+  }
+
+  
+/* Gradient Text */
+.text-gradient {
+    background: linear-gradient(90deg, #a855f7, #ff2fb3);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  /* Button */
+  .btn-primary {
+    background: linear-gradient(90deg, #a855f7, #ff2fb3);
+    padding: 10px 22px;
+    border-radius: 999px;
+    transition: 0.3s;
+  }
+  .btn-primary:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(168,85,247,0.6);
+  }
+  
+  /* Feature */
+  .feature {
+    background: rgba(255,255,255,0.05);
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+    transition: 0.3s;
+  }
+  .feature:hover {
+    background: rgba(168,85,247,0.2);
+  }
+  
+  /* Testimonial */
+  .testimonial-card {
+    background: rgba(255,255,255,0.05);
+    padding: 25px;
+    border-radius: 16px;
+    transition: 0.3s;
+  }
+  .testimonial-card:hover {
+    transform: translateY(-8px);
+  }
+  
+  /* Stars */
+  .stars {
+    color: gold;
+    margin-bottom: 10px;
+  }
+  
+  /* User */
+  .user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 15px;
+  }
+  .user img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+  .user span {
+    font-size: 12px;
+    color: gray;
+  }
+  
+  /* Animation */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.8s ease;
+  }
+  .fade-up.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  

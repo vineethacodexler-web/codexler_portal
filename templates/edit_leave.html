@@ -1,0 +1,18 @@
+
+
+<form method="post">
+    {% csrf_token %}
+    <label>Date From:</label>
+    <input type="date" name="date_from" value="{{ leave.date_from }}" required>
+    <br>
+
+    <label>Date To:</label>
+    <input type="date" name="date_to" value="{{ leave.date_to }}" required>
+    <br>
+
+    <label>Reason:</label>
+    <textarea name="reason" required>{{ leave.reason }}</textarea>
+    <br>
+
+    <button type="submit">Update</button>
+</form>

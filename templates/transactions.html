@@ -1,0 +1,123 @@
+{% load static %}
+{% include 'navbar.html' %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <title>Transactions</title>
+
+
+</head>
+
+<body>
+
+<main id="main" class="main">
+
+
+
+      <h4>
+        <i class="bi bi-receipt-cutoff"></i>
+        Transactions
+      </h4>
+
+    <!-- Table -->
+    <div class="card-box">
+
+      <table class="table table-bordered align-middle">
+
+        <thead class="table-dark">
+
+          <tr>
+
+            <th>Date</th>
+
+            <th>Type</th>
+
+            <th>Category</th>
+
+            <th>Description</th>
+
+            <th>Amount</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          {% for t in transactions %}
+
+          <tr>
+
+            <td>{{ t.date }}</td>
+
+            <td>
+
+              {% if t.transaction_type == 'credit' %}
+
+                <span class="badge bg-success">
+                  Credit
+                </span>
+
+              {% else %}
+
+                <span class="badge bg-danger">
+                  Debit
+                </span>
+
+              {% endif %}
+
+            </td>
+
+            <td>{{ t.category }}</td>
+
+            <td>{{ t.description }}</td>
+
+            <td>
+
+              {% if t.transaction_type == 'credit' %}
+
+                <span class="text-success fw-bold">
+                  + ₹{{ t.amount }}
+                </span>
+
+              {% else %}
+
+                <span class="text-danger fw-bold">
+                  - ₹{{ t.amount }}
+                </span>
+
+              {% endif %}
+
+            </td>
+
+          </tr>
+
+          {% empty %}
+
+          <tr>
+
+            <td colspan="5" class="text-center">
+
+              No transactions available
+
+            </td>
+
+          </tr>
+
+          {% endfor %}
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+</main>
+</body>
+
+</html>

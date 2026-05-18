@@ -1,0 +1,220 @@
+{% include 'header.html' %}
+
+<section class="bg-slate-950 text-white overflow-hidden">
+
+  <!-- ================= HEADING ================= -->
+  <div class="page-heading">
+    <h2>Web Development</h2>
+  </div>
+
+  <!-- ================= INTRO ================= -->
+  <section class="py-20 px-6 md:px-16 text-center fade-up">
+    <h3 class="text-3xl md:text-4xl font-bold mb-4">
+      We Build Fast, Modern & Scalable Websites
+    </h3>
+    <p class="text-gray-400 max-w-3xl mx-auto">
+      At Codexler Technologies, we create high-performance websites tailored to your business needs. 
+      From simple landing pages to complex web applications, we deliver clean, efficient, and scalable solutions.
+    </p>
+  </section>
+
+  <!-- ================= SERVICES ================= -->
+  <section class="relative py-20 px-6 md:px-16">
+
+    <!-- Glow -->
+    <div class="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-500 to-indigo-500 opacity-10 blur-3xl"></div>
+
+    <div class="relative max-w-7xl mx-auto grid md:grid-cols-3 gap-8">
+
+      <!-- Card -->
+      <div class="service-card fade-up">
+        <h4>Custom Website Development</h4>
+        <p>Fully customized websites designed specifically for your brand and business goals.</p>
+      </div>
+
+      <div class="service-card fade-up">
+        <h4>E-Commerce Solutions</h4>
+        <p>Build powerful online stores with secure payment integration and smooth user experience.</p>
+      </div>
+
+      <div class="service-card fade-up">
+        <h4>Web Applications</h4>
+        <p>Advanced web apps with dynamic functionality, dashboards, and real-time data.</p>
+      </div>
+
+      <div class="service-card fade-up">
+        <h4>UI/UX Design</h4>
+        <p>Modern and intuitive designs that enhance user engagement and conversions.</p>
+      </div>
+
+      <div class="service-card fade-up">
+        <h4>SEO Optimization</h4>
+        <p>Optimized websites to rank better on search engines and attract more traffic.</p>
+      </div>
+
+      <div class="service-card fade-up">
+        <h4>Maintenance & Support</h4>
+        <p>Continuous support, updates, and performance improvements for your website.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= PROCESS ================= -->
+  <section class="py-20 px-6 md:px-16 text-center">
+
+    <h3 class="text-3xl font-bold mb-12 fade-up">Our Process</h3>
+
+    <div class="grid md:grid-cols-4 gap-8 max-w-6xl mx-auto">
+
+      <div class="process-card fade-up">
+        <span>01</span>
+        <h4>Planning</h4>
+        <p>Understanding your requirements and business goals.</p>
+      </div>
+
+      <div class="process-card fade-up">
+        <span>02</span>
+        <h4>Design</h4>
+        <p>Creating wireframes and modern UI/UX designs.</p>
+      </div>
+
+      <div class="process-card fade-up">
+        <span>03</span>
+        <h4>Development</h4>
+        <p>Building scalable and efficient web solutions.</p>
+      </div>
+
+      <div class="process-card fade-up">
+        <span>04</span>
+        <h4>Launch</h4>
+        <p>Testing, deployment, and going live smoothly.</p>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ================= CTA ================= -->
+  <section class="py-20 text-center fade-up">
+    <h3 class="text-3xl font-bold mb-4">Ready to Build Your Website?</h3>
+    <p class="text-gray-400 mb-6">Let’s turn your ideas into reality.</p>
+    <a href="{% url 'contact' %}" class="cta-btn">Get Started →</a>
+  </section>
+
+</section>
+
+<!-- ================= STYLES ================= -->
+<style>
+
+/* Heading */
+.page-heading {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.page-heading h2 {
+  font-size: 42px;
+  font-weight: 700;
+  position: relative;
+  display: inline-block;
+}
+
+.page-heading h2::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -8px;
+  width: 0%;
+  height: 3px;
+  background: linear-gradient(90deg, #a855f7, #ff2fb3);
+  transform: translateX(-50%);
+  animation: underlineGrow 1s ease forwards;
+}
+
+@keyframes underlineGrow {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+
+/* Service Cards */
+.service-card {
+  padding: 20px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.05);
+  transition: 0.3s;
+}
+
+.service-card:hover {
+  transform: translateY(-8px);
+  background: rgba(255,255,255,0.08);
+}
+
+.service-card h4 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+/* Process Cards */
+.process-card {
+  padding: 20px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.05);
+}
+
+.process-card span {
+  font-size: 24px;
+  font-weight: bold;
+  color: #a855f7;
+}
+
+.process-card h4 {
+  margin-top: 10px;
+  font-weight: 600;
+}
+
+/* CTA */
+.cta-btn {
+  padding: 12px 28px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #a855f7, #ff2fb3);
+  transition: 0.3s;
+}
+
+.cta-btn:hover {
+  transform: scale(1.05);
+}
+
+/* Animation */
+.fade-up {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.8s ease;
+}
+
+.fade-up.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+</style>
+
+<!-- ================= JS ================= -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const elements = document.querySelectorAll('.fade-up');
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('show');
+      }
+    });
+  });
+
+  elements.forEach(el => observer.observe(el));
+});
+</script>
+
+{% include 'footer.html' %}

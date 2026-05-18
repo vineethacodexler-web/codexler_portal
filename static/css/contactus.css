@@ -1,0 +1,102 @@
+
+/* Heading */
+.contact-heading {
+    text-align: center;
+    margin-top: 40px;
+  }
+  
+  .contact-heading h2 {
+    font-size: 42px;
+    font-weight: 700;
+    position: relative;
+    display: inline-block;
+  }
+  
+  .contact-heading h2::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -8px;
+    width: 0%;
+    height: 3px;
+    background: linear-gradient(90deg, #a855f7, #ff2fb3);
+    transform: translateX(-50%);
+    animation: underlineGrow 1s ease forwards;
+  }
+  
+  @keyframes underlineGrow {
+    from { width: 0%; }
+    to { width: 100%; }
+  }
+  
+  /* Form */
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .contact-form input,
+  .contact-form textarea {
+    padding: 12px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.05);
+    border: none;
+    color: white;
+  }
+  
+  .contact-form input:focus,
+  .contact-form textarea:focus {
+    outline: 1px solid #a855f7;
+  }
+  
+  /* Button */
+  .contact-form button {
+    margin-top: 10px;
+    padding: 12px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #a855f7, #ff2fb3);
+    transition: 0.3s;
+  }
+  
+  .contact-form button:hover {
+    transform: scale(1.05);
+  }
+  
+  /* Toast */
+  .toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(90deg, #22c55e, #16a34a);
+    color: white;
+    padding: 14px 20px;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    z-index: 9999;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: 0.4s;
+  }
+  
+  .toast.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .toast.error {
+    background: linear-gradient(90deg, #ef4444, #b91c1c);
+  }
+  
+  /* Animation */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.8s ease;
+  }
+  
+  .fade-up.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  

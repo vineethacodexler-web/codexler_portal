@@ -1,0 +1,255 @@
+{% include 'header.html' %}
+
+<section class="bg-slate-950 text-white overflow-hidden">
+
+  <!-- ================= HEADING ================= -->
+  <div class="page-heading">
+    <h2>Cloud Solutions</h2>
+  </div>
+
+  <!-- ================= INTRO ================= -->
+  <section class="py-20 px-6 md:px-16 text-center fade-up">
+    <h3 class="text-3xl md:text-4xl font-bold mb-4">
+      Scalable & Secure Cloud Solutions for Your Business
+    </h3>
+    <p class="text-gray-400 max-w-3xl mx-auto">
+      At Codexler Technologies, we provide reliable cloud solutions that help businesses 
+      scale efficiently, reduce costs, and improve performance. From cloud migration to 
+      deployment and maintenance, we ensure your systems run smoothly and securely.
+    </p>
+  </section>
+
+  <!-- ================= SERVICES ================= -->
+  <section class="relative py-20 px-6 md:px-16">
+
+    <!-- Glow -->
+    <div class="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-500 to-indigo-500 opacity-10 blur-3xl"></div>
+
+    <div class="relative max-w-7xl mx-auto grid md:grid-cols-3 gap-8">
+
+      <div class="service-card fade-up">
+        <h4>Cloud Migration</h4>
+        <p>Seamlessly move your applications and data to the cloud with minimal downtime.</p>
+      </div>
+
+      <div class="service-card fade-up">
+        <h4>Cloud Infrastructure</h4>
+        <p>Design and manage scalable cloud infrastructure tailored to your needs.</p>
+      </div>
+
+      <div class="service-card fade-up">
+        <h4>DevOps & Automation</h4>
+        <p>Automate deployments and streamline workflows for faster delivery.</p>
+      </div>
+
+      <div class="service-card fade-up">
+        <h4>Cloud Security</h4>
+        <p>Implement advanced security measures to protect your applications and data.</p>
+      </div>
+
+      <div class="service-card fade-up">
+        <h4>Backup & Recovery</h4>
+        <p>Ensure data safety with reliable backup and disaster recovery solutions.</p>
+      </div>
+
+      <div class="service-card fade-up">
+        <h4>Monitoring & Support</h4>
+        <p>24/7 monitoring and support to keep your systems running smoothly.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= BENEFITS ================= -->
+  <section class="py-20 px-6 md:px-16 text-center">
+
+    <h3 class="text-3xl font-bold mb-12 fade-up">Why Choose Cloud?</h3>
+
+    <div class="grid md:grid-cols-4 gap-8 max-w-6xl mx-auto">
+
+      <div class="process-card fade-up">
+        <span>✔</span>
+        <h4>Scalability</h4>
+        <p>Easily scale resources as your business grows.</p>
+      </div>
+
+      <div class="process-card fade-up">
+        <span>✔</span>
+        <h4>Cost Efficiency</h4>
+        <p>Reduce infrastructure and maintenance costs.</p>
+      </div>
+
+      <div class="process-card fade-up">
+        <span>✔</span>
+        <h4>Security</h4>
+        <p>Advanced protection for your data and applications.</p>
+      </div>
+
+      <div class="process-card fade-up">
+        <span>✔</span>
+        <h4>Accessibility</h4>
+        <p>Access your systems anytime, anywhere.</p>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ================= PROCESS ================= -->
+  <section class="py-20 px-6 md:px-16 text-center">
+
+    <h3 class="text-3xl font-bold mb-12 fade-up">Our Cloud Process</h3>
+
+    <div class="grid md:grid-cols-4 gap-8 max-w-6xl mx-auto">
+
+      <div class="process-card fade-up">
+        <span>01</span>
+        <h4>Assessment</h4>
+        <p>Analyzing your current infrastructure and needs.</p>
+      </div>
+
+      <div class="process-card fade-up">
+        <span>02</span>
+        <h4>Planning</h4>
+        <p>Designing the right cloud architecture.</p>
+      </div>
+
+      <div class="process-card fade-up">
+        <span>03</span>
+        <h4>Migration</h4>
+        <p>Moving systems securely to the cloud.</p>
+      </div>
+
+      <div class="process-card fade-up">
+        <span>04</span>
+        <h4>Optimization</h4>
+        <p>Monitoring and improving performance continuously.</p>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ================= CTA ================= -->
+  <section class="py-20 text-center fade-up">
+    <h3 class="text-3xl font-bold mb-4">Ready to Move to the Cloud?</h3>
+    <p class="text-gray-400 mb-6">Let’s build a scalable and secure cloud solution.</p>
+    <a href="{% url 'contact' %}" class="cta-btn">Get Started →</a>
+  </section>
+
+</section>
+
+<!-- ================= STYLES ================= -->
+<style>
+
+/* Heading */
+.page-heading {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.page-heading h2 {
+  font-size: 42px;
+  font-weight: 700;
+  position: relative;
+  display: inline-block;
+}
+
+.page-heading h2::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -8px;
+  width: 0%;
+  height: 3px;
+  background: linear-gradient(90deg, #a855f7, #ff2fb3);
+  transform: translateX(-50%);
+  animation: underlineGrow 1s ease forwards;
+}
+
+@keyframes underlineGrow {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+
+/* Service Cards */
+.service-card {
+  padding: 20px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.05);
+  transition: 0.3s;
+}
+
+.service-card:hover {
+  transform: translateY(-8px);
+  background: rgba(255,255,255,0.08);
+}
+
+.service-card h4 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+/* Process Cards */
+.process-card {
+  padding: 20px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.05);
+}
+
+.process-card span {
+  font-size: 24px;
+  font-weight: bold;
+  color: #a855f7;
+}
+
+.process-card h4 {
+  margin-top: 10px;
+  font-weight: 600;
+}
+
+/* CTA */
+.cta-btn {
+  padding: 12px 28px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #a855f7, #ff2fb3);
+  transition: 0.3s;
+}
+
+.cta-btn:hover {
+  transform: scale(1.05);
+}
+
+/* Animation */
+.fade-up {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.8s ease;
+}
+
+.fade-up.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+</style>
+
+<!-- ================= JS ================= -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const elements = document.querySelectorAll('.fade-up');
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('show');
+      }
+    });
+  });
+
+  elements.forEach(el => observer.observe(el));
+});
+</script>
+
+{% include 'footer.html' %}

@@ -1,0 +1,102 @@
+{% include 'admin_navbar.html' %}
+<main id="main" class="main">
+
+    <div class="container">
+     
+        {% if messages %}
+        <div id="popup-alert-container" class="popup-alert-container">
+            {% for message in messages %}
+            <div class="popup-alert {% if 'success' in message.tags %}popup-success{% else %}popup-error{% endif %}
+            {% if 'delete' in message.text %} popup-deleted {% endif %}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <style>
+        .popup-alert-container {
+            position: fixed;
+            top: 50px;
+            left: 20%;
+            z-index: 1050;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .popup-alert {
+            padding: 12px 20px;
+            border-radius: 5px;
+            color: #fff;
+            min-width: 250px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            opacity: 0.95;
+            animation: fadeout 0.5s ease-in-out forwards;
+            animation-delay: 3s;
+        }
+        
+        .popup-success {
+            background-color: #28a745;
+        }
+        
+        .popup-error {
+            background-color: #dc3545;
+        }
+        
+        .popup-deleted {
+            background-color: #dc3545; /* Red background for deleted messages */
+        }
+        
+        @keyframes fadeout {
+            to {
+                opacity: 0;
+                transform: translateY(-10px);
+                pointer-events: none;
+            }
+        }
+        </style>
+        
+        <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const alertContainer = document.getElementById("popup-alert-container");
+            if (alertContainer) {
+                const seen = new Set();
+                const alerts = alertContainer.querySelectorAll(".popup-alert");
+        
+                alerts.forEach(alert => {
+                    const text = alert.textContent.trim();
+                    if (seen.has(text)) {
+                        alert.classList.add("popup-deleted"); // Add red background before removal
+                        setTimeout(() => {
+                            alert.remove();
+                        }, 1000); // Delay before removing it (after showing red)
+                    } else {
+                        seen.add(text);
+                        // Remove each alert after 4s
+                        setTimeout(() => {
+                            alert.remove();
+                        }, 4000);
+                    }
+                });
+            }
+        });
+        </script>
+        
+
+  
+        <h3 class="card-title mb-4">Additional Working Day</h3>
+            <form method="post" action="{% url 'submit_additional_day_admin' %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="work_date" class="form-label">Date Worked:</label>
+                    <input type="date" name="work_date" id="work_date" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="work_reason" class="form-label">Reason:</label>
+                    <textarea name="work_reason" id="work_reason" class="form-control" ></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+    </div>
+</main>

@@ -1,0 +1,129 @@
+{% load static %}
+{% include 'header.html' %}
+<link rel="stylesheet" href="{% static 'css/about.css' %}">
+<script src="{% static 'js/about.js' %}"></script>
+
+
+
+<section class="bg-slate-950 text-white overflow-hidden">
+<!-- ================= ABOUT HEADING ================= -->
+<div class="about-heading">
+    <h2>About Us</h2>
+  </div>
+
+  <!-- ================= ABOUT ================= -->
+  <section id="about" class="relative py-24 px-6 md:px-16">
+
+ 
+    <div class="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-500 to-indigo-500 opacity-10 blur-3xl"></div>
+
+    <div class="max-w-7xl mx-auto relative z-10 grid md:grid-cols-2 gap-12 items-center">
+
+  
+      <div class="relative fade-up">
+        <img src="/static/assets/img/meet.jpeg"
+             class="rounded-2xl shadow-2xl w-full max-w-md mx-auto" alt="Meet">
+
+        <div class="absolute -bottom-6 -left-6 bg-gradient-to-r from-purple-600 to-pink-500 p-4 rounded-xl shadow-lg">
+          <h3 class="text-xl font-bold">6+</h3>
+          <p class="text-xs">Years Experience</p>
+        </div>
+      </div>
+
+      
+      <div class="fade-up">
+
+        <h2 class="text-3xl md:text-5xl font-bold leading-tight">
+          Empowering Businesses with 
+          <span class="text-gradient">Modern Digital Solutions</span>
+        </h2>
+
+        <p class="text-gray-400 mt-5">
+          At <span class="text-purple-400 font-medium">Codexler Technologies</span>, 
+          we build scalable web apps, mobile solutions, and digital marketing strategies 
+          that accelerate business growth.
+        </p>
+
+        <div class="grid grid-cols-2 gap-4 mt-6 text-sm">
+          <div class="feature">🌐 Web Apps</div>
+          <div class="feature">📱 Mobile Apps</div>
+          <div class="feature">📈 Marketing</div>
+          <div class="feature">⚡ Scalable Systems</div>
+        </div>
+
+        <a href="#services" class="btn-primary mt-6 inline-block">
+          Explore Services →
+        </a>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ================= TESTIMONIALS ================= -->
+  <section id="testimonials" class="py-24 px-6 md:px-16">
+
+    <div class="max-w-7xl mx-auto">
+
+      <div class="text-center mb-16 fade-up">
+        <h2 class="text-3xl md:text-5xl font-bold">
+          Client <span class="text-gradient">Testimonials</span>
+        </h2>
+        <p class="text-gray-400 mt-4">
+          Trusted by clients worldwide
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-8">
+
+        <div class="testimonial-card fade-up">
+          <div class="stars">★★★★★</div>
+          <p>"Amazing web development service. Highly recommended!"</p>
+
+          <div class="user">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBymIfzpM6IvBcd5dWeda7JN-Nnm6HzXdxbw&s" alt="review">
+            <div>
+              <h4>Benny</h4>
+ 
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card fade-up">
+          <div class="stars">★★★★★</div>
+          <p>"Smooth mobile app with great UI and performance."</p>
+
+          <div class="user">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBymIfzpM6IvBcd5dWeda7JN-Nnm6HzXdxbw&s" alt="review1">
+            <div>
+              <h4>Hareesh</h4>
+        
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card fade-up">
+          <div class="stars">★★★★★</div>
+          <p>"Marketing results boosted our growth significantly."</p>
+
+          <div class="user">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBymIfzpM6IvBcd5dWeda7JN-Nnm6HzXdxbw&s" alt="review2">
+            <div>
+              <h4>Saheer</h4>
+    
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+</section>
+
+
+
+{% include 'footer.html' %}

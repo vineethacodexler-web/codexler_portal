@@ -1,0 +1,132 @@
+{% include 'admin_nav.html' %}
+<main id="main" class="main">
+
+    <div >
+        {% if messages %}
+        <div id="popup-alert-container" class="popup-alert-container">
+            {% for message in messages %}
+            <div class="popup-alert {% if 'success' in message.tags %}popup-success{% else %}popup-error{% endif %}
+            {% if 'delete' in message.text %} popup-deleted {% endif %}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <style>
+        .popup-alert-container {
+            position: fixed;
+            top: 50px;
+            left: 20%;
+            z-index: 1050;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .popup-alert {
+            padding: 12px 20px;
+            border-radius: 5px;
+            color: #fff;
+            min-width: 250px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            opacity: 0.95;
+            animation: fadeout 0.5s ease-in-out forwards;
+            animation-delay: 3s;
+        }
+        
+        .popup-success {
+            background-color: #28a745;
+        }
+        
+        .popup-error {
+            background-color: #dc3545;
+        }
+        
+        .popup-deleted {
+            background-color: #dc3545; /* Red background for deleted messages */
+        }
+        
+        @keyframes fadeout {
+            to {
+                opacity: 0;
+                transform: translateY(-10px);
+                pointer-events: none;
+            }
+        }
+        </style>
+        
+        <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const alertContainer = document.getElementById("popup-alert-container");
+            if (alertContainer) {
+                const seen = new Set();
+                const alerts = alertContainer.querySelectorAll(".popup-alert");
+        
+                alerts.forEach(alert => {
+                    const text = alert.textContent.trim();
+                    if (seen.has(text)) {
+                        alert.classList.add("popup-deleted"); // Add red background before removal
+                        setTimeout(() => {
+                            alert.remove();
+                        }, 1000); // Delay before removing it (after showing red)
+                    } else {
+                        seen.add(text);
+                        // Remove each alert after 4s
+                        setTimeout(() => {
+                            alert.remove();
+                        }, 4000);
+                    }
+                });
+            }
+        });
+        </script>
+ <div class="card shadow-lg p-4 mt-2">
+            <h3 class="card-title mb-4">APPLY LEAVE</h3>
+        
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="container py-4">
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-4">
+                <label for="document" class="form-label">Upload Document (optional)</label>
+                <input type="file" name="document" id="document" class="form-control">
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <label for="datetime_from" class="form-label">Date & Time From</label>
+                <input type="datetime-local" class="form-control" id="datetime_from" name="date_from" required>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <label for="datetime_to" class="form-label">Date & Time To</label>
+                <input type="datetime-local" class="form-control" id="datetime_to" name="date_to" required>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <label for="leave_type" class="form-label">Leave Type</label>
+                <select name="leave_type" id="leave_type" class="form-select" required onchange="togglePaidLeaveField()">
+                    <option value="">-- Select Leave Type --</option>
+                    <option value="Casual">Casual</option>
+                    <option value="Sick">Sick</option>
+                    <option value="Compensatory">Compensatory</option>
+                    <option value="Paid">Paid Leave</option>
+                </select>
+            </div>
+</div><br>
+            <div class="col-md-12 col-lg-8">
+                <label for="reason" class="form-label">Reason</label>
+                <textarea name="reason" id="reason" class="form-control" rows="4" placeholder="Describe your reason..."></textarea>
+            </div>
+<br>
+            <div class="col-1 d-grid mt-1">
+                <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+            </div>
+        </div>
+    </div>
+</form>
+            
+            
+           
+    </div>
+</main>

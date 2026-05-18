@@ -1,0 +1,213 @@
+{% load static %}
+{% include 'admin_nav.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Timesheet - Rowther</title>
+  <link rel="icon" href="{% static 'logo.jpg' %}">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script> <!-- Add SheetJS Library -->
+  <style>
+    .table th, .table td {
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+  <main id="main" class="main">
+  <div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center">
+ 
+      <h3 class="card-title">All Timesheets</h3>
+      <form method="get" id="filterForm" class="mb-4 d-flex align-items-center">
+        <div class="d-flex">
+          <div class="input-group me-3">
+            <span class="input-group-text" id="from-date-prefix">From</span>
+            <input type="date" name="from_date" id="from_date" class="form-control">
+          </div>
+          <div class="input-group me-3">
+            <span class="input-group-text" id="to-date-prefix">To</span>
+            <input type="date" name="to_date" id="to_date" class="form-control">
+          </div>
+          <button type="submit" class="btn btn-primary me-2">Filter</button>
+          <button type="button" id="clearFilter" class="btn btn-secondary">Clear</button>
+        </div>
+      </form>
+      
+      <script>
+        window.addEventListener('DOMContentLoaded', () => {
+          const fromInput = document.getElementById('from_date');
+          const toInput = document.getElementById('to_date');
+          const defaultApplied = sessionStorage.getItem('dateDefaultApplied');
+      
+          console.log('From Date Input:', fromInput); // Debugging step
+          console.log('To Date Input:', toInput); // Debugging step
+      
+          // Apply default range only once per session
+          if (!fromInput.value && !toInput.value && !defaultApplied) {
+            const today = new Date();
+            const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+      
+            fromInput.value = firstDay.toISOString().split('T')[0];
+            toInput.value = today.toISOString().split('T')[0];
+      
+            console.log('Default From Date:', fromInput.value); // Debugging step
+            console.log('Default To Date:', toInput.value); // Debugging step
+      
+            sessionStorage.setItem('dateDefaultApplied', 'true');
+          }
+      
+          // Clear Filter button: clears inputs and removes session flag
+          document.getElementById('clearFilter').addEventListener('click', () => {
+            fromInput.value = '';
+            toInput.value = '';
+            sessionStorage.removeItem('dateDefaultApplied');
+            document.getElementById('filterForm').submit(); // Optional: auto-submit
+          });
+        });
+      </script>
+      
+    
+      <div class="mb-4 text-end d-flex align-items-center">
+        <a href="{% url 'view_timesheets_staff' %}"class="btn btn-primary me-3">Exit</a>
+        <button class="btn btn-success" id="export-excel">Export to Excel</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="card-body p-4">
+      <!-- Header -->
+      <div class="mb-2" id="timesheet-details">
+        <h5 class="mb-2">Timesheet Details</h5>
+        <table class="table-bordered" style="border-collapse: collapse; font-size: 14px;">
+          <tr>
+            <th style="background-color: #D3EEFF; text-align: left; padding: 6px;width: 20%; ">Staff Name</th>
+            <td style="padding: 6px;">{{ bok.First_name }}</td>
+          </tr>
+          <tr>
+            <th style="background-color: #D3EEFF; text-align: left; padding: 6px;width: 20%; ">Staff No</th>
+            <td style="padding: 6px;">{{ bok.Emp_Id }}</td>
+          </tr>
+          <tr>
+            <th style="background-color: #D3EEFF; text-align: left; padding: 6px;width: 20%; ">Location</th>
+            <td style="padding: 6px;">{{ bok.Location }}</td>
+          </table>
+      </div>
+
+    <!-- Timesheet Data Display -->
+{% if monthly_timesheets %}
+<div class="card mb-3">
+  <div class="card-body p-2">
+    <table class="table table-bordered table-striped align-middle text-center" id="timesheet-table" style="font-size: 13px;">
+      <thead>
+        <tr>
+          <th style="background-color: #D3EEFF; width: 10%;">Sl No</th>  <!-- Added loop counter for serial number -->
+          <th style="background-color: #D3EEFF; width: 15%;">Date</th>
+          <th style="background-color: #D3EEFF; width: 15%;">Day</th>
+          <th style="background-color: #D3EEFF; width: 15%;">Project No</th>
+          <th style="background-color: #D3EEFF; width: 15%;">Project Name</th>
+        
+          <th style="background-color: #D3EEFF; width: 20%;">Description</th>
+        
+          <th style="background-color: #D3EEFF; width: 15%;">Week</th>
+          <th style="background-color: #D3EEFF; width: 15%;">Hours Worked</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for month, entries in monthly_timesheets.items %}
+        {% regroup entries by week_label as week_groups %}
+        {% for week in week_groups %}
+          {% for entry in week.list %}
+            <tr>
+              <!-- Start counting from 1 -->
+              <td>{{ forloop.parentloop.counter0|add:forloop.counter }}</td> <!-- Adjust the counter to start at 1 -->
+              <td>{{ entry.date }}</td>
+              <td>
+                <table style="width: 100%; padding: 2px;">
+                  <tbody>
+                    {% if entry.hours.mon %}<tr><td>Mon</td></tr>{% endif %}
+                    {% if entry.hours.tue %}<tr><td>Tue</td></tr>{% endif %}
+                    {% if entry.hours.wed %}<tr><td>Wed</td></tr>{% endif %}
+                    {% if entry.hours.thu %}<tr><td>Thu</td></tr>{% endif %}
+                    {% if entry.hours.fri %}<tr><td>Fri</td></tr>{% endif %}
+                    {% if entry.hours.sat %}<tr><td>Sat</td></tr>{% endif %}
+                    {% if entry.hours.sun %}<tr><td>Sun</td></tr>{% endif %}
+                  </tbody>
+                </table>
+              </td>
+              <td>{{ entry.project_no }}</td>
+              <td>{{ entry.project_name }}</td>
+              <td>{{ entry.remarks }}</td>
+              <td>{{ week.grouper }}</td>
+              <td class="fw-bold total-hours" style="font-size: 14px;">{{ entry.total }}</td>
+            </tr>
+          {% endfor %}
+        {% endfor %}
+      {% endfor %}
+      {% else %}
+        <p>No timesheet data available.</p>
+      {% endif %}
+      
+
+
+  <script>
+    // Export to Excel functionality
+    document.getElementById('export-excel').addEventListener('click', function () {
+      const exportArea = document.querySelector('.card-body').cloneNode(true);
+
+      // Optional: remove the date filter form from export
+      const form = exportArea.querySelector('form');
+      if (form) form.remove();
+
+      const htmlContent = `
+        <html>
+          <head>
+            <meta charset="UTF-8">
+            <style>
+              body {
+                font-family: Arial, sans-serif;
+              }
+              h4 {
+                margin-bottom: 8px;
+              }
+              table {
+                border-collapse: collapse;
+                width: 100%;
+                margin-bottom: 20px;
+              }
+              th, td {
+                border: 1px solid #000;
+                padding: 8px;
+                text-align: center;
+                vertical-align: middle;
+              }
+              th {
+                background-color: #D3EEFF;
+                font-weight: bold;
+                text-align: left;
+              }
+            </style>
+          </head>
+          <body>
+            ${exportArea.innerHTML}
+          </body>
+        </html>
+      `;
+
+      const blob = new Blob([htmlContent], { type: "application/vnd.ms-excel" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "styled_timesheet.xls";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+  </script>
+</body>
+</html>
+
+        

@@ -1,0 +1,79 @@
+{% load static %}
+{% include 'header.html' %}
+<link rel="stylesheet" href="{% static 'css/services.css' %}">
+<script src="{% static 'js/services.js' %}"></script>
+
+
+<section class="bg-slate-950 text-white overflow-hidden">
+
+  <!-- ================= SERVICES HEADING ================= -->
+  <div class="services-heading">
+    <h2>Our Services</h2>
+  </div>
+
+
+
+  <!-- ================= SERVICES ================= -->
+  <section id="services" class="relative py-24 px-6 md:px-16">
+
+    <!-- Background Glow -->
+    <div class="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-500 to-indigo-500 opacity-10 blur-3xl"></div>
+
+    <div class="max-w-7xl mx-auto relative z-10">
+
+      <!-- Grid -->
+      <div class="grid md:grid-cols-3 gap-8 mt-16">
+
+        <!-- SERVICE CARD -->
+        <div class="service-card fade-up">
+          <div class="icon">🌐</div>
+          <h3>Web Development</h3>
+          <p>Custom websites and web applications built for performance and scalability.</p>
+          <a href="{% url 'web_development' %}"  class="service-btn">Learn More →</a>
+        </div>
+
+        <div class="service-card fade-up">
+          <div class="icon">📱</div>
+          <h3>Mobile App Development</h3>
+          <p>High-quality Android & iOS apps with smooth UI and powerful backend.</p>
+          <a href="{% url 'mobile_apps' %}" class="service-btn">Learn More →</a>
+        </div>
+
+        <div class="service-card fade-up">
+          <div class="icon">📈</div>
+          <h3>Digital Marketing</h3>
+          <p>SEO, social media, and campaigns to grow your brand and reach customers.</p>
+          <a href="{% url 'digital_marketing' %}"  class="service-btn">Learn More →</a>
+        </div>
+
+        <div class="service-card fade-up">
+          <div class="icon">⚙️</div>
+          <h3>Software Solutions</h3>
+          <p>Custom ERP, CRM, and business automation systems.</p>
+          <a href="{% url 'custom_software' %}" class="service-btn">Learn More →</a>
+        </div>
+
+        <div class="service-card fade-up">
+          <div class="icon">☁️</div>
+          <h3>Cloud Integration</h3>
+          <p>Secure cloud deployment and scalable infrastructure setup.</p>
+          <a href="{% url 'cloud_solutions' %}"  class="service-btn">Learn More →</a>
+        </div>
+
+        <div class="service-card fade-up">
+            <div class="icon">🤖</div>
+          <h3>AI Solutions</h3>
+          <p>Build intelligent applications using AI, Machine Learning, and automation.</p>
+          <a href="{% url 'ai_solutions' %}"class="service-btn">Learn More →</a>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+</section>
+
+
+
+{% include 'footer.html' %}

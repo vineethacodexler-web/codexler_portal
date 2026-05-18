@@ -1,0 +1,238 @@
+{% load static %}
+{% include 'admin_navbar.html' %}
+
+<main id="main" class="main">
+
+  <div class="pagetitle">
+    <h1>Manage Profile</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'admin_home' %}">Home</a></li>
+        <li class="breadcrumb-item active">Profile</li>
+      </ol>
+    </nav>
+  </div>
+
+  <section class="section profile">
+    <div class="row">
+
+  <!-- LEFT SIDE PROFILE -->
+  <div class="col-xl-4">
+    <div class="card text-center p-3">
+      <div class="card-body">
+
+        {% if bb1.Image %}
+          <img src="{{ bb1.Image.url }}" class="rounded-circle mb-3" width="150" height="150">
+        {% else %}
+          <img src="{% static 'assets/img/profile-img.jpg' %}" class="rounded-circle mb-3" width="150">
+        {% endif %}
+
+        <h4>{{ bb1.First_name }}</h4>
+        <h6 class="text-muted">{{ bb1.Designation }}</h6>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT SIDE -->
+  <div class="col-xl-8">
+    <div class="card">
+      <div class="card-body pt-3">
+
+        <!-- TABS -->
+        <ul class="nav nav-tabs nav-tabs-bordered">
+          <li class="nav-item">
+            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#overview" style="color: white;">Overview</button>
+          </li>
+&nbsp;
+          <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#edit"style="color: white;">Edit Profile</button>
+          </li>
+          &nbsp;
+          <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#password"style="color: white;">Change Password</button>
+          </li>
+        </ul>
+
+        <div class="tab-content pt-3">
+
+          <!-- OVERVIEW -->
+          <div class="tab-pane fade show active" id="overview">
+
+            <h5 class="card-title">Profile Details</h5>
+
+            <p><strong>Name:</strong> {{ bb1.First_name }}</p>
+            <p><strong>Designation:</strong> {{ bb1.Designation }}</p>
+            <p><strong>Email:</strong> {{ bb1.Email }}</p>
+            <p><strong>Mobile:</strong> {{ bb1.Mobile_Number }}</p>
+            <p><strong>Location:</strong> {{ bb1.Location }}</p>
+            <p><strong>Gender:</strong> {{ bb1.Gender }}</p>
+            <p><strong>Address:</strong> {{ bb1.Address }}</p>
+            <p><strong>Joined:</strong> {{ bb1.Registration_date }}</p>
+            {% for i in gtt %}
+            <button class="btn btn-primary" onclick="window.location.href = '{% url 'del_admin' i.id %}';">Resign from administration</button>
+            {% endfor %} 
+          </div>
+
+          <!-- EDIT PROFILE -->
+          <div class="tab-pane fade" id="edit">
+
+            <form action="{% url 'bnb' %}" method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+      
+              {% if messages %}
+                {% for msg in messages %}
+                  <div class="alert alert-info">{{ msg }}</div>
+                {% endfor %}
+              {% endif %}
+
+              <div class="row mb-3">
+                <label class="col-md-3 col-form-label">First Name</label>
+                <div class="col-md-9">
+                  <input type="text" name="first" class="form-control" value="{{ bb1.First_name }}" required>
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <label class="col-md-3 col-form-label">Username</label>
+                <div class="col-md-9">
+                  <input type="text" name="user_name" class="form-control" value="{{ um.username }}" required>
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <label class="col-md-3 col-form-label">Designation</label>
+                <div class="col-md-9">
+                  <input type="text" name="designatio" class="form-control" value="{{ bb1.Designation }}">
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <label class="col-md-3 col-form-label">Email</label>
+                <div class="col-md-9">
+                  <input type="email" name="em" class="form-control" value="{{ bb1.Email }}" required>
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <label class="col-md-3 col-form-label">Mobile</label>
+                <div class="col-md-9">
+                  <input type="text" name="mobile" class="form-control" value="{{ bb1.Mobile_Number }}">
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <label class="col-md-3 col-form-label">Location</label>
+                <div class="col-md-9">
+                  <input type="text" name="loc" class="form-control" value="{{ bb1.Location }}">
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <label class="col-md-3 col-form-label">Gender</label>
+                <div class="col-md-9">
+                  <select name="gender" class="form-control">
+                    <option value="Male" {% if bb1.Gender == "Male" %}selected{% endif %}>Male</option>
+                    <option value="Female" {% if bb1.Gender == "Female" %}selected{% endif %}>Female</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <label class="col-md-3 col-form-label">Address</label>
+                <div class="col-md-9">
+                  <textarea name="address" class="form-control">{{ bb1.Address }}</textarea>
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <label class="col-md-3 col-form-label">Profile Image</label>
+                <div class="col-md-9">
+                  <input type="file" name="photo" class="form-control">
+                </div>
+              </div>
+
+              <div class="text-left">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+              </div>
+
+            </form>
+
+          </div>
+
+          <!-- CHANGE PASSWORD -->
+          <div class="tab-pane fade" id="password">
+
+            <form action="{% url 'bnb' %}" method="post">
+              {% csrf_token %}
+              <div class="row mb-3">
+                <label class="col-md-3 col-form-label">Old Password</label>
+                <div class="col-md-9">
+                  <input type="text" value="{{bok.Password}}" class="form-control" readonly>
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <label class="col-md-3 col-form-label">New Password</label>
+                <div class="col-md-9">
+                  <input type="password" name="psw" id="newPassword" class="form-control" required>
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <label class="col-md-3 col-form-label">Confirm Password</label>
+                <div class="col-md-9">
+                  <input type="password" name="confirm_psw" id="confirmPassword" class="form-control" required>
+                  <small id="msg"></small>
+                </div>
+              </div>
+
+              <div class="text-left">
+                <button type="submit" class="btn btn-danger" id="btn" disabled>Change Password</button>
+              </div>
+
+            </form>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+```
+
+  </section>
+
+</main>
+
+{% include 'footer.html' %}
+
+<script>
+  const newPass = document.getElementById("newPassword");
+  const confirmPass = document.getElementById("confirmPassword");
+  const msg = document.getElementById("msg");
+  const btn = document.getElementById("btn");
+
+  function validate() {
+    if (newPass.value === confirmPass.value) {
+      msg.innerHTML = "Passwords match";
+      msg.style.color = "green";
+      btn.disabled = false;
+    } else {
+      msg.innerHTML = "Passwords do not match";
+      msg.style.color = "red";
+      btn.disabled = true;
+    }
+  }
+
+  newPass.onkeyup = validate;
+  confirmPass.onkeyup = validate;
+</script>
+
+</body>
+</html>
+
+                  

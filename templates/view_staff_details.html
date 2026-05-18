@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Staff Profile</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+        }
+
+        .profile-header {
+            background-color: #4a90e2;
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .profile-header h1 {
+            margin: 0;
+            font-size: 32px;
+        }
+
+        .profile-header span {
+            font-size: 18px;
+            display: block;
+            margin-top: 8px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        .section h2 {
+            margin-bottom: 20px;
+            border-left: 5px solid #4a90e2;
+            padding-left: 10px;
+            font-size: 24px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .info-card {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .info-card strong {
+            color: #4a90e2;
+        }
+
+        .empty-message {
+            grid-column: 1 / -1;
+            text-align: center;
+            color: #999;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+<div class="profile-header">
+    <h1>{{ registrations.0.First_name }}</h1>
+    <span>Employee ID: {{ bok.id }}</span>
+</div>
+
+<div class="container">
+
+    <div class="section">
+        <h2>Registration Info</h2>
+        <div class="info-grid" >
+            {% for registration in registrations %}
+                <div class="info-card" >
+                    <p><strong>Employee ID:</strong> {{ registration.Emp_Id }}</p>
+                    <p><strong>Name:</strong> {{ registration.First_name }}</p>
+                    <p><strong>Designation:</strong> {{ registration.Designation }}</p>
+                    <p><strong>Email:</strong> {{ registration.Email }}</p>
+                    <p><strong>Mobile Number:</strong> {{ registration.Mobile_Number }}</p>
+                    <p><strong>Registration Date:</strong> {{ registration.Registration_date }}</p>
+                    <p><strong>Gender:</strong> {{ registration.Gender }}</p>
+                    <p><strong>Address:</strong> {{ registration.Address }}</p>
+                    <p><strong>Location:</strong> {{ registration.Location }}</p>
+                    <p><strong>User Role:</strong> {{ registration.User_role }}</p>
+                    
+                    {% if registration.Image %}
+                        <p><strong>Image:</strong><br><img src="{{ registration.Image.url }}" width="150" /></p>
+                    {% endif %}
+                    
+                    {% if registration.user %}
+                        <p><strong>Username:</strong> {{ registration.user.username }}</p>
+                    {% endif %}
+                    
+                </div>
+            {% empty %}
+                <div class="empty-message">No registration info found.</div>
+            {% endfor %}
+        </div>
+    </div>

@@ -1,0 +1,466 @@
+{% include 'admin_navbar.html' %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Management</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|Nunito:300,400,600,700|Poppins:300,400,500,600,700" rel="stylesheet">
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" crossorigin="anonymous">
+
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- jQuery & Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+</head>
+
+<body>
+
+<main id="main" class="main">
+
+  {% if messages %}
+  <div id="popup-alert-container" class="popup-alert-container">
+      {% for message in messages %}
+      <div class="popup-alert {% if 'success' in message.tags %}popup-success{% else %}popup-error{% endif %}">
+          {{ message }}
+      </div>
+      {% endfor %}
+  </div>
+  {% endif %}
+  
+  <style>
+  .popup-alert-container {
+      position: fixed;
+      top: 20px;
+      left: 45%;
+      z-index: 1050;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+  }
+  
+  .popup-alert {
+      padding: 12px 20px;
+      border-radius: 5px;
+      color: #fff;
+      min-width: 250px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      opacity: 0.95;
+      animation: fadeout 0.5s ease-in-out forwards;
+      animation-delay: 3s;
+  }
+  
+  .popup-success {
+      background-color: #28a745;
+  }
+  
+  .popup-error {
+      background-color: #dc3545;
+  }
+  
+  @keyframes fadeout {
+      to {
+          opacity: 0;
+          transform: translateY(-10px);
+          pointer-events: none;
+      }
+  }
+  </style>
+  
+  <script>
+  document.addEventListener("DOMContentLoaded", function () {
+      const alertContainer = document.getElementById("popup-alert-container");
+      if (alertContainer) {
+          const seen = new Set();
+          const alerts = alertContainer.querySelectorAll(".popup-alert");
+  
+          alerts.forEach(alert => {
+              const text = alert.textContent.trim();
+              if (seen.has(text)) {
+                  alert.remove();
+              } else {
+                  seen.add(text);
+                  // Remove each alert after 4s
+                  setTimeout(() => {
+                      alert.remove();
+                  }, 4000);
+              }
+          });
+      }
+  });
+  </script>
+  
+  <div class="d-flex justify-content-between align-items-center mt-0.15">
+    <h3 class="card-title">MY TIMESHEET</h3>
+    <button type="button" class="btn btn-primary" onclick="location.href='{% url 'view_all_timesheets' %}'">
+      ALL TIMESHEETS
+    </button>
+  </div>
+
+
+
+  <div class="table-responsive mt-3">
+    <table id="projectTable" class="table table-striped table-bordered compact-table">
+      <thead class="table-dark">
+        <tr>
+          <th style="background-color: #D3EEFF; color: black;">Sl No</th>
+          <th style="background-color: #D3EEFF; color: black;">Date</th>
+          <th style="background-color: #D3EEFF; color: black;">Project No</th>
+          <th style="background-color: #D3EEFF; color: black;">Project Name</th>
+          <th style="background-color: #D3EEFF; color: black;">Remarks</th>
+          <th style="background-color: #D3EEFF; color: black;">Total Hours</th>
+          <th style="background-color: #D3EEFF; color: black;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for timesheet in timesheets|dictsortreversed:"id"  %}
+        <tr class="timesheet-row" data-id="{{ timesheet.timesheet.id }}" data-project-no="{{ timesheet.project_no }}"
+            data-project-name="{{ timesheet.project_name }}" data-start-date="{{ timesheet.date|date:'Y-m-d' }}"
+            data-total-hours="{{ timesheet.total_hours_taken }}" data-remarks="{{ timesheet.remarks }}"
+            data-admin-id="{{ timesheet.admin_list.id }}" data-week-no="{{ timesheet.timesheet.week_no|default:'' }}"
+            data-location="{{ timesheet.timesheet.location|default:'' }}">
+          <td >{{ forloop.counter }}</td>
+          <td>{{ timesheet.date|date:'Y-m-d' }}</td>
+          <td>{{ timesheet.project_no }}</td>
+          <td>{{ timesheet.project_name }}</td>
+          <td>{{ timesheet.remarks }}</td>
+          <td>{{ timesheet.total_hours_taken }}</td>
+          <td>
+            <div class="d-flex gap-2">
+      
+
+              <button style="font-size: 0.8rem;" class="btn btn-success btn-sm edit-timesheet-btn" data-bs-toggle="modal"
+                      data-bs-target="#editTimesheetModal" data-url="{% url 'update_timesheet_admin' timesheet_id=timesheet.id %}"
+
+                      data-project-no="{{ timesheet.project_no }}" data-project-name="{{ timesheet.project_name }}"
+                      data-start-date="{{ timesheet.start_datetime|date:'Y-m-d' }}" data-due-date="{{ timesheet.end_datetime|date:'Y-m-d' }}"
+                      data-remarks="{{ timesheet.remarks }}" data-admin-list="{{ timesheet.admin_list }}"
+                      data-week-no="{{ timesheet.week_no }}" data-location="{{ timesheet.location }}">
+                Edit
+              </button>
+              <button style="font-size: 0.8rem;" class="btn btn-danger btn-sm" onclick="confirmDelete('{% url 'delete_timesheet_admin' timesheet.id %}')">Delete</button>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="6" class="text-center">No timesheets available</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+<!-- Edit Timesheet Modal -->
+<div class="modal fade" id="editTimesheetModal" tabindex="-1" aria-labelledby="editTimesheetModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="POST" id="editTimesheetForm">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Timesheet</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+          <div class="mb-3">
+            <label>Date:</label>
+            <input type="date" class="form-control" name="date" value="{{ timesheet.date|default_if_none:''|date:'Y-m-d' }}{% if not timesheet.date %}{{ ''|add:'' }}{% now 'Y-m-d' %}{% endif %}">
+
+          </div>
+          <div class="mb-3">
+            <label>Project No:</label>
+            <input type="text" id="modalProjectNo" name="project_no" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label>Project Name:</label>
+            <input type="text" id="modalProjectName" name="project_name" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label>Total Hours Taken:</label>
+            <input type="text" id="modaltotal_hours_taken" name="total_hours_taken" class="form-control" >
+          </div>
+          <div class="mb-3">
+            <label>Remarks:</label>
+            <textarea id="modalRemarks" name="remarks" class="form-control"></textarea>
+          </div>
+          <input type="hidden" id="modaladminList" name="admin_list">
+          <input type="hidden" id="modalWeekNo" name="week_no">
+          <input type="hidden" id="modalLocation" name="location">
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Update Timesheet</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+<script>
+  // Initialize DataTables
+  $(document).ready(function() {
+    $('#projectTable').DataTable({
+      paging: true,
+      searching: true,
+      info: true,
+      ordering: true,
+      pageLength: 10,
+      lengthChange: true,
+      columnDefs: [
+        { orderable: false, targets: [5] }
+      ]
+    });
+  });
+
+  // SweetAlert Delete Confirmation
+  function confirmDelete(deleteUrl) {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "This action cannot be undone!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = deleteUrl;
+      }
+    });
+  }
+
+  // Load data into Edit Modal
+  document.querySelectorAll(".edit-timesheet-btn").forEach(button => {
+    button.addEventListener("click", function () {
+      document.getElementById("editTimesheetForm").action = this.dataset.url;
+      document.getElementById("modalProjectNo").value = this.dataset.projectNo;
+      document.getElementById("modalProjectName").value = this.dataset.projectName;
+      document.getElementById("modaldate").value = this.dataset.date;
+      document.getElementById("modaltotal_hours_taken").value = this.dataset.total_hours_taken;
+      document.getElementById("modalRemarks").value = this.dataset.remarks;
+      document.getElementById("modaladminList").value = this.dataset.adminList;
+      document.getElementById("modalWeekNo").value = this.dataset.weekNo;
+      document.getElementById("modalLocation").value = this.dataset.location;
+    });
+  });
+</script>
+
+
+
+<h3 class="card-title">Create Time Sheet</h3>
+
+<form action="{% url 'add_timesheet_admin' %}" method="post" class="form" novalidate>
+  {% csrf_token %}
+
+  <input type="hidden" id="admin_name" class="form-control" value="{{ request.user.first_name }} {{ request.user.last_name }}" readonly />
+  <input type="hidden" id="admin_list" value="{{ request.user.id }}" name="admin_list">  <!-- Use the user ID here -->
+
+  <div class="table-responsive mt-1" style="background-color: #f8f8f8;"style="margin-top: -15px;">
+    <style>
+      .compact-table th,
+      .compact-table td {
+        padding: 4px !important;
+        font-size: 13px;
+        vertical-align: middle;
+      }
+    
+      .compact-table input {
+        height: 28px;
+        font-size: 13px;
+        padding: 2px 6px;
+      }
+    
+      .btn-sm {
+        padding: 2px 6px;
+        font-size: 12px;
+      }
+    </style>
+    
+    <table class="table table-bordered table-hover compact-table" id="timesheet-table">
+      <thead class="table-dark">
+        <tr>
+          <th style="background-color: #D3EEFF; color:black;">Date</th>
+          <th style="background-color: #D3EEFF; color:black;">Project No</th>
+          <th style="background-color: #D3EEFF; color:black;">Project Name / Absence Code</th>
+          <th style="background-color: #D3EEFF; color:black;">Description</th>
+          <th style="background-color: #D3EEFF; color:black; width:100px;">Total (Hrs)</th>
+          <th style="background-color: #D3EEFF; color:black;">Action</th>
+        </tr>
+      </thead>
+      <tbody id="timesheet-lines">
+        <tr>
+          <td>
+            <input type="date" id="date" name="date" required>
+          </td>
+          <td>
+            <input type="text" class="project-search" name="project_no" placeholder="Search Code" required>
+          </td>
+          <td>
+            <input type="text" class="project-name" name="project_name" placeholder="Project Name" style="width:100%;">
+          </td>
+          <td>
+            <input class="remarks" name="remarks" placeholder="Description" style="width:100%;">
+          </td>
+          <td>
+            <input type="text" id="total_hours_taken" name="total_hours_taken" style="width:100%;" required>
+          </td>
+          <td>
+            <button type="button" style="font-size: 0.8rem;" class="btn btn-danger btn-sm" onclick="removeRow(this)">Remove</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+  </div>
+
+  <div class="d-flex">
+    <button type="button" class="btn btn-primary" onclick="addTimesheetLine()">Add More</button>&nbsp;&nbsp;
+    <button type="submit" class="btn btn-success">Submit</button>
+  </div>
+
+</form>
+
+<!-- Modal for search results -->
+<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="searchModalLabel">Select Project</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div id="searchResults"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Modal Body Styles */
+  .modal-body {
+    max-height: 400px; /* Limit height for scroll effect */
+    overflow-y: auto;  /* Enable vertical scrolling */
+  }
+  /* Style for each project separated by a line */
+  #searchResults div {
+    border-bottom: 1px solid #ccc;  /* Add line between projects */
+    padding: 10px 0; /* Add padding between lines */
+  }
+  /* Style for the close button to make it white */
+  .btn-close {
+    background-color: white;
+    border: 1px solid #ccc; /* Optional: add a border around the close button */
+  }
+  /* Highlight each project on hover with light blue */
+  #searchResults div:hover {
+    background-color: #e0f7fa; /* Light blue color */
+    cursor: pointer; /* Change cursor to indicate interactivity */
+  }
+</style>
+
+<script>
+  function addTimesheetLine() {
+    const table = document.getElementById('timesheet-lines');
+    const row = document.createElement('tr');
+
+    row.innerHTML = `
+    <td>
+            <input type="date" id="date" name="date" required>
+          </td>
+          <td>
+            <input type="text" class="project-search" name="project_no" placeholder="Search Code" required>
+          </td>
+          <td>
+            <input type="text" class="project-name" name="project_name" placeholder="Project Name" style="width:100%;">
+          </td>
+          <td>
+            <input class="remarks" name="remarks" placeholder="Description" style="width:100%;">
+          </td>
+          <td>
+            <input type="text" id="total_hours_taken" name="total_hours_taken" style="width:100%;" required>
+          </td>
+          <td>
+            <button type="button" style="font-size: 0.8rem;" class="btn btn-danger btn-sm" onclick="removeRow(this)">Remove</button>
+          </td>
+    `;
+
+    table.appendChild(row);
+  }
+
+  function removeRow(button) {
+    button.closest('tr').remove();
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("input", function (event) {
+      if (event.target.classList.contains("project-search")) {
+        let searchInput = event.target;
+        let query = searchInput.value.trim();
+
+        if (query.length > 0) {
+          fetch(`/api/projects/?q=${query}`)
+            .then(response => response.json())
+            .then(data => {
+              const searchResults = document.getElementById("searchResults");
+              searchResults.innerHTML = "";
+              if (data.length > 0) {
+                data.forEach(project => {
+                  let item = document.createElement("div");
+                  item.innerHTML = `
+                    <strong>${project.project_no} (${project.project_name})</strong><br>
+              
+                  `;
+                  item.classList.add("dropdown-item");
+                  item.addEventListener("click", function () {
+                    searchInput.value = project.project_no;
+                    let row = searchInput.closest("tr");
+                    row.querySelector(".project-name").value = project.project_name;
+
+                    $('#searchModal').modal('hide'); // Close the modal after selection
+                  });
+                  searchResults.appendChild(item);
+                });
+                $('#searchModal').modal('show'); // Show the modal with search results
+              } else {
+                searchResults.innerHTML = "<p>No results found</p>";
+              }
+            })
+            .catch(error => console.error("Error fetching projects:", error));
+        }
+      }
+    });
+  });
+</script>
+
+</main>
+</body>
+</html>

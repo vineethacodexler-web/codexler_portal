@@ -1,0 +1,151 @@
+<!-- templates/add_salary_structure.html -->
+
+{% include 'admin_navbar.html' %}
+ <main id="main" class="main">
+
+<div class="container mt-4">
+
+    <div class="card shadow-sm">
+
+        <div class="card-header bg-primary text-white">
+
+            <h4>
+
+                Edit Salary Structure
+
+            </h4>
+
+        </div>
+
+        <div class="card-body">
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+
+                        <label>Employee</label>
+
+                        <input type="text"
+                               class="form-control"
+                               value="{{ employee.First_name }}"
+                               readonly>
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <label>Basic Salary</label>
+
+                        <input type="number"
+                               step="0.01"
+                               name="basic_salary"
+                               value="{{ salary_structure.basic_salary }}"
+                               class="form-control">
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <label>HRA</label>
+
+                        <input type="number"
+                               step="0.01"
+                               name="hra"
+                               value="{{ salary_structure.hra }}"
+                               class="form-control">
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <label>DA</label>
+
+                        <input type="number"
+                               step="0.01"
+                               name="da"
+                               value="{{ salary_structure.da }}"
+                               class="form-control">
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <label>Travel Allowance</label>
+
+                        <input type="number"
+                               step="0.01"
+                               name="travel_allowance"
+                               value="{{ salary_structure.travel_allowance }}"
+                               class="form-control">
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <label>Medical Allowance</label>
+
+                        <input type="number"
+                               step="0.01"
+                               name="medical_allowance"
+                               value="{{ salary_structure.medical_allowance }}"
+                               class="form-control">
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <label>PF Percentage</label>
+
+                        <input type="number"
+                               step="0.01"
+                               name="pf_percentage"
+                               value="{{ salary_structure.pf_percentage }}"
+                               class="form-control">
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <label>ESI Percentage</label>
+
+                        <input type="number"
+                               step="0.01"
+                               name="esi_percentage"
+                               value="{{ salary_structure.esi_percentage }}"
+                               class="form-control">
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <label>Overtime Rate Per Hour</label>
+
+                        <input type="number"
+                               step="0.01"
+                               name="overtime_rate_per_hour"
+                               value="{{ salary_structure.overtime_rate_per_hour }}"
+                               class="form-control">
+
+                    </div>
+
+                </div>
+
+                <button type="submit"
+                        class="btn btn-success">
+
+                    Update Salary Structure
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+ </main>

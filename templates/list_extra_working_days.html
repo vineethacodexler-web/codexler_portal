@@ -1,0 +1,48 @@
+<!-- list_extra_working_days.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Extra Working Days</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        table {
+            width: 50%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <h1>Extra Working Days</h1>
+
+
+        <table>
+            <tr>
+                <th>Date</th>
+                <th>Description</th>
+            </tr>
+            {% for day in working_days %}
+                <tr>
+                    <td>{{ day.date }}</td>
+                    <td>{{ day.description }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+
+</body>
+</html>

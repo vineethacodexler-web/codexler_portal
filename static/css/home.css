@@ -1,0 +1,277 @@
+
+.outer-circle, .inner-circle {
+    position: absolute;
+    border-radius: 50%;
+    inset: 0;
+  }
+  
+  .outer-circle {
+    border: 2px solid rgba(99,102,241,0.4);
+    animation: rotate 25s linear infinite;
+  }
+  
+  /* INNER */
+  .inner-circle {
+    width: 70%;
+    height: 70%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 2px solid rgba(139,92,246,0.4);
+    animation: rotateReverse 20s linear infinite;
+  }
+  
+  /* ICONS */
+  .icon-block {
+    width: 55px;
+    height: 55px;
+    position: absolute;
+    border-radius: 50%;
+    background: linear-gradient(180deg, #6366f1, #8b5cf6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 20px rgba(99,102,241,0.6);
+    transition: 0.3s;
+  }
+  
+  .icon-block img {
+    width: 60%;
+  }
+  
+  /* HOVER */
+  .icon-block:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 35px rgba(139,92,246,1);
+  }
+  
+  /* POSITIONING OUTER ICONS */
+  .outer-circle .icon-block:nth-child(1) { top: 0; left: 50%; transform: translate(-50%, -50%); }
+  .outer-circle .icon-block:nth-child(2) { top: 50%; right: 0; transform: translate(50%, -50%); }
+  .outer-circle .icon-block:nth-child(3) { bottom: 0; left: 50%; transform: translate(-50%, 50%); }
+  .outer-circle .icon-block:nth-child(4) { top: 50%; left: 0; transform: translate(-50%, -50%); }
+  
+  /* POSITIONING INNER ICONS */
+  .inner-circle .icon-block:nth-child(1) { top: 0; left: 50%; transform: translate(-50%, -50%); }
+  .inner-circle .icon-block:nth-child(2) { top: 50%; right: 0; transform: translate(50%, -50%); }
+  .inner-circle .icon-block:nth-child(3) { bottom: 0; left: 50%; transform: translate(-50%, 50%); }
+  .inner-circle .icon-block:nth-child(4) { top: 50%; left: 0; transform: translate(-50%, -50%); }
+  
+  /* CENTER LOGO */
+  .center-logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  .center-logo img {
+    width: 180px;
+    animation: pulse 3s infinite;
+  }
+  
+  /* GLASS CARD */
+  .glass-card {
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  }
+  
+  /* AVATAR */
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #020617;
+  }
+  
+  /* ANIMATIONS */
+  @keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  
+  @keyframes rotateReverse {
+    from { transform: translate(-50%, -50%) rotate(360deg); }
+    to { transform: translate(-50%, -50%) rotate(0deg); }
+  }
+  
+  @keyframes pulse {
+    0%,100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+  }
+  
+  /* MOBILE */
+  @media (max-width: 768px) {
+    .center-logo img {
+      width: 120px;
+    }
+  }
+
+  
+  #typingText::after {
+    content: "|";
+    animation: blink 1s infinite;
+  }
+  
+  @keyframes blink {
+    0%,100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+
+  
+.glass-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(16px);
+    border-radius: 22px;
+    padding: 30px;
+    text-align: center;
+    transition: 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 260px;
+  }
+  
+  .glass-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(168,85,247,0.5);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+  }
+  
+  .icon {
+    font-size: 42px;
+    margin-bottom: 12px;
+  }
+  
+  .glass-card h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: white;
+  }
+  
+  .glass-card p {
+    font-size: 14px;
+    color: #9ca3af;
+    margin-top: 10px;
+    flex-grow: 1;
+  }
+  
+  .card-footer {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+  }
+  
+  /* Buttons */
+  .btn-glass {
+    font-size: 14px;
+    font-weight: 500;
+    color: #a855f7;
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(168,85,247,0.4);
+    transition: 0.3s;
+  }
+  
+  .btn-glass:hover {
+    background: rgba(168,85,247,0.15);
+    color: #ff2fb3;
+    transform: translateY(-2px);
+  }
+  
+  /* AI Card */
+  .ai-card {
+    position: relative;
+    border: 1px solid rgba(168,85,247,0.6);
+    overflow: hidden;
+  }
+  
+  .ai-glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top left, rgba(168,85,247,0.3), transparent 60%);
+    border-radius: 22px;
+    z-index: 0;
+  }
+  
+  .btn-ai {
+    font-size: 14px;
+    font-weight: 500;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #ff2fb3, #a855f7);
+    box-shadow: 0 0 15px rgba(168,85,247,0.6);
+    transition: 0.3s;
+  }
+  
+  .btn-ai:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(168,85,247,0.9);
+  }
+  
+  .ai-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    font-size: 10px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(168,85,247,0.2);
+    color: #c084fc;
+  }
+
+  
+.faq-item {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: 0.3s;
+  }
+  
+  .faq-item:hover {
+    border-color: rgba(168,85,247,0.4);
+  }
+  
+  .faq-question {
+    width: 100%;
+    padding: 18px 20px;
+    text-align: left;
+    color: white;
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    background: transparent;
+  }
+  
+  .faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    color: #9ca3af;
+    font-size: 14px;
+    padding: 0 20px;
+    transition: max-height 0.4s ease, padding 0.3s ease;
+  }
+  
+  /* Active State */
+  .faq-item.active .faq-answer {
+    max-height: 200px;
+    padding: 0 20px 18px;
+  }
+  
+  .faq-icon {
+    font-size: 20px;
+    transition: transform 0.3s;
+  }
+  
+  .faq-item.active .faq-icon {
+    transform: rotate(45deg);
+  }

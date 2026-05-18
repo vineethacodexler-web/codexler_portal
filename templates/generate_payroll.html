@@ -1,0 +1,227 @@
+<!-- templates/generate_payroll.html -->
+
+{% include 'admin_navbar.html' %}
+
+ <main id="main" class="main">
+
+<div class="container mt-4">
+
+    {% if messages %}
+        {% for message in messages %}
+
+        <div class="alert alert-success alert-dismissible fade show">
+
+            {{ message }}
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"></button>
+
+        </div>
+
+        {% endfor %}
+    {% endif %}
+
+    <div class="card shadow-sm border-0">
+
+        <div class="card-header bg-dark text-white">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <h4 class="mb-0">
+
+                    <i class="bi bi-calculator-fill"></i>
+
+                    Generate Payroll
+
+                </h4>
+
+            </div>
+
+        </div>
+
+        <div class="card-body">
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <div class="row">
+
+                    <!-- Month -->
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label">
+
+                            Select Month
+
+                        </label>
+
+                        <select name="month"
+                                class="form-select"
+                                required>
+
+                            <option value="">
+                                Choose Month
+                            </option>
+
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+
+                        </select>
+
+                    </div>
+
+                    <!-- Year -->
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label">
+
+                            Select Year
+
+                        </label>
+
+                        <input type="number"
+                               name="year"
+                               class="form-control"
+                               placeholder="Enter Year"
+                               required>
+
+                    </div>
+
+                </div>
+
+                <div class="mt-3">
+
+                    <button type="submit"
+                            class="btn btn-success">
+
+                        <i class="bi bi-cash-stack"></i>
+
+                        Generate Payroll
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- Employee Info -->
+
+    <div class="card shadow-sm border-0 mt-4">
+
+        <div class="card-header bg-primary text-white">
+
+            <h5 class="mb-0">
+
+                Employees Included
+
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <table class="table table-bordered table-hover align-middle">
+
+                <thead class="table-dark">
+
+                    <tr>
+
+                        <th>#</th>
+
+                        <th>Employee ID</th>
+
+                        <th>Employee Name</th>
+
+                        <th>Designation</th>
+
+                        <th>Email</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for emp in employees %}
+
+                    <tr>
+
+                        <td>
+                            {{ forloop.counter }}
+                        </td>
+
+                        <td>
+                            {{ emp.Emp_Id }}
+                        </td>
+
+                        <td>
+
+                            <div class="d-flex align-items-center">
+
+                                {% if emp.Image %}
+                                <img src="{{ emp.Image.url }}"
+                                     width="40"
+                                     height="40"
+                                     class="rounded-circle me-2">
+                                {% endif %}
+
+                                {{ emp.First_name }}
+
+                            </div>
+
+                        </td>
+
+                        <td>
+                            {{ emp.Designation }}
+                        </td>
+
+                        <td>
+                            {{ emp.Email }}
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="5"
+                            class="text-center text-muted">
+
+                            No employees found
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+ </main>

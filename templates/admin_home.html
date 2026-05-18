@@ -1,0 +1,453 @@
+{% include 'admin_navbar.html' %}
+
+<body>
+
+  <main id="main" class="main">
+
+    {% if messages %}
+    <div id="popup-alert-container" class="popup-alert-container">
+        {% for message in messages %}
+        <div class="popup-alert {% if 'success' in message.tags %}popup-success{% else %}popup-error{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <style>
+    .popup-alert-container {
+        position: fixed;
+        top: 20px;
+        left: 45%;
+        z-index: 1050;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .popup-alert {
+        padding: 12px 20px;
+        border-radius: 5px;
+        color: #fff;
+        min-width: 250px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        opacity: 0.95;
+        animation: fadeout 0.5s ease-in-out forwards;
+        animation-delay: 3s;
+    }
+    
+    .popup-success {
+        background-color: #28a745;
+    }
+    
+    .popup-error {
+        background-color: #dc3545;
+    }
+    
+    @keyframes fadeout {
+        to {
+            opacity: 0;
+            transform: translateY(-10px);
+            pointer-events: none;
+        }
+    }
+    </style>
+    
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const alertContainer = document.getElementById("popup-alert-container");
+        if (alertContainer) {
+            const seen = new Set();
+            const alerts = alertContainer.querySelectorAll(".popup-alert");
+    
+            alerts.forEach(alert => {
+                const text = alert.textContent.trim();
+                if (seen.has(text)) {
+                    alert.remove();
+                } else {
+                    seen.add(text);
+                    // Remove each alert after 4s
+                    setTimeout(() => {
+                        alert.remove();
+                    }, 4000);
+                }
+            });
+        }
+    });
+    </script>
+    <div id="dashboardBanner">
+      <h2 class="dashboard-title"> Dashboard</h2>
+      <span id="currentDateTime"></span>
+    </div>
+    
+    <style>
+      /* Dashboard banner container */
+      #dashboardBanner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: white;
+        padding: 12px 20px;
+        color: black;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        border-radius: 8px;
+        font-family: Arial, sans-serif;
+      }
+    
+      /* Dashboard title */
+      .dashboard-title {
+        font-size: 22px;
+        font-weight: bold;
+        margin: 0;
+      }
+    
+      /* Date/time style */
+      #currentDateTime {
+        font-size: 16px;
+        font-weight: 500;
+        background: rgba(255, 255, 255, 0.15);
+        padding: 6px 12px;
+        border-radius: 6px;
+      }
+    
+      /* Mobile responsiveness */
+      @media (max-width: 768px) {
+        #dashboardBanner {
+          flex-direction: column;
+          gap: 8px;
+          text-align: center;
+        }
+      }
+    </style>
+    
+    <script>
+      function updateDateTime() {
+        const now = new Date();
+        const options = {
+          weekday: 'long', 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric', 
+          hour: '2-digit', 
+          minute: '2-digit', 
+          second: '2-digit'
+        };
+        document.getElementById('currentDateTime').innerText = now.toLocaleDateString(undefined, options);
+      }
+    
+      setInterval(updateDateTime, 1000);
+      updateDateTime();
+    </script>
+    
+  <br> <br> 
+  <section class="section dashboard">
+    <div class="row">
+      <div class="col-lg-8">
+        <div class="row">
+  
+          <!-- Total Projects -->
+          <div class="col-xxl-4 col-md-6">
+            <div class="card info-card sales-card p-2" style="min-height: 110px;">
+              <div class="card-body p-2">
+                <h6 class="card-title mb-2" style="font-size: 17px;">Total Projects</h6>
+                <div onclick="location.href='{% url 'add_project' %}'" class="d-flex align-items-center" style="cursor: pointer;">
+                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center" style="width:40px; height:40px; font-size:16px;">
+                    <i class="fas fa-project-diagram"></i>
+                  </div>
+                  <div class="ps-2">
+                    <h6 class="mb-0" style="font-size:28px;">{{ total_project }}</h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Total Timesheets -->
+          <div class="col-xxl-4 col-md-6">
+            <div class="card info-card revenue-card p-2" style="min-height: 110px;">
+              <div class="card-body p-2">
+                <h6 class="card-title mb-2" style="font-size: 17px;">Total Time Sheets</h6>
+                <div onclick="location.href='{% url 'all_view_timesheet_admin' %}'" class="d-flex align-items-center" style="cursor: pointer;">
+                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center" style="width:40px; height:40px; font-size:16px;">
+                    <i class="fas fa-file-alt" style="color:red"></i>
+                  </div>
+                  <div class="ps-2">
+                    <h6 class="mb-0" style="font-size:28px;">{{ total_timesheet }}</h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Total Staffs -->
+          <div class="col-xxl-4 col-md-6">
+            <div class="card info-card revenue-card p-2" style="min-height: 110px;">
+              <div class="card-body p-2">
+                <h6 class="card-title mb-2" style="font-size: 17px;">Total Staffs</h6>
+                <div onclick="location.href='{% url 'view_staffs' %}'" class="d-flex align-items-center" style="cursor: pointer;">
+                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center" style="width:40px; height:40px; font-size:16px;">
+                    <i class="fas fa-users"></i>
+                  </div>
+                  <div class="ps-2">
+                    <h6 class="mb-0" style="font-size:28px;">{{ total_staffs }}</h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+  <!-- Add Toast Container -->
+
+                      <!-- Total Staffs -->
+                      <div class="col-xxl-4 col-md-6">
+                
+                      </div>
+            
+                    </div><!-- Row End -->
+            
+                    <!-- Line Chart -->
+                    <div class="card mt-3">
+                      <div class="card-body">
+                        <h5 class="card-title">Work Summary <span>| Trends</span></h5>
+                        <div id="workSummaryLineChart" style="min-height:350px;" class="echart"></div>
+                      </div>
+                    </div>
+            
+                    <!-- Recent Leaves -->
+                    <div class="card mt-3 recent-sales overflow-auto">
+                      <div class="card-body">
+                        <h5 class="card-title">Recent Leaves</h5>
+                        <div style="max-height:300px;overflow-y:auto;">
+                          <table class="table table-borderless">
+                            <thead>
+                              <tr>
+                                <th>Sl No</th>
+                                <th>Staff</th>
+                                <th>Leave From</th>
+                                <th>Leave To</th>
+                                <th>Reason</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {% for leave in leaves|dictsortreversed:"id" %}
+                              <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ leave.staff.username }}</td>
+                                <td>{{ leave.date_from }}</td>
+                                <td>{{ leave.date_to }}</td>
+                                <td>{{ leave.reason }}</td>
+                              </tr>
+                              {% endfor %}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+            
+                  </div><!-- Col 8 End -->
+            
+                  <!-- Right Side Widgets -->
+                  <div class="col-lg-4">
+            
+                    <!-- Recent Projects -->
+                    <div class="card">
+                      <div class="card-body">
+                        <h5 class="card-title">Recent Projects <span class="text-muted">| Overview</span></h5>
+                        <div class="timeline position-relative ps-4 border-start border-2 border-primary" style="max-height:300px;overflow-y:auto;">
+                          {% if total_projects %}
+                            {% for i in total_projects|dictsortreversed:"id" %}
+                            <div class="mb-4 position-relative">
+                              <span class="position-absolute top-40 start-40 translate-middle p-1 bg-primary border border-light rounded-circle" style="margin-top:10px;"></span>
+                              <div>
+                                <h6 class="mb-1">&nbsp;&nbsp;&nbsp;&nbsp;{{ i.project_no }}</h6>
+                                <p class="mb-0 text-muted">{{ i.project_name }}</p>
+                              </div>
+                            </div>
+                            {% endfor %}
+                          {% else %}
+                            <div class="text-muted text-center mt-3">No project records found</div>
+                          {% endif %}
+                        </div>
+                        <div class="text-end mt-3">
+                          <a href="{% url 'add_project' %}" class="btn btn-sm btn-outline-primary">See More</a>
+                        </div>
+                      </div>
+                    </div>
+            
+    <!-- Pie Chart -->
+    <div class="card mt-3">
+      <div class="card-body">
+        <h5 class="card-title">Work Distribution <span>| Overview</span></h5>
+        <div id="workSummaryPieChart" style="min-height:350px;" class="echart"></div>
+      </div>
+    </div>
+
+    <!-- Bar Chart -->
+    <div class="card mt-3">
+      <div class="card-body">
+        <h5 class="card-title">Work Stats <span>| Comparisons</span></h5>
+        <div id="workSummaryBarChart" style="min-height:350px;" class="echart"></div>
+      </div>
+    </div>
+
+  </div><!-- Col 4 End -->
+</div>
+</section>
+</main>
+<!-- ECharts Script -->
+<script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var chartData = [
+        { name: 'Total Projects', value: {{ total_project|default:0 }} },
+        { name: 'Total Timesheets', value: {{ total_timesheet|default:0 }} },
+        { name: 'Total Staffs', value: {{ total_staffs|default:0 }} },
+        { name: 'Total Leaves', value: {{ leave_total|default:0 }} }
+    ];
+    var names = chartData.map(item => item.name);
+    var values = chartData.map(item => item.value);
+
+    // LINE CHART (Dashed Line + Large Points)
+    var lineChart = echarts.init(document.getElementById("workSummaryLineChart"));
+    lineChart.setOption({
+        tooltip: { trigger: 'axis' },
+        xAxis: {
+            type: 'category',
+            data: names,
+            axisLabel: { fontSize: 12 }
+        },
+        yAxis: { type: 'value' },
+        series: [{
+            name: 'Work Stats',
+            type: 'line',
+            smooth: false,
+            data: values,
+            symbol: 'circle',
+            symbolSize: 12,
+            lineStyle: { width: 2, color: '#d32f2f', type: 'dashed' },
+            itemStyle: { color: '#d32f2f', borderWidth: 2, borderColor: '#fff' },
+            label: { show: true, position: 'top', fontWeight: 'bold' }
+        }]
+    });
+
+    // PIE CHART (Bold Center Percentages)
+    var pieChart = echarts.init(document.getElementById("workSummaryPieChart"));
+    pieChart.setOption({
+        tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
+        legend: { bottom: 0 },
+        series: [{
+            name: 'Work Distribution',
+            type: 'pie',
+            radius: ['45%', '70%'],
+            data: chartData,
+            label: {
+                formatter: '{d}%',
+                fontSize: 14,
+                fontWeight: 'bold',
+                color: '#fff'
+            },
+            labelLine: { show: false },
+            itemStyle: { borderColor: '#fff', borderWidth: 2 }
+        }],
+        color: ['#1976d2', '#388e3c', '#fbc02d', '#e64a19']
+    });
+
+    // BAR CHART (3D Effect with Shadows)
+    var barChart = echarts.init(document.getElementById("workSummaryBarChart"));
+    barChart.setOption({
+        tooltip: { trigger: 'axis' },
+        xAxis: {
+            type: 'category',
+            data: names,
+            axisLabel: { fontSize: 12 }
+        },
+        yAxis: { type: 'value' },
+        series: [{
+            name: 'Work Stats',
+            type: 'bar',
+            data: values,
+            barWidth: '50%',
+            itemStyle: {
+                color: '#0288d1',
+                shadowColor: 'rgba(0, 0, 0, 0.4)',
+                shadowBlur: 8,
+                shadowOffsetX: 4,
+                shadowOffsetY: 4,
+                borderRadius: [5, 5, 0, 0]
+            }
+        }]
+    });
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              <div id="toast" style="
+              position: fixed;
+              bottom: 20px;
+              right: 20px;
+              background: white;
+              border-radius: 6px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+              padding: 15px 20px;
+              min-width: 280px;
+              display: none;
+              border-left: 5px solid #4a6cf7; /* Left side color */
+              z-index: 9999;
+              ">
+              <strong id="toast-title" style="display:block; font-size:16px; margin-bottom:5px;">Hi, {{bok.First_name }}</strong>
+              <span id="toast-message" style="color: gray; font-size:14px;"></span>
+              <span onclick="closeToast()" style="position:absolute; top:8px; right:10px; cursor:pointer;">&times;</span>
+              </div>
+              <script>
+                function getGreeting() {
+                    let now = new Date();
+                    let hour = now.getHours();
+                
+                    if (hour >= 5 && hour < 12) {
+                        return "Good morning! Please check in for attendance.";
+                    } else if (hour >= 12 && hour < 18) {
+                        return "Good afternoon! Hope you're having a productive day!";
+                    } else {
+                        return "Good evening! Don't forget to check out when you leave!";
+                    }
+                }
+                
+                function showToast(title, message) {
+                    document.getElementById("toast-title").innerText = title;
+                    document.getElementById("toast-message").innerText = message;
+                
+                    let toast = document.getElementById("toast");
+                    toast.style.display = "block";
+                
+                    setTimeout(() => {
+                        toast.style.display = "none";
+                    }, 5000);
+                }
+                
+                function closeToast() {
+                    document.getElementById("toast").style.display = "none";
+                }
+                
+                // Show greeting on page load
+                document.addEventListener("DOMContentLoaded", function () {
+                    showToast("Hi, {{ bok.First_name }}", getGreeting());
+                });
+                </script>
+                
+             
+     
+            </body>
+            </html>
+            

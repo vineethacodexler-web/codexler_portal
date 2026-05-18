@@ -1,0 +1,241 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <title>Monthly Report</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+
+@media print {
+
+  .btn,
+  .sidebar,
+  .header,
+  .topbar button,
+  .topbar a {
+    display: none !important;
+  }
+
+  body {
+    background: white;
+  }
+
+  .card-box {
+    box-shadow: none;
+    border: 1px solid #ddd;
+  }
+
+}
+
+body {
+  background: #f4f6f9;
+  font-size: 13px;
+}
+
+.content {
+  padding: 15px;
+}
+
+.topbar {
+  background: #fff;
+  padding: 10px 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.topbar h4 {
+  font-size: 18px;
+  margin: 0;
+  font-weight: 600;
+}
+
+.card-box {
+  background: #fff;
+  border-radius: 8px;
+  padding: 15px;
+}
+
+.table {
+  font-size: 13px;
+}
+
+.table th {
+  background: #f8f9fa !important;
+  color: #333 !important;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 10px;
+}
+
+.table td {
+  padding: 9px;
+  vertical-align: middle;
+}
+
+.btn {
+  font-size: 12px;
+  padding: 5px 12px;
+  border-radius: 5px;
+}
+
+.text-success,
+.text-danger {
+  font-size: 13px;
+}
+
+</style>
+</head>
+
+<body>
+
+
+  {% include 'navbar.html' %}
+<main id="main" class="main">
+  <div class="content">
+
+   <!-- Top -->
+<div class="topbar d-flex justify-content-between align-items-center">
+
+  <h4>
+    <i class="bi bi-calendar3"></i>
+    Monthly Financial Report
+  </h4>
+
+  <div>
+
+    <!-- Export CSV -->
+    <a href="?export=csv"
+       class="btn btn-success btn-sm">
+
+      <i class="bi bi-file-earmark-excel"></i>
+
+      Export CSV
+
+    </a>
+
+    <!-- Print -->
+    <button onclick="printReport()"
+            class="btn btn-dark btn-sm">
+
+      <i class="bi bi-printer"></i>
+
+      Print
+
+    </button>
+
+  </div>
+
+</div>
+
+    <!-- Table -->
+    <div class="card-box">
+
+      <table class="table table-bordered table-hover">
+
+        <thead >
+
+          <tr>
+
+            <th>Month</th>
+
+            <th>Total Income</th>
+
+            <th>Total Expense</th>
+
+            <th>Profit / Loss</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          {% for r in report %}
+
+          <tr>
+
+            <td>
+
+              <strong>{{ r.month }}</strong>
+
+            </td>
+
+            <td class="text-success fw-bold">
+
+              ₹{{ r.income }}
+
+            </td>
+
+            <td class="text-danger fw-bold">
+
+              ₹{{ r.expense }}
+
+            </td>
+
+            <td>
+
+              {% if r.profit > 0 %}
+
+                <span class="text-success fw-bold">
+
+                  ₹{{ r.profit }}
+
+                </span>
+
+              {% else %}
+
+                <span class="text-danger fw-bold">
+
+                  ₹{{ r.profit }}
+
+                </span>
+
+              {% endif %}
+
+            </td>
+
+          </tr>
+
+          {% empty %}
+
+          <tr>
+
+            <td colspan="4" class="text-center">
+
+              No monthly data available
+
+            </td>
+
+          </tr>
+
+          {% endfor %}
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+</main>
+<script>
+
+function printReport() {
+
+    window.print();
+
+}
+
+</script>
+
+</body>
+
+</html>

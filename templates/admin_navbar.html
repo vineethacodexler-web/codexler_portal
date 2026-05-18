@@ -1,0 +1,364 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Codexler Technologies</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+  
+  <link rel="icon" href="https://www.codexlertechnologies.com/static/assets/img/logo_transparent.png">
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|Nunito:300,400,600,700|Poppins:300,400,500,600,700" rel="stylesheet">
+  
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="static/assets/vendor/bootstrap-icons/bootstrap-icons.css">
+  <link rel="stylesheet" href="static/assets/vendor/boxicons/css/boxicons.min.css">
+  <link rel="stylesheet" href="static/assets/vendor/quill/quill.snow.css">
+  <link rel="stylesheet" href="static/assets/vendor/remixicon/remixicon.css">
+  <link rel="stylesheet" href="static/assets/vendor/simple-datatables/style.css">
+  <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+</head>
+
+<body>
+  <header id="header" class="header fixed-top d-flex align-items-center" >
+    <div class="d-flex align-items-center justify-content-between" >
+      <a href=""><img src="/static/logo_c_frame.jpeg" width="100" height="50" alt=""></a>
+      <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div>
+    <div class="search-bar" >
+      <p style="font-size:20px;">Welcome, {{ bok.First_name }}  
+        
+    
+     </p>
+    </div>
+    <nav class="header-nav ms-auto">
+      <ul class="d-flex align-items-center" >
+        <li class="nav-item dropdown pe-3" >
+          <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown" style="background-color: white;">
+            <img src="/media/{{ bok.Image }}" alt="" width="30" style="background-color: white;">
+            <span class="d-none d-md-block dropdown-toggle ps-2" style="background-color: white;">{{ bok.First_name }}</span>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+            <li class="dropdown-header">
+              <img src="/media/{{ bok.Image }}" alt=""width="100" style="max-height:130px ;">
+              <h6> {{ bok.First_name }}</h6>
+              <span>Employee Id: {{ bok.Emp_Id }}</span><br>
+              <span>{{ bok.Email }}</span>
+            </li>
+            <li>
+              <a >
+                <form method="POST" action="mark_attendance_staff">
+                  {% csrf_token %}
+                  
+                  <input type="hidden" name="status" >
+                  
+                  {% if not attendance or not attendance.check_out_time %}
+                  <div class="mt-4">
+                    <button type="submit" style="width:100%" style="background-color: orange;" >
+                      {% if attendance and attendance.check_out_time %}
+                        <span >You have already checked out today.</span>
+                      {% else %}
+                      <i class="bi bi-box-arrow-right"></i>   Check In / Check Out
+                      {% endif %}
+                    </button>
+                  </div>
+                  {% endif %}
+                </form>
+              
+              
+              </a>
+            </li>
+            
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="{% url 'update_employee' %}">
+                <i class="bi bi-person-gear"></i>
+                <span>Account Settings</span>
+              </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="{% url 'logout' %}">
+                <i class="bi bi-box-arrow-right"></i>
+                <span>Sign Out</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <aside id="sidebar" class="sidebar" style="background-color: #161f2e;">
+    <ul class="sidebar-nav" id="sidebar-nav">
+  
+      <!-- Dashboard -->
+      <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.url_name == 'admin_home' %}active{% endif %}" href="{% url 'admin_home' %}" style="background-color: #161f2e;color:white">
+          <i class="bi bi-house-door-fill" style="background-color: #161f2e;color:white"></i> Dashboard
+        </a>
+      </li>
+  
+      <!-- Add Project -->
+      <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.url_name == 'add_project' %}active{% endif %}" href="{% url 'add_project' %}" style="background-color: #161f2e;color:white">
+          <i class="bi bi-folder-plus" style="background-color: #161f2e;color:white"></i> Add Project
+        </a>
+      </li>
+  
+      <!-- Timesheets -->
+      <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.url_name == 'all_view_timesheet_admin' %}active{% endif %}" href="{% url 'all_view_timesheet_admin' %}" style="background-color: #161f2e;color:white">
+          <i class="bi bi-clock-history" style="background-color: #161f2e;color:white"></i> Timesheets
+        </a>
+      </li>
+  
+      <!-- Leaves -->
+      <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.url_name == 'view_leaves_admin_all' %}active{% endif %}" href="{% url 'view_leaves_admin_all' %}" style="background-color: #161f2e;color:white">
+          <i class="bi bi-person-dash-fill" style="background-color: #161f2e;color:white"></i> Leaves
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.url_name == 'view_additional_days_admin' %}active{% endif %}" href="{% url 'view_additional_days_admin' %}" style="background-color: #161f2e; color:white;">
+          <i class="bi bi-calendar-plus" style="color:white;"></i> View Extra shifts
+        </a>
+      </li>
+      <!-- Attendance -->
+      <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.url_name == 'view_attendance' %}active{% endif %}" href="{% url 'view_attendance' %}" style="background-color: #161f2e;color:white">
+          <i class="bi bi-calendar-check-fill" style="background-color: #161f2e;color:white"></i> Attendance
+        </a>
+      </li>
+      <!-- Payroll -->
+<li class="nav-item">
+  <a class="nav-link collapsed"
+     data-bs-target="#payroll-nav"
+     data-bs-toggle="collapse"
+     href="#"
+     style="background-color: #161f2e; color:white">
+
+    <i class="bi bi-cash-stack" style="color:white"></i>
+
+    <span>Payroll</span>
+
+    <i class="bi bi-chevron-down ms-auto"
+       style="color:white"></i>
+  </a>
+
+  <ul id="payroll-nav"
+      class="nav-content collapse"
+      data-bs-parent="#sidebar-nav">
+<li>
+  <a class="dropdown-item
+     {% if request.resolver_match.url_name == 'add_salary_structure_page' %}
+     active
+     {% endif %}"
+
+     href="{% url 'add_salary_structure_page' %}"
+
+     style="background-color: #161f2e; color:white">
+
+    <i class="bi bi-plus-circle"
+       style="color:white"></i>
+
+    <span>Add Salary Structure</span>
+
+  </a>
+</li>
+    <!-- Salary Structure -->
+    <li>
+      <a class="dropdown-item
+         {% if request.resolver_match.url_name == 'salary_structure_list' %}
+         active
+         {% endif %}"
+
+         href="{% url 'salary_structure_list' %}"
+
+         style="background-color: #161f2e; color:white">
+
+        <i class="bi bi-wallet2"
+           style="color:white"></i>
+
+        <span>Salary Structure</span>
+      </a>
+    </li>
+
+    <!-- Generate Payroll -->
+    <li>
+      <a class="dropdown-item
+         {% if request.resolver_match.url_name == 'generate_payroll' %}
+         active
+         {% endif %}"
+
+         href="{% url 'generate_payroll' %}"
+
+         style="background-color: #161f2e; color:white">
+
+        <i class="bi bi-calculator"
+           style="color:white"></i>
+
+        <span>Generate Payroll</span>
+      </a>
+    </li>
+
+    <!-- Payroll List -->
+    <li>
+      <a class="dropdown-item
+         {% if request.resolver_match.url_name == 'payroll_list' %}
+         active
+         {% endif %}"
+
+         href="{% url 'payroll_list' %}"
+
+         style="background-color: #161f2e; color:white">
+
+        <i class="bi bi-receipt"
+           style="color:white"></i>
+
+        <span>Payroll List</span>
+      </a>
+    </li>
+
+    <!-- Payslips -->
+    <li>
+      <a class="dropdown-item
+         {% if request.resolver_match.url_name == 'payslip_list' %}
+         active
+         {% endif %}"
+
+         href="{% url 'payslip_list' %}"
+
+         style="background-color: #161f2e; color:white">
+
+        <i class="bi bi-file-earmark-pdf"
+           style="color:white"></i>
+
+        <span>Payslips</span>
+      </a>
+    </li>
+
+    <!-- Reports -->
+    <li>
+      <a class="dropdown-item
+         {% if request.resolver_match.url_name == 'payroll_reports' %}
+         active
+         {% endif %}"
+
+         href="{% url 'payroll_reports' %}"
+
+         style="background-color: #161f2e; color:white">
+
+        <i class="bi bi-bar-chart"
+           style="color:white"></i>
+
+        <span>Payroll Reports</span>
+      </a>
+    </li>
+
+  </ul>
+</li>
+  
+      <!-- Add Staff -->
+      <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.url_name == 'register_employee' %}active{% endif %}" href="{% url 'register_employee' %}" style="background-color: #161f2e;color:white">
+          <i class="bi bi-person-plus-fill" style="background-color: #161f2e;color:white"></i> Add Staff
+        </a>
+      </li>
+  
+      <!-- Manage Staffs -->
+      <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.url_name == 'view_staffs' %}active{% endif %}" href="{% url 'view_staffs' %}" style="background-color: #161f2e;color:white">
+          <i class="bi bi-people-fill" style="background-color: #161f2e;color:white"></i> Manage Staffs
+        </a>
+      </li>
+  
+      <!-- Admin Menu -->
+      <li class="nav-item">
+<!--         <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#components-nav" style="background-color: #161f2e; color:white">
+          <i class="bi bi-sliders" style="color:white"></i><span>Admin Menu</span><i class="bi bi-chevron-down ms-auto" style="background-color: #161f2e; color:white"></i>
+        </a> -->
+        <ul id="components-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+  
+          <li>
+            <a class="dropdown-item {% if request.resolver_match.url_name == 'view_timesheets_admin' %}active{% endif %}" href="{% url 'view_timesheets_admin' %}" style="background-color: #161f2e; color:white">
+              <i class="bi bi-journal-text" style="background-color: #161f2e; color:white"></i><span>My TimeSheet</span>
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item {% if request.resolver_match.url_name == 'submit_additional_day_admin' %}active{% endif %}" href="{% url 'submit_additional_day_admin' %}" style="background-color: #161f2e; color:white">
+              <i class="bi bi-calendar-plus" style="background-color: #161f2e; color:white"></i><span>Additional Work Day</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.resolver_match.url_name == 'view_additional_days_a' %}active{% endif %}" href="{% url 'view_additional_days_a' %}" style="background-color: #161f2e; color:white;">
+              <i class="bi bi-calendar-plus" style="color:white;"></i> view Extra shifts
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item {% if request.resolver_match.url_name == 'apply_leave_admin' %}active{% endif %}" href="{% url 'apply_leave_admin' %}" style="background-color: #161f2e; color:white">
+              <i class="bi bi-calendar-event" style="background-color: #161f2e; color:white"></i> Apply Leave
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item {% if request.resolver_match.url_name == 'view_leaves_admin' %}active{% endif %}" href="{% url 'view_leaves_admin' %}" style="background-color: #161f2e; color:white">
+              <i class="bi bi-calendar2-week" style="background-color: #161f2e; color:white"></i> View Leaves
+            </a>
+          </li>
+  
+        </ul>
+      </li>
+  
+    </ul>
+  </aside>
+
+  <!-- Sidebar Styling -->
+  <style>
+    .sidebar {
+      background-color: #161f2e;
+    }
+  
+    .nav-link {
+      color: white;
+      background-color: #161f2e;
+    }
+  
+    .nav-link i {
+      color: white;
+    }
+  
+    .nav-link.active {
+      background-color: #1e2a3a !important;
+      color: #f8f9fa !important;
+      font-weight: bold;
+      border-left: 4px solid #007bff;
+    }
+  </style>
+  
+
+
+
+
+
+
+  </main>
+  <script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/chart.js/chart.umd.js"></script>
+  <script src="assets/vendor/echarts/echarts.min.js"></script>
+  <script src="assets/vendor/quill/quill.min.js"></script>
+  <script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
+  <script src="assets/vendor/tinymce/tinymce.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="assets/js/main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="static/assets/js/main.js"></script>
+</body>
+</html>

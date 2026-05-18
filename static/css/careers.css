@@ -1,0 +1,59 @@
+
+    .careers-heading {
+        text-align: center;
+        margin-top: 40px;
+      }
+  
+      .careers-heading h2 {
+        color: white;
+        font-size: 42px;
+        font-weight: 700;
+        position: relative;
+        display: inline-block;
+      }
+  
+      .careers-heading h2::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        bottom: -8px;
+        width: 0%;
+        height: 3px;
+        background: linear-gradient(90deg, #a855f7, #ff2fb3);
+        transform: translateX(-50%);
+        animation: underlineGrow 1s ease forwards;
+      }
+  
+      @keyframes underlineGrow {
+        from { width: 0%; }
+        to { width: 100%; }
+      }
+
+      
+/* No Openings Box */
+.no-openings {
+    display: inline-block;
+    padding: 14px 28px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.05);
+    border: 1px dashed rgba(168,85,247,0.4);
+    font-size: 16px;
+    margin-top: 10px;
+    transition: 0.3s;
+  }
+  
+  .no-openings:hover {
+    background: rgba(168,85,247,0.15);
+  }
+  
+  /* Animation */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.8s ease;
+  }
+  .fade-up.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  

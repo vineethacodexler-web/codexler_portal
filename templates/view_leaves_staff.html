@@ -1,0 +1,245 @@
+{% include 'admin_nav.html' %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+  <link rel="icon" href="{% static 'logo.jpg' %}">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|Nunito:300,400,600,700|Poppins:300,400,500,600,700" rel="stylesheet">
+
+  <!-- Vendor CSS -->
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+
+  <!-- DataTables CSS -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+
+  <!-- jQuery & Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+  <!-- DataTables JS -->
+  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</head>
+
+<body>
+
+<main id="main" class="main">
+  {% if messages %}
+  <div id="popup-alert-container" class="popup-alert-container">
+      {% for message in messages %}
+      <div class="popup-alert {% if 'success' in message.tags %}popup-success{% else %}popup-error{% endif %}
+      {% if 'delete' in message.text %} popup-deleted {% endif %}">
+          {{ message }}
+      </div>
+      {% endfor %}
+  </div>
+  {% endif %}
+  
+  <style>
+  .popup-alert-container {
+      position: fixed;
+      top: 50px;
+      left: 20%;
+      z-index: 1050;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+  }
+  
+  .popup-alert {
+      padding: 12px 20px;
+      border-radius: 5px;
+      color: #fff;
+      min-width: 250px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      opacity: 0.95;
+      animation: fadeout 0.5s ease-in-out forwards;
+      animation-delay: 3s;
+  }
+  
+  .popup-success {
+      background-color: #28a745;
+  }
+  
+  .popup-error {
+      background-color: #dc3545;
+  }
+  
+  .popup-deleted {
+      background-color: #dc3545; /* Red background for deleted messages */
+  }
+  
+  @keyframes fadeout {
+      to {
+          opacity: 0;
+          transform: translateY(-10px);
+          pointer-events: none;
+      }
+  }
+  </style>
+  
+  <script>
+  document.addEventListener("DOMContentLoaded", function () {
+      const alertContainer = document.getElementById("popup-alert-container");
+      if (alertContainer) {
+          const seen = new Set();
+          const alerts = alertContainer.querySelectorAll(".popup-alert");
+  
+          alerts.forEach(alert => {
+              const text = alert.textContent.trim();
+              if (seen.has(text)) {
+                  alert.classList.add("popup-deleted"); // Add red background before removal
+                  setTimeout(() => {
+                      alert.remove();
+                  }, 1000); // Delay before removing it (after showing red)
+              } else {
+                  seen.add(text);
+                  // Remove each alert after 4s
+                  setTimeout(() => {
+                      alert.remove();
+                  }, 4000);
+              }
+          });
+      }
+  });
+  </script>
+  
+  
+    
+  
+
+  <h3 class="card-title">MANAGE LEAVES</h3>
+
+  <div class="table-responsive mt-3">
+<table id="leaveTable" class="table table-sm table-striped table-bordered">
+  <thead class="table-dark">
+    <tr>
+      <th style="background-color: #D3EEFF; color: black; font-size: 0.8rem;">Sl No</th>
+      <th style="background-color: #D3EEFF; color: black; font-size: 0.8rem;">Leave Type</th>
+      <th style="background-color: #D3EEFF; color: black; font-size: 0.8rem;">Multiple Days</th>
+      <th style="background-color: #D3EEFF; color: black; font-size: 0.8rem;">Date From</th>
+      <th style="background-color: #D3EEFF; color: black; font-size: 0.8rem;">Date To</th>
+      <th style="background-color: #D3EEFF; color: black; font-size: 0.8rem;">Reason</th>
+      <th style="background-color: #D3EEFF; color: black; font-size: 0.8rem;">Document</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for leave in leaves|dictsortreversed:"id" %}
+    <tr>
+      <td style="font-size: 0.8rem;">{{ forloop.counter }}</td>
+      <td style="font-size: 0.8rem;">{{ leave.leave_type }}</td>
+      <td style="font-size: 0.8rem;">{{ leave.total_days }}</td>
+      <td style="font-size: 0.8rem;">{{ leave.date_from }}</td>
+      <td style="font-size: 0.8rem;">{{ leave.date_to }}</td>
+      <td style="font-size: 0.8rem;">{{ leave.reason }}</td>
+
+      <td>
+        {% if leave.document %}
+          <a href="{{ leave.document.url }}" style="font-size: 0.8rem;" target="_blank" download  class="btn btn-success btn-sm mt-1">
+            Download
+          </a>
+        {% else %}
+        
+            Not uploaded
+  
+        {% endif %}
+      </td>
+
+        <!-- <button type="button" class="btn btn-outline-primary btn-sm mb-1" data-bs-toggle="modal" data-bs-target="#editLeaveModal{{ leave.id }}">
+          Edit
+        </button>
+
+        <button type="button" class="btn btn-outline-danger btn-sm mb-1" onclick="confirmDelete('{% url 'delete_leave_staff' leave.id %}')">
+          Delete
+        </button> -->
+
+        <!-- Edit Modal -->
+        <div class="modal fade" id="editLeaveModal{{ leave.id }}" tabindex="-1" aria-labelledby="editLeaveModalLabel{{ leave.id }}" aria-hidden="true">
+          <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+              <form method="post" action="{% url 'update_leave_staff' leave.id %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                  <h6 class="modal-title" id="editLeaveModalLabel{{ leave.id }}">Edit Leave</h6>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <div class="mb-2">
+                    <label class="form-label">From:</label>
+                    <input type="datetime-local" name="date_from" class="form-control form-control-sm" value="{{ leave.date_from|date:'Y-m-d\\TH:i' }}" required>
+                  </div>
+                  <div class="mb-2">
+                    <label class="form-label">To:</label>
+                    <input type="datetime-local" name="date_to" class="form-control form-control-sm" value="{{ leave.date_to|date:'Y-m-d\\TH:i' }}" required>
+                  </div>
+                  <div class="mb-2">
+                    <label class="form-label">Reason:</label>
+                    <textarea name="reason" class="form-control form-control-sm" required>{{ leave.reason }}</textarea>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+  </div>
+
+</main>
+
+<!-- DataTable Initialization -->
+<script>
+  $(document).ready(function () {
+    $('#leaveTable').DataTable({
+      "paging": true,
+      "searching": true,
+      "info": true,
+      "ordering": true,
+      "pageLength": 10,
+      "lengthChange": true
+    });
+  });
+</script>
+
+<!-- SweetAlert Delete Confirmation -->
+<script>
+  function confirmDelete(deleteUrl) {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "This action cannot be undone.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = deleteUrl;
+      }
+    });
+  }
+</script>
+
+</body>
+</html>

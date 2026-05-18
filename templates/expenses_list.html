@@ -1,0 +1,290 @@
+{% include 'navbar.html' %}
+{% load static %}
+
+
+  <style>
+    body {
+      background-color: #f5f7fb;
+    }
+
+   body {
+  font-size: 13px;
+}
+
+h3 {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+    .stat-card h6 {
+      color: #888;
+      font-size: 13px;
+    }
+
+    .stat-card h4 {
+      font-weight: 600;
+    }
+
+    .filter-card {
+      background: #fff;
+      padding: 15px;
+      border-radius: 10px;
+    }
+
+    .table {
+      background: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .badge-category {
+      background: #e7f1ff;
+      color: #0d6efd;
+      padding: 5px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+    }
+
+    .action-btn i {
+      font-size: 16px;
+      margin-right: 8px;
+      cursor: pointer;
+    }
+
+    .action-btn i:hover {
+      opacity: 0.7;
+    }
+  </style>
+    <style>
+.mini-card {
+  background: #fff;
+  padding: 6px 10px;   /* reduced */
+  border-radius: 6px;
+  border: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mini-card span {
+  font-size: 11px;
+  color: #777;
+}
+
+.mini-card h6 {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+}
+.filter-card {
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.filter-card label {
+  font-size: 11px;
+  margin-bottom: 2px;
+}
+
+.filter-card .form-control {
+  font-size: 12px;
+  padding: 4px 8px;
+  height: 30px;
+}
+.btn {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+.table th {
+  font-size: 12px;
+  padding: 6px;
+}
+
+.table td {
+  font-size: 12px;
+  padding: 6px;
+}
+.action-btn i {
+  font-size: 14px;
+  margin-right: 6px;
+}
+.badge-category {
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<main id="main" class="main">
+
+  <h3 class="mb-2">Expenses Dashboard</h3>
+
+  <!-- 🔥 Top Cards -->
+  <div class="row mb-3 g-2">
+
+  <div class="col-md-3">
+    <div class="mini-card">
+      <span>Total</span>
+      <h6>₹{{ total|default:"0" }}</h6>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="mini-card">
+      <span>Records</span>
+      <h6>{{ expenses|length }}</h6>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="mini-card">
+      <span>Categories</span>
+      <h6>{{ categories|length }}</h6>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="mini-card">
+      <span>Today</span>
+      <h6>₹{{ today_total|default:"0" }}</h6>
+    </div>
+  </div>
+
+</div>
+
+  <!-- 🔥 Filter + Actions -->
+  <div class="filter-card mb-3">
+    <form method="GET">
+      <div class="row align-items-end">
+
+        <div class="col-md-2">
+          <label>Category</label>
+          <select name="category" class="form-control">
+            <option value="">All</option>
+            {% for c in categories %}
+              <option value="{{ c.id }}" {% if request.GET.category == c.id|stringformat:"s" %}selected{% endif %}>
+                {{ c.name }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="col-md-3">
+          <label>From</label>
+          <input type="date" name="start_date" class="form-control" value="{{ request.GET.start_date }}">
+        </div>
+
+        <div class="col-md-3">
+          <label>To</label>
+          <input type="date" name="end_date" class="form-control" value="{{ request.GET.end_date }}">
+        </div>
+
+        <div class="col-md-4 d-flex">
+          <button class="btn btn-primary me-2">Filter</button>
+
+          <a href="{% url 'expense_list' %}" class="btn btn-light me-2">Reset</a>
+             <a href="{% url 'export_excel' %}?category={{ request.GET.category }}&start_date={{ request.GET.start_date }}&end_date={{ request.GET.end_date }}"
+   class="btn btn-success me-2">
+   Export
+</a>
+        </div>
+
+      </div>
+    </form>
+  </div>
+
+  <!-- 🔥 Table -->
+  <div class="table-responsive">
+    <table id="expenseTable" class="table table-hover align-middle">
+
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th>Amount</th>
+          <th>Date</th>
+          <th>Description</th>
+          <th>Receipt</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for e in expenses %}
+        <tr>
+
+          <td>
+            <span class="badge-category">{{ e.category.name }}</span>
+          </td>
+
+          <td><strong>₹{{ e.amount }}</strong></td>
+
+          <td>{{ e.date }}</td>
+
+          <td>{{ e.description }}</td>
+
+          <td>
+            {% if e.receipt %}
+              <a href="{{ e.receipt.url }}" target="_blank">
+                <i class="bi bi-eye"></i>
+              </a>
+            {% endif %}
+          </td>
+
+          <td class="action-btn">
+
+            <a href="{% url 'edit_expense' e.id %}">
+              <i class="bi bi-pencil-square text-primary"></i>
+            </a>
+
+            <a href="{% url 'delete_expense' e.id %}" class="delete-btn">
+              <i class="bi bi-trash text-danger"></i>
+            </a>
+
+          </td>
+
+        </tr>
+        {% endfor %}
+      </tbody>
+
+    </table>
+  </div>
+
+</main>
+
+<script>
+$(document).ready(function() {
+  $('#expenseTable').DataTable({
+    paging: true,
+    searching: true,
+    ordering: true,
+    pageLength: 10
+  });
+
+  $('.delete-btn').click(function(e){
+    e.preventDefault();
+    let link = $(this).attr('href');
+
+    Swal.fire({
+      title: 'Delete?',
+      text: "This cannot be undone!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      confirmButtonText: 'Yes delete'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = link;
+      }
+    });
+  });
+
+});
+</script>
+
+</body>

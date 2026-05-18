@@ -1,0 +1,560 @@
+{% include 'admin_nav.html' %}
+
+<body>
+
+  <main id="main" class="main">
+
+    <div id="dashboardBanner">
+      <h2 class="dashboard-title"> Dashboard</h2>
+      <span id="currentDateTime"></span>
+    </div>
+    
+    <style>
+      /* Dashboard banner container */
+      #dashboardBanner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background:white;
+        padding: 12px 20px;
+        color: black;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        border-radius: 8px;
+        font-family: Arial, sans-serif;
+      }
+    
+      /* Dashboard title */
+      .dashboard-title {
+        font-size: 22px;
+        font-weight: bold;
+        margin: 0;
+      }
+    
+      /* Date/time style */
+      #currentDateTime {
+        font-size: 16px;
+        font-weight: 500;
+        background: rgba(255, 255, 255, 0.15);
+        padding: 6px 12px;
+        border-radius: 6px;
+      }
+    
+      /* Mobile responsiveness */
+      @media (max-width: 768px) {
+        #dashboardBanner {
+          flex-direction: column;
+          gap: 8px;
+          text-align: center;
+        }
+      }
+    </style>
+    
+    <script>
+      function updateDateTime() {
+        const now = new Date();
+        const options = {
+          weekday: 'long', 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric', 
+          hour: '2-digit', 
+          minute: '2-digit', 
+          second: '2-digit'
+        };
+        document.getElementById('currentDateTime').innerText = now.toLocaleDateString(undefined, options);
+      }
+    
+      setInterval(updateDateTime, 1000);
+      updateDateTime();
+    </script>
+    <br><br>
+
+  <style>
+    .info-card {
+      padding: 10px; /* Reduce inside spacing */
+      height: 90px;  /* Fixed smaller height */
+      display: flex;
+      align-items: center;
+    }
+    .info-card .card-body {
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .info-card h5.card-title {
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+    .info-card h6 {
+      font-size: 16px;
+      margin: 0;
+    }
+    .info-card .card-icon {
+      width: 40px;
+      height: 40px;
+      font-size: 18px;
+    }
+  </style>
+  
+  <style>
+    .info-card {
+      padding: 8px;
+      height: 115px; /* Smaller rectangular height */
+      display: flex;
+      align-items: center;
+      border-radius: 10px;
+    }
+    .info-card .card-body {
+      padding: 6px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
+    .info-card h5.card-title {
+      font-size: 15px; /* Smaller title */
+      margin: 0 0 4px 0;
+      line-height: 1.2;
+    }
+    .info-card h6 {
+      font-size: 12px; /* Smaller value text */
+      margin: 0;
+      font-weight: bold;
+    }
+    .info-card .card-icon {
+      width: 36px;
+      height: 36px;
+      font-size: 16px;
+      min-width: 36px;
+      border-radius: 50%;
+      background: #f5f5f5;
+    }
+    .ps-3 {
+      padding-left: 10px !important;
+    }
+  </style>
+  <!-- Add Toast Container -->
+<div id="toast" style="
+position: fixed;
+bottom: 20px;
+right: 20px;
+background: white;
+border-radius: 6px;
+box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+padding: 15px 20px;
+min-width: 280px;
+display: none;
+border-left: 5px solid #4a6cf7; /* Left side color */
+z-index: 9999;
+">
+<strong id="toast-title" style="display:block; font-size:16px; margin-bottom:5px;">Hi, {{bok.First_name }}</strong>
+<span id="toast-message" style="color: gray; font-size:14px;"></span>
+<span onclick="closeToast()" style="position:absolute; top:8px; right:10px; cursor:pointer;">&times;</span>
+</div>
+<script>
+  function getGreeting() {
+      let now = new Date();
+      let hour = now.getHours();
+  
+      if (hour >= 5 && hour < 12) {
+          return "Good morning! Please check in for attendance.";
+      } else if (hour >= 12 && hour < 18) {
+          return "Good afternoon! Hope you're having a productive day!";
+      } else {
+          return "Good evening! Don't forget to check out when you leave!";
+      }
+  }
+  
+  function showToast(title, message) {
+      document.getElementById("toast-title").innerText = title;
+      document.getElementById("toast-message").innerText = message;
+  
+      let toast = document.getElementById("toast");
+      toast.style.display = "block";
+  
+      setTimeout(() => {
+          toast.style.display = "none";
+      }, 5000);
+  }
+  
+  function closeToast() {
+      document.getElementById("toast").style.display = "none";
+  }
+  
+  // Show greeting on page load
+  document.addEventListener("DOMContentLoaded", function () {
+      showToast("Hi, {{ bok.First_name }}", getGreeting());
+  });
+  </script>
+  
+  <section class="section dashboard">
+    <div class="row">
+      <div class="col-lg-8">
+        <div class="row">
+  
+          <!-- Total Worked Days -->
+          <div class="col-xxl-4 col-md-6">
+            <div class="card info-card sales-card p-2" style="min-height: 110px;">
+              <div class="card-body">
+                <div class="card-icon d-flex align-items-center justify-content-center">
+                  <i class="fas fa-calendar-day"></i>
+                </div>
+                <div class="ps-2">
+                  <h6 class="mb-0" style="font-size:15px;">Total Worked Days</h5>
+                  <h6>{{ total_working_days }}</h6>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Total Leave -->
+          <div class="col-xxl-4 col-md-6">
+            <div class="card info-card revenue-card">
+              <div class="card-body">
+                <div class="card-icon d-flex align-items-center justify-content-center">
+                  <i class="fas fa-user-times" style="color:red"></i>
+                </div>
+                <div class="ps-2">
+                  <h6 class="mb-0" style="font-size:15px;">Total Leave</h5>
+                  <h6>{{ leave_total }}</h6>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Total Working -->
+          <div class="col-xxl-4 col-md-6">
+            <div class="card info-card revenue-card">
+              <div class="card-body">
+                <div class="card-icon d-flex align-items-center justify-content-center">
+                  <i class="fas fa-business-time"></i>
+                </div>
+                <div class="ps-2">
+                  <h6 class="mb-0" style="font-size:15px;">Total Working</h5>
+                  <h6 style="font-size:25px;" id="working-time"></h6>
+                  <script>
+                    let total_working_minutes = {{ total_working_minutes }};
+                    let hours = Math.floor(total_working_minutes / 60);
+                    document.getElementById("working-time").innerText = `${hours} hrs`;
+                  </script>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Casual Leave -->
+          <div class="col-xxl-4 col-md-6">
+            <div class="card info-card sales-card">
+              <div class="card-body">
+                <div class="card-icon d-flex align-items-center justify-content-center">
+                  <i class="fas fa-calendar-day"></i>
+                </div>
+                <div class="ps-2">
+                  <h6 class="mb-0" style="font-size:15px;">Casual Leave</h5>
+                  <h6>{{ leave_balance.casual_leaves }}</h6>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Sick Leave -->
+          <div class="col-xxl-4 col-md-6">
+            <div class="card info-card revenue-card">
+              <div class="card-body">
+                <div class="card-icon d-flex align-items-center justify-content-center">
+                  <i class="fas fa-user-times" style="color:red"></i>
+                </div>
+                <div class="ps-2">
+                  <h6 class="mb-0" style="font-size:15px;">Sick Leave</h5>
+                  <h6>{{ leave_balance.sick_leaves }}</h6>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Compensatory Leave -->
+          <div class="col-xxl-4 col-md-6">
+            <div class="card info-card revenue-card">
+              <div class="card-body">
+                <div class="card-icon d-flex align-items-center justify-content-center">
+                  <i class="fas fa-business-time"></i>
+                </div>
+                <div class="ps-2">
+                  <h6 class="mb-0" style="font-size:15px;">Compensatory </h5>
+                  <h6>{{ leave_balance.compensatory_leaves }}</h6>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Additional Working Days -->
+          <div class="col-xxl-4 col-md-6">
+            <div class="card info-card sales-card">
+              <div class="card-body">
+                <div class="card-icon d-flex align-items-center justify-content-center">
+                  <i class="fas fa-calendar-day"></i>
+                </div>
+                <div class="ps-2">
+                  <h6 class="mb-0" style="font-size:15px;">Additional Working</h5>
+                  <h6>{{ leave_balance.additional_working_days }}</h6>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+
+
+      <!-- Recent Sales (if needed) -->
+      <div class="col-12">
+        <div class="card recent-sales overflow-auto">
+          <!-- Additional content can go here -->
+        </div>
+      </div>
+
+
+
+            <!-- Recent Sales -->
+            <div class="col-12">
+              <div class="card recent-sales overflow-auto">
+
+
+                <div class="card-body">
+                  <h5 class="card-title">Leave</h5>
+
+                  <div style="max-height: 250px; overflow-y: auto;">
+                    <table class="table table-borderless datatable">
+                      <thead>
+                        <tr>
+                            <th scope="col">Sl No</th>
+                            <th scope="col">Leave From</th>
+                            <th scope="col">Leave To</th>
+                            <th scope="col">Reason</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if leaves %}
+                            {% for leave in leaves %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ leave.date_from }}</td>
+                                <td>{{ leave.date_to }}</td>
+                                <td>{{ leave.reason }}</td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="4" class="text-center">No leave records found</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+
+                    </table>
+                  </div>
+
+
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="col-lg-4">
+
+
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Recent Projects <span class="text-muted">| Overview</span></h5>
+
+              <!-- Scrollable timeline -->
+              <div class="timeline position-relative ps-4 border-start border-2 border-primary" style="max-height: 300px; overflow-y: auto;">
+                {% if total_projects %}
+                  {% for i in total_projects|dictsortreversed:"id" %}
+                    <div class="mb-4 position-relative">
+                      <span class="position-absolute top-40 start-40 translate-middle p-1 bg-primary border border-light rounded-circle" style="margin-top: 10px;"></span>
+                      <div>
+                        <h6 class="mb-1">&nbsp;&nbsp;&nbsp;&nbsp;{{ i.project_no }}</h6>
+                        <p class="mb-0 text-muted">{{ i.project_name }}</p>
+                      </div>
+                    </div>
+                  {% endfor %}
+                {% else %}
+                  <div class="text-muted text-center mt-3">No project records found</div>
+                {% endif %}
+              </div>
+
+
+            </div>
+          </div>
+
+          <style>
+            .timeline .position-relative::before {
+              content: '';
+              position: absolute;
+              left: -10px;
+              top: 0;
+              height: 100%;
+              width: 2px;
+              background-color: #0d6efd;
+            }
+          </style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Include ECharts Library -->
+<script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+<div class="card">
+  <div class="card-body pb-0">
+    <h5 class="card-title">Leave Summary <span>| Overview</span></h5>
+
+    <!-- Pie Chart -->
+    <div id="workSummaryPieChart" style="min-height: 400px;" class="echart"></div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Data from Django or backend context variables
+    var chartData = [
+      { name: 'Total Working', value: {{ total_working_days|default:0 }}, itemStyle: { color: '#3498db' } }, // Blue
+      { name: 'Casual Leaves', value: {{ leave_balance.casual_leaves|default:0 }}, itemStyle: { color: '#1abc9c' } }, // Teal
+      { name: 'Sick Leaves', value: {{ leave_balance.sick_leaves|default:0 }}, itemStyle: { color: '#e74c3c' } }, // Red
+      { name: 'Compensatory Leaves', value: {{ leave_balance.compensatory_leaves|default:0 }}, itemStyle: { color: '#9b59b6' } }, // Purple
+      { name: 'Additional Working Days', value: {{ leave_balance.additional_working_days|default:0 }}, itemStyle: { color: '#f1c40f' } }, // Yellow
+
+    ];
+
+    var pieChartDom = document.getElementById("workSummaryPieChart");
+    if (pieChartDom) {
+      var pieChart = echarts.init(pieChartDom);
+      var pieOption = {
+        tooltip: {
+          trigger: 'item'
+        },
+        legend: {
+          top: '5%',
+          left: 'center'
+        },
+        series: [{
+          name: 'Leave Summary',
+          type: 'pie',
+          radius: ['40%', '70%'],
+          avoidLabelOverlap: false,
+          label: { show: false, position: 'center' },
+          emphasis: {
+            label: { show: true, fontSize: '18', fontWeight: 'bold' }
+          },
+          labelLine: { show: false },
+          data: chartData
+        }]
+      };
+      pieChart.setOption(pieOption);
+    }
+  });
+</script>
+
+
+
+          <!-- <div class="card">
+            <div class="filter">
+              <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                <li class="dropdown-header text-start">
+                  <h6>Filter</h6>
+                </li>
+
+                <li><a class="dropdown-item" href="#">Today</a></li>
+                <li><a class="dropdown-item" href="#">This Month</a></li>
+                <li><a class="dropdown-item" href="#">This Year</a></li>
+              </ul>
+            </div>
+
+            <div class="card-body pb-0">
+              <h5 class="card-title">News &amp; Updates <span>| Today</span></h5>
+
+              <div class="news">
+                <div class="post-item clearfix">
+                  <img src="assets/img/news-1.jpg" alt="">
+                  <h4><a href="#">Nihil blanditiis at in nihil autem</a></h4>
+                  <p>Sit recusandae non aspernatur laboriosam. Quia enim eligendi sed ut harum...</p>
+                </div>
+
+                <div class="post-item clearfix">
+                  <img src="assets/img/news-2.jpg" alt="">
+                  <h4><a href="#">Quidem autem et impedit</a></h4>
+                  <p>Illo nemo neque maiores vitae officiis cum eum turos elan dries werona nande...</p>
+                </div>
+
+                <div class="post-item clearfix">
+                  <img src="assets/img/news-3.jpg" alt="">
+                  <h4><a href="#">Id quia et et ut maxime similique occaecati ut</a></h4>
+                  <p>Fugiat voluptas vero eaque accusantium eos. Consequuntur sed ipsam et totam...</p>
+                </div>
+
+                <div class="post-item clearfix">
+                  <img src="assets/img/news-4.jpg" alt="">
+                  <h4><a href="#">Laborum corporis quo dara net para</a></h4>
+                  <p>Qui enim quia optio. Eligendi aut asperiores enim repellendusvel rerum cuder...</p>
+                </div>
+
+                <div class="post-item clearfix">
+                  <img src="assets/img/news-5.jpg" alt="">
+                  <h4><a href="#">Et dolores corrupti quae illo quod dolor</a></h4>
+                  <p>Odit ut eveniet modi reiciendis. Atque cupiditate libero beatae dignissimos eius...</p>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      </div> -->
+    </section>
+
+  </main><!-- End #main -->
+
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/chart.js/chart.umd.js"></script>
+  <script src="assets/vendor/echarts/echarts.min.js"></script>
+  <script src="assets/vendor/quill/quill.min.js"></script>
+  <script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
+  <script src="assets/vendor/tinymce/tinymce.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="assets/js/main.js"></script>
+
+</body>
+
+</html>
+

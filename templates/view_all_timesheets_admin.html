@@ -1,0 +1,241 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Timesheet - Rowther</title>
+  <link rel="icon" href="{% static 'logo.jpg' %}">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script> <!-- Add SheetJS Library -->
+  <style>
+    .table th, .table td {
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+  <div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center">
+      <h3 class="card-title">ALL TIMESHEETS</h3>
+      <form method="get" class="mb-4 d-flex align-items-center">
+        <div class="d-flex">
+          <div class="input-group me-3"> <!-- Added margin-right to space out elements -->
+            <span class="input-group-text" id="from-date-prefix">From</span>
+            <input type="date" name="from_date" id="from_date" class="form-control" value="{{ from_date }}">
+          </div>
+          <div class="input-group me-3"> <!-- Added margin-right to space out elements -->
+            <span class="input-group-text" id="to-date-prefix">To</span>
+            <input type="date" name="to_date" id="to_date" class="form-control" value="{{ to_date }}">
+          </div>
+          <button type="submit" class="btn btn-primary">Filter</button> <!-- No need for margin-top here -->
+        </div>
+      </form>
+    
+      <div class="mb-4 text-end d-flex align-items-center">
+        <a href="javascript:history.back()" class="btn btn-primary me-3">Exit</a>
+        <button class="btn btn-success" id="export-excel">Export to Excel</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="card-body p-4">
+      <!-- Header -->
+      <div class="mb-2" id="timesheet-details">
+        <h5 class="mb-2">ADMIN REPORT</h5>
+        <table class="table-bordered" style="border-collapse: collapse; font-size: 14px;">
+          <tr>
+            <th style="background-color: #D3EEFF; text-align: left; padding: 6px;width: 20%; ">Admin Name</th>
+            <td style="padding: 6px;">{{ bok.First_name }}</td>
+          </tr>
+          <tr>
+            <th style="background-color: #D3EEFF; text-align: left; padding: 6px;width: 20%; ">Admin ID</th>
+            <td style="padding: 6px;">{{ bok.Emp_Id }}</td>
+          </tr>
+          <tr>
+            <th style="background-color: #D3EEFF; text-align: left; padding: 6px;width: 20%; ">Location</th>
+            <td style="padding: 6px;">{{ bok.Location }}</td>
+          </table>
+      </div>
+
+    <!-- Timesheet Data Display -->
+{% if monthly_timesheets %}
+<div class="card mb-3">
+  <div class="card-body p-2">
+    <table class="table table-bordered table-striped align-middle text-center" id="timesheet-table" style="font-size: 13px;">
+      <thead style="font-size: 0.8rem;">
+        <tr>
+          <th style="background-color: #D3EEFF;">Sl No</th>
+          <th style="background-color: #D3EEFF; width:100px;">Date</th>
+          <th style="background-color: #D3EEFF;">Staff</th>
+          <th style="background-color: #D3EEFF;">Day</th>
+          <th style="background-color: #D3EEFF;">Project No</th>
+          <th style="background-color: #D3EEFF;">Project Name</th>
+          <th style="background-color: #D3EEFF;">Description</th>
+          <th style="background-color: #D3EEFF;">Total Hours Worked</th>
+          <th style="background-color: #D3EEFF;">Week</th>
+        </tr>
+      </thead>
+      <tbody id="timesheet-body" style="font-size: 0.8rem;">
+        {% for month, entries in monthly_timesheets.items %}
+        {% regroup entries by week_label as week_groups %}
+        {% for week in week_groups %}
+          {% for entry in week.list %}
+            <tr>
+              <!-- Start counting from 1 -->
+              <td style="width: 50px;">{{ forloop.parentloop.counter0|add:forloop.counter }}</td> <!-- Adjust the counter to start at 1 -->
+              <td style="width: 50px;">{{ entry.date|date:'d-m-Y'  }}</td>
+              <td>{{ entry.staff_name }}</td>
+              <td>
+                <table style="width: 100%; padding: 2px;">
+                  <tbody style="font-size: 0.8rem;">
+                    {% if entry.hours.mon %}<tr><td>Mon</td></tr>{% endif %}
+                    {% if entry.hours.tue %}<tr><td>Tue</td></tr>{% endif %}
+                    {% if entry.hours.wed %}<tr><td>Wed</td></tr>{% endif %}
+                    {% if entry.hours.thu %}<tr><td>Thu</td></tr>{% endif %}
+                    {% if entry.hours.fri %}<tr><td>Fri</td></tr>{% endif %}
+                    {% if entry.hours.sat %}<tr><td>Sat</td></tr>{% endif %}
+                    {% if entry.hours.sun %}<tr><td>Sun</td></tr>{% endif %}
+                  </tbody>
+                </table>
+              </td>
+              <td>{{ entry.project_no }}</td>
+              <td>{{ entry.project_name }}</td>
+              <td>{{ entry.remarks }}</td>
+              <td>{{ week.grouper }}</td>
+              <td class="fw-bold total-hours" style="font-size: 14px;">{{ entry.total }}</td>
+            </tr>
+          {% endfor %}
+        {% endfor %}
+      {% endfor %}
+      {% else %}
+        <p>No timesheet data available.</p>
+      {% endif %}
+      <script id="timesheet-data" type="application/json">
+        {{ monthly_timesheets|json_script:"timesheet-data" }}
+      </script>
+      
+      <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const data = JSON.parse(document.getElementById("timesheet-data").textContent);
+        const tbody = document.getElementById("timesheet-body");
+        let allEntries = [];
+      
+        // Collect all entries
+        for (const month in data) {
+          const entries = data[month];
+          if (Array.isArray(entries)) {
+            allEntries.push(...entries);
+          }
+        }
+      
+        // Sort by date descending (LIFO)
+        allEntries.sort((a, b) => new Date(b.date) - new Date(a.date));
+      
+        if (allEntries.length === 0) {
+          const row = document.createElement("tr");
+          row.innerHTML = `<td colspan="9">No timesheet data available.</td>`;
+          tbody.appendChild(row);
+          return;
+        }
+      
+        allEntries.forEach((entry, index) => {
+          const row = document.createElement("tr");
+      
+          const dayRows = [];
+          if (entry.hours?.mon) dayRows.push("Mon");
+          if (entry.hours?.tue) dayRows.push("Tue");
+          if (entry.hours?.wed) dayRows.push("Wed");
+          if (entry.hours?.thu) dayRows.push("Thu");
+          if (entry.hours?.fri) dayRows.push("Fri");
+          if (entry.hours?.sat) dayRows.push("Sat");
+          if (entry.hours?.sun) dayRows.push("Sun");
+      
+          const daysHtml = `
+            <table style="width: 100%; padding: 2px;">
+              <tbody style="font-size: 0.8rem;">
+                ${dayRows.map(day => `<tr><td>${day}</td></tr>`).join('')}
+              </tbody>
+            </table>`;
+      
+          const formattedDate = new Date(entry.date).toLocaleDateString('en-GB');
+      
+          row.innerHTML = `
+            <td style="width: 50px;">${index + 1}</td>
+            <td style="width: 50px;">${formattedDate}</td>
+            <td>${entry.staff_name || ''}</td>
+            <td>${daysHtml}</td>
+            <td>${entry.project_no || ''}</td>
+            <td>${entry.project_name || ''}</td>
+            <td>${entry.remarks || ''}</td>
+            <td class="fw-bold total-hours" style="font-size: 14px;">${entry.total || 0}</td>
+            <td>${entry.week_label || ''}</td>
+          `;
+      
+          tbody.appendChild(row);
+        });
+      });
+      </script>
+      
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // Export to Excel functionality
+    document.getElementById('export-excel').addEventListener('click', function () {
+      const exportArea = document.querySelector('.card-body').cloneNode(true);
+
+      // Optional: remove the date filter form from export
+      const form = exportArea.querySelector('form');
+      if (form) form.remove();
+
+      const htmlContent = `
+        <html>
+          <head>
+            <meta charset="UTF-8">
+            <style>
+              body {
+                font-family: Arial, sans-serif;
+              }
+              h4 {
+                margin-bottom: 8px;
+              }
+              table {
+                border-collapse: collapse;
+                width: 100%;
+                margin-bottom: 20px;
+              }
+              th, td {
+                border: 1px solid #000;
+                padding: 8px;
+                text-align: center;
+                vertical-align: middle;
+              }
+              th {
+                background-color: #D3EEFF;
+                font-weight: bold;
+                text-align: left;
+              }
+            </style>
+          </head>
+          <body>
+            ${exportArea.innerHTML}
+          </body>
+        </html>
+      `;
+
+      const blob = new Blob([htmlContent], { type: "application/vnd.ms-excel" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "styled_timesheet.xls";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+  </script>
+</body>
+</html>
+

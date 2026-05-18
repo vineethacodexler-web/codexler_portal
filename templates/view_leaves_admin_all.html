@@ -1,0 +1,240 @@
+{% include 'admin_navbar.html' %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Management</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|Nunito:300,400,600,700|Poppins:300,400,500,600,700" rel="stylesheet">
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" crossorigin="anonymous">
+
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- jQuery & Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+</head>
+
+<body>
+
+<main id="main" class="main">
+
+    <style>
+      .popup-alert-container {
+        position: fixed;
+        top: 50px;
+        left: 20%;
+        z-index: 1050;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .popup-alert {
+        padding: 12px 20px;
+        border-radius: 5px;
+        color: #fff;
+        min-width: 250px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        opacity: 0.95;
+        animation: fadeout 0.5s ease-in-out forwards;
+        animation-delay: 3s;
+      }
+      .popup-success {
+        background-color: #28a745;
+      }
+      .popup-error, .popup-deleted {
+        background-color: #dc3545;
+      }
+      @keyframes fadeout {
+        to {
+          opacity: 0;
+          transform: translateY(-10px);
+          pointer-events: none;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+
+
+    {% if messages %}
+    <div id="popup-alert-container" class="popup-alert-container">
+      {% for message in messages %}
+        <div class="popup-alert {% if 'success' in message.tags %}popup-success{% else %}popup-error{% endif %}
+        {% if 'delete' in message.text %} popup-deleted {% endif %}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <h3 class="card-title mb-3">Manage Leaves</h3>
+
+    <div class="table-responsive">
+      <table id="leaveTable" class="table table-sm table-bordered">
+        <thead style="background-color: #D3EEFF; color: black; font-size: 0.85rem;">
+          <tr>
+            <th style="background-color: #D3EEFF; color: black; font-size: 0.85rem;">Sl No</th>
+            <th style="background-color: #D3EEFF; color: black; font-size: 0.85rem;">Staff</th>
+            <th style="background-color: #D3EEFF; color: black; font-size: 0.85rem;" >Leave Type</th>
+            <th style="background-color: #D3EEFF; color: black; font-size: 0.85rem;" >Multiple Days</th>
+            <th style="background-color: #D3EEFF; color: black; font-size: 0.85rem;">Date From</th>
+            <th style="background-color: #D3EEFF; color: black; font-size: 0.85rem;">Date To</th>
+            <th style="background-color: #D3EEFF; color: black; font-size: 0.85rem;">Reason</th>
+            <th style="background-color: #D3EEFF; color: black; font-size: 0.85rem;">Document</th>
+            <th style="background-color: #D3EEFF; color: black; font-size: 0.85rem;">Actions</th>
+          </tr>
+        </thead>
+        <tbody style="font-size: 0.8rem;">
+          {% for leave in leaves|dictsortreversed:"id" %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ leave.staff.username }}</td>
+            <td >{{ leave.leave_type }}</td>
+            <td >{{ leave.total_days }}</td>
+            <td>{{ leave.date_from }}</td>
+            <td>{{ leave.date_to }}</td>
+            <td>{{ leave.reason }}</td>
+            <td>
+              {% if leave.document %}
+                <a href="{{ leave.document.url }}" class="btn btn-success btn-sm" target="_blank" download>Download</a>
+              {% else %}
+                Not uploaded
+              {% endif %}
+            </td>
+            <td>
+              <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editLeaveModal{{ leave.id }}">Edit</button>
+              <button class="btn btn-danger btn-sm" onclick="confirmDelete('{% url 'delete_leave_admin_all' leave.id %}')">Delete</button>
+
+              <!-- Edit Modal -->
+              <div class="modal fade" id="editLeaveModal{{ leave.id }}" tabindex="-1" aria-labelledby="editLeaveModalLabel{{ leave.id }}" aria-hidden="true">
+                <div class="modal-dialog modal-sm">
+                  <div class="modal-content">
+                    <form method="post" action="{% url 'update_leave_admin' leave.id %}" enctype="multipart/form-data">
+                      {% csrf_token %}
+                      <div class="modal-header">
+                        <h5 class="modal-title">Update Leave Request</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="mb-3">
+                          <label for="document{{ leave.id }}" class="form-label">Upload Document</label>
+                          <input type="file" name="document" id="document{{ leave.id }}" class="form-control">
+                          {% if leave.document %}
+                            <small class="form-text">Current: <a href="{{ leave.document.url }}" target="_blank">View file</a></small>
+                          {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                          <label for="datetime_from{{ leave.id }}" class="form-label">Date & Time From</label>
+                          <input type="datetime-local" class="form-control" id="datetime_from{{ leave.id }}" name="datetime_from"
+                            value="{{ leave.date_from|date:'Y-m-d\\TH:i' }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                          <label for="datetime_to{{ leave.id }}" class="form-label">Date & Time To</label>
+                          <input type="datetime-local" class="form-control" id="datetime_to{{ leave.id }}" name="datetime_to"
+                            value="{{ leave.date_to|date:'Y-m-d\\TH:i' }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                          <label for="leave_type" class="form-label">Leave Type</label>
+                          <select name="leave_type" id="leave_type" class="form-select" required onchange="togglePaidLeaveField()">
+                            <option value="" disabled {% if not leave.leave_type %}selected{% endif %}>-- Select Leave Type --</option>
+                            <option value="Casual" {% if leave.leave_type == "Casual" %}selected{% endif %}>Casual</option>
+                            <option value="Sick" {% if leave.leave_type == "Sick" %}selected{% endif %}>Sick</option>
+                            <option value="Compensatory" {% if leave.leave_type == "Compensatory" %}selected{% endif %}>Compensatory</option>
+                            <option value="Paid" {% if leave.leave_type == "Paid" %}selected{% endif %}>Paid Leave</option>
+                          </select>
+                        </div>
+
+
+                        <div class="mb-3">
+                          <label for="reason{{ leave.id }}" class="form-label">Reason</label>
+                          <textarea name="reason" id="reason{{ leave.id }}" class="form-control" rows="3" required>{{ leave.reason }}</textarea>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Update</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- Scripts -->
+  <script>
+    $(document).ready(function () {
+      $('#leaveTable').DataTable({
+        paging: true,
+        searching: true,
+        info: true,
+        ordering: true,
+        pageLength: 10,
+        lengthChange: true
+      });
+    });
+
+    function confirmDelete(deleteUrl) {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "This action cannot be undone.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Yes, delete it!"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.href = deleteUrl;
+        }
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const container = document.getElementById("popup-alert-container");
+      if (container) {
+        const seen = new Set();
+        container.querySelectorAll(".popup-alert").forEach(alert => {
+          const text = alert.textContent.trim();
+          if (seen.has(text)) {
+            alert.classList.add("popup-deleted");
+            setTimeout(() => alert.remove(), 1000);
+          } else {
+            seen.add(text);
+            setTimeout(() => alert.remove(), 4000);
+          }
+        });
+      }
+    });
+  </script>
+
+  </body>
+  </html>

@@ -1,0 +1,124 @@
+{% include 'navbar.html' %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rowther | Manage Employees</title>
+
+  <link rel="icon" href="{% static 'logo.jpg' %}">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|Nunito:300,400,600,700|Poppins:300,400,500,600,700" rel="stylesheet">
+
+  <!-- Vendor CSS -->
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}">
+  <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+
+  <!-- DataTables CSS -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+
+  <!-- jQuery & Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+  <!-- DataTables JS -->
+  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <style>
+    .profile-img {
+      border-radius: 10%;
+      object-fit: cover;
+      border: 3px solid #ddd;
+    }
+    .btn-sm {
+      font-size: 0.8rem;
+      padding: 5px 10px;
+    }
+    .modal-header {
+      background-color: #007bff;
+      color: white;
+    }
+    .modal-content {
+      border-radius: 10px;
+    }
+    #searchInput {
+      position: absolute;
+      top: 80px;
+      right: 50px;
+      padding: 8px 16px;
+      width: 300px;
+    }
+  </style>
+
+</head>
+
+<body>
+<main id="main" class="main">
+
+  <h3 class="card-title mb-4">Add Expenses</h3>
+  <div class="container">
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="row">
+
+        <!-- Category -->
+        <div class="col-md-6 mb-3">
+            <label>Category</label>
+            <select name="category" class="form-control">
+                <option value="">Select Category</option>
+                {% for c in categories %}
+                    <option value="{{ c.id }}">{{ c.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Amount -->
+        <div class="col-md-6 mb-3">
+            <label>Amount</label>
+            <input type="number" step="0.01" name="amount" class="form-control">
+        </div>
+
+        <!-- Date -->
+        <div class="col-md-6 mb-3">
+            <label>Date</label>
+            <input type="date" name="date" class="form-control">
+        </div>
+
+        <!-- Receipt -->
+        <div class="col-md-6 mb-3">
+            <label>Receipt</label>
+            <input type="file" name="receipt" class="form-control">
+        </div>
+
+        <!-- Description -->
+        <div class="col-md-12 mb-3">
+            <label>Description</label>
+            <textarea name="description" class="form-control" rows="3"></textarea>
+        </div>
+
+    </div>
+
+    <!-- Buttons -->
+    <div class="text-center">
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a href="{% url 'expense_list' %}" class="btn btn-secondary">Cancel</a>
+    </div>
+
+</form>
+  </div>
+</main>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>
