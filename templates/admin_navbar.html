@@ -16,22 +16,22 @@
   
   <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="static/assets/vendor/bootstrap-icons/bootstrap-icons.css">
-  <link rel="stylesheet" href="static/assets/vendor/boxicons/css/boxicons.min.css">
-  <link rel="stylesheet" href="static/assets/vendor/quill/quill.snow.css">
-  <link rel="stylesheet" href="static/assets/vendor/remixicon/remixicon.css">
-  <link rel="stylesheet" href="static/assets/vendor/simple-datatables/style.css">
+  <link rel="stylesheet" href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}">
+  <link rel="stylesheet" href="{% static 'assets/vendor/boxicons/css/boxicons.min.css' %}">
+  <link rel="stylesheet" href="{% static 'assets/vendor/quill/quill.snow.css' %}">
+  <link rel="stylesheet" href="{% static 'assets/vendor/remixicon/remixicon.css' %}">
+  <link rel="stylesheet" href="{% static 'assets/vendor/simple-datatables/style.css' %}">
   <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
 </head>
 
 <body>
   <header id="header" class="header fixed-top d-flex align-items-center" >
     <div class="d-flex align-items-center justify-content-between" >
-      <a href=""><img src="/static/logo_c_frame.jpeg" width="100" height="50" alt=""></a>
+      <a href=""><img src="{% static 'logo_c_frame.jpeg' %}" width="100" height="50" alt=""></a>
       <i class="bi bi-list toggle-sidebar-btn"></i>
     </div>
     <div class="search-bar" >
-      <p style="font-size:20px;">Welcome, {{ bok.First_name }}  
+      <p style="font-size:20px;">Welcome, {{ bok.First_name }}
         
     
      </p>
@@ -94,45 +94,45 @@
     </nav>
   </header>
 
-  <aside id="sidebar" class="sidebar" style="background-color: #161f2e;">
+  <aside id="sidebar" class="sidebar" >
     <ul class="sidebar-nav" id="sidebar-nav">
   
       <!-- Dashboard -->
       <li class="nav-item">
-        <a class="nav-link {% if request.resolver_match.url_name == 'admin_home' %}active{% endif %}" href="{% url 'admin_home' %}" style="background-color: #161f2e;color:white">
-          <i class="bi bi-house-door-fill" style="background-color: #161f2e;color:white"></i> Dashboard
+        <a class="nav-link {% if request.resolver_match.url_name == 'admin_home' %}active{% endif %}" href="{% url 'admin_home' %}" >
+          <i class="bi bi-house-door-fill"></i> Dashboard
         </a>
       </li>
   
       <!-- Add Project -->
       <li class="nav-item">
-        <a class="nav-link {% if request.resolver_match.url_name == 'add_project' %}active{% endif %}" href="{% url 'add_project' %}" style="background-color: #161f2e;color:white">
-          <i class="bi bi-folder-plus" style="background-color: #161f2e;color:white"></i> Add Project
+        <a class="nav-link {% if request.resolver_match.url_name == 'add_project' %}active{% endif %}" href="{% url 'add_project' %}" >
+          <i class="bi bi-folder-plus" ></i> Add Project
         </a>
       </li>
   
       <!-- Timesheets -->
       <li class="nav-item">
-        <a class="nav-link {% if request.resolver_match.url_name == 'all_view_timesheet_admin' %}active{% endif %}" href="{% url 'all_view_timesheet_admin' %}" style="background-color: #161f2e;color:white">
-          <i class="bi bi-clock-history" style="background-color: #161f2e;color:white"></i> Timesheets
+        <a class="nav-link {% if request.resolver_match.url_name == 'all_view_timesheet_admin' %}active{% endif %}" href="{% url 'all_view_timesheet_admin' %}" >
+          <i class="bi bi-clock-history" ></i> Timesheets
         </a>
       </li>
   
       <!-- Leaves -->
       <li class="nav-item">
-        <a class="nav-link {% if request.resolver_match.url_name == 'view_leaves_admin_all' %}active{% endif %}" href="{% url 'view_leaves_admin_all' %}" style="background-color: #161f2e;color:white">
-          <i class="bi bi-person-dash-fill" style="background-color: #161f2e;color:white"></i> Leaves
+        <a class="nav-link {% if request.resolver_match.url_name == 'view_leaves_admin_all' %}active{% endif %}" href="{% url 'view_leaves_admin_all' %}">
+          <i class="bi bi-person-dash-fill"></i> Leaves
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link {% if request.resolver_match.url_name == 'view_additional_days_admin' %}active{% endif %}" href="{% url 'view_additional_days_admin' %}" style="background-color: #161f2e; color:white;">
-          <i class="bi bi-calendar-plus" style="color:white;"></i> View Extra shifts
+        <a class="nav-link {% if request.resolver_match.url_name == 'view_additional_days_admin' %}active{% endif %}" href="{% url 'view_additional_days_admin' %}" >
+          <i class="bi bi-calendar-plus" ></i> View Extra shifts
         </a>
       </li>
       <!-- Attendance -->
       <li class="nav-item">
-        <a class="nav-link {% if request.resolver_match.url_name == 'view_attendance' %}active{% endif %}" href="{% url 'view_attendance' %}" style="background-color: #161f2e;color:white">
-          <i class="bi bi-calendar-check-fill" style="background-color: #161f2e;color:white"></i> Attendance
+        <a class="nav-link {% if request.resolver_match.url_name == 'view_attendance' %}active{% endif %}" href="{% url 'view_attendance' %}" >
+          <i class="bi bi-calendar-check-fill"></i> Attendance
         </a>
       </li>
       <!-- Payroll -->
@@ -141,14 +141,12 @@
      data-bs-target="#payroll-nav"
      data-bs-toggle="collapse"
      href="#"
-     style="background-color: #161f2e; color:white">
+    >
 
-    <i class="bi bi-cash-stack" style="color:white"></i>
+    <i class="bi bi-cash-stack" ></i>
 
-    <span>Payroll</span>
-
-    <i class="bi bi-chevron-down ms-auto"
-       style="color:white"></i>
+    Payroll
+    <i class="bi bi-chevron-down ms-auto"></i>
   </a>
 
   <ul id="payroll-nav"
@@ -162,10 +160,10 @@
 
      href="{% url 'add_salary_structure_page' %}"
 
-     style="background-color: #161f2e; color:white">
+     >
 
     <i class="bi bi-plus-circle"
-       style="color:white"></i>
+       ></i>
 
     <span>Add Salary Structure</span>
 
@@ -180,10 +178,10 @@
 
          href="{% url 'salary_structure_list' %}"
 
-         style="background-color: #161f2e; color:white">
+        >
 
         <i class="bi bi-wallet2"
-           style="color:white"></i>
+          ></i>
 
         <span>Salary Structure</span>
       </a>
@@ -198,10 +196,10 @@
 
          href="{% url 'generate_payroll' %}"
 
-         style="background-color: #161f2e; color:white">
+       >
 
         <i class="bi bi-calculator"
-           style="color:white"></i>
+          ></i>
 
         <span>Generate Payroll</span>
       </a>
@@ -216,10 +214,10 @@
 
          href="{% url 'payroll_list' %}"
 
-         style="background-color: #161f2e; color:white">
+        >
 
         <i class="bi bi-receipt"
-           style="color:white"></i>
+          ></i>
 
         <span>Payroll List</span>
       </a>
@@ -234,10 +232,10 @@
 
          href="{% url 'payslip_list' %}"
 
-         style="background-color: #161f2e; color:white">
+         >
 
         <i class="bi bi-file-earmark-pdf"
-           style="color:white"></i>
+           ></i>
 
         <span>Payslips</span>
       </a>
@@ -252,10 +250,10 @@
 
          href="{% url 'payroll_reports' %}"
 
-         style="background-color: #161f2e; color:white">
+        >
 
         <i class="bi bi-bar-chart"
-           style="color:white"></i>
+          ></i>
 
         <span>Payroll Reports</span>
       </a>
@@ -266,15 +264,15 @@
   
       <!-- Add Staff -->
       <li class="nav-item">
-        <a class="nav-link {% if request.resolver_match.url_name == 'register_employee' %}active{% endif %}" href="{% url 'register_employee' %}" style="background-color: #161f2e;color:white">
-          <i class="bi bi-person-plus-fill" style="background-color: #161f2e;color:white"></i> Add Staff
+        <a class="nav-link {% if request.resolver_match.url_name == 'register_employee' %}active{% endif %}" href="{% url 'register_employee' %}" >
+          <i class="bi bi-person-plus-fill"></i> Add Staff
         </a>
       </li>
   
       <!-- Manage Staffs -->
       <li class="nav-item">
-        <a class="nav-link {% if request.resolver_match.url_name == 'view_staffs' %}active{% endif %}" href="{% url 'view_staffs' %}" style="background-color: #161f2e;color:white">
-          <i class="bi bi-people-fill" style="background-color: #161f2e;color:white"></i> Manage Staffs
+        <a class="nav-link {% if request.resolver_match.url_name == 'view_staffs' %}active{% endif %}" href="{% url 'view_staffs' %}">
+          <i class="bi bi-people-fill" ></i> Manage Staffs
         </a>
       </li>
   
@@ -286,28 +284,28 @@
         <ul id="components-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
   
           <li>
-            <a class="dropdown-item {% if request.resolver_match.url_name == 'view_timesheets_admin' %}active{% endif %}" href="{% url 'view_timesheets_admin' %}" style="background-color: #161f2e; color:white">
-              <i class="bi bi-journal-text" style="background-color: #161f2e; color:white"></i><span>My TimeSheet</span>
+            <a class="dropdown-item {% if request.resolver_match.url_name == 'view_timesheets_admin' %}active{% endif %}" href="{% url 'view_timesheets_admin' %}" >
+              <i class="bi bi-journal-text" ></i><span>My TimeSheet</span>
             </a>
           </li>
           <li>
-            <a class="dropdown-item {% if request.resolver_match.url_name == 'submit_additional_day_admin' %}active{% endif %}" href="{% url 'submit_additional_day_admin' %}" style="background-color: #161f2e; color:white">
-              <i class="bi bi-calendar-plus" style="background-color: #161f2e; color:white"></i><span>Additional Work Day</span>
+            <a class="dropdown-item {% if request.resolver_match.url_name == 'submit_additional_day_admin' %}active{% endif %}" href="{% url 'submit_additional_day_admin' %}" >
+              <i class="bi bi-calendar-plus" ></i><span>Additional Work Day</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link {% if request.resolver_match.url_name == 'view_additional_days_a' %}active{% endif %}" href="{% url 'view_additional_days_a' %}" style="background-color: #161f2e; color:white;">
-              <i class="bi bi-calendar-plus" style="color:white;"></i> view Extra shifts
+            <a class="nav-link {% if request.resolver_match.url_name == 'view_additional_days_a' %}active{% endif %}" href="{% url 'view_additional_days_a' %}" >
+              <i class="bi bi-calendar-plus" ></i> view Extra shifts
             </a>
           </li>
           <li>
-            <a class="dropdown-item {% if request.resolver_match.url_name == 'apply_leave_admin' %}active{% endif %}" href="{% url 'apply_leave_admin' %}" style="background-color: #161f2e; color:white">
-              <i class="bi bi-calendar-event" style="background-color: #161f2e; color:white"></i> Apply Leave
+            <a class="dropdown-item {% if request.resolver_match.url_name == 'apply_leave_admin' %}active{% endif %}" href="{% url 'apply_leave_admin' %}">
+              <i class="bi bi-calendar-event" ></i> Apply Leave
             </a>
           </li>
           <li>
-            <a class="dropdown-item {% if request.resolver_match.url_name == 'view_leaves_admin' %}active{% endif %}" href="{% url 'view_leaves_admin' %}" style="background-color: #161f2e; color:white">
-              <i class="bi bi-calendar2-week" style="background-color: #161f2e; color:white"></i> View Leaves
+            <a class="dropdown-item {% if request.resolver_match.url_name == 'view_leaves_admin' %}active{% endif %}" href="{% url 'view_leaves_admin' %}" >
+              <i class="bi bi-calendar2-week" ></i> View Leaves
             </a>
           </li>
   
@@ -318,28 +316,7 @@
   </aside>
 
   <!-- Sidebar Styling -->
-  <style>
-    .sidebar {
-      background-color: #161f2e;
-    }
-  
-    .nav-link {
-      color: white;
-      background-color: #161f2e;
-    }
-  
-    .nav-link i {
-      color: white;
-    }
-  
-    .nav-link.active {
-      background-color: #1e2a3a !important;
-      color: #f8f9fa !important;
-      font-weight: bold;
-      border-left: 4px solid #007bff;
-    }
-  </style>
-  
+
 
 
 
@@ -347,18 +324,17 @@
 
 
   </main>
-  <script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
-  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/vendor/chart.js/chart.umd.js"></script>
-  <script src="assets/vendor/echarts/echarts.min.js"></script>
-  <script src="assets/vendor/quill/quill.min.js"></script>
-  <script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
-  <script src="assets/vendor/tinymce/tinymce.min.js"></script>
-  <script src="assets/vendor/php-email-form/validate.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script src="{% static 'assets/vendor/apexcharts/apexcharts.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/chart.js/chart.umd.js' %}"></script>
+  <script src="{% static 'assets/vendor/echarts/echarts.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/quill/quill.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/simple-datatables/simple-datatables.js' %}"></script>
+  <script src="{% static 'assets/vendor/tinymce/tinymce.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/php-email-form/validate.js'%}"></script>
 
   <!-- Template Main JS File -->
-  <script src="assets/js/main.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="static/assets/js/main.js"></script>
+  <script src="{% static 'assets/js/main.js' %}"></script>
 </body>
 </html>

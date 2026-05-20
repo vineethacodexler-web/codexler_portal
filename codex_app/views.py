@@ -4079,3 +4079,126 @@ def add_salary_structure_page(request):
         'add_salary_structure_page.html',
         context
     )
+
+
+def view_payslip(request, id):
+
+    bok = Registration.objects.get(
+        id=request.session['logg']
+    )
+
+    payroll = Payroll.objects.get(id=id)
+
+    context = {
+        'bok': bok,
+        'payroll': payroll,
+    }
+
+    return render(
+        request,
+        'view_payslip.html',
+        context
+    )
+
+
+from django.http import HttpResponse
+from reportlab.platypus import (
+    SimpleDocTemplate,
+    Paragraph,
+    Spacer,
+    Table,
+    TableStyle
+)
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.pagesizes import letter
+
+
+def download_payslip_pdf(request, id):
+
+    payroll = Payroll.objects.get(id=id)
+
+    response = HttpResponse(
+        content_type='application/pdf'
+    )
+
+    response['Content-Disposition'] = (
+        f'attachment; filename="Payslip_{payroll.id}.pdf"'
+    )
+
+    doc = SimpleDocTemplate(
+        response,
+        pagesize=letter
+    )
+
+    styles = getSampleStyleSheet()
+
+    elements = []
+
+    title = Paragraph(
+        "Codexler Technologies - Payslip",
+        styles['Title']
+    )
+
+    elements.append(title)
+
+    elements.append(Spacer(1, 20))
+
+    details = Paragraph(
+        f"""
+        Employee:
+        {payroll.employee.First_name}
+        <br/>
+        Employee ID:
+        {payroll.employee.Emp_Id}
+        <br/>
+        Month:
+        {payroll.month}
+        <br/>
+        Year:
+        {payroll.year}
+        """,
+        styles['BodyText']
+    )
+
+    elements.append(details)
+
+    elements.append(Spacer(1, 20))
+
+    data = [
+
+        ['Description', 'Amount'],
+
+        ['Gross Salary', f'₹ {payroll.gross_salary}'],
+
+        ['PF', f'₹ {payroll.pf_amount}'],
+
+        ['ESI', f'₹ {payroll.esi_amount}'],
+
+        ['Leave Deduction', f'₹ {payroll.leave_deduction}'],
+
+        ['Net Salary', f'₹ {payroll.net_salary}'],
+
+    ]
+
+    table = Table(data, colWidths=[250, 200])
+
+    table.setStyle(TableStyle([
+
+        ('BACKGROUND', (0, 0), (-1, 0), colors.black),
+
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 10),
+
+    ]))
+
+    elements.append(table)
+
+    doc.build(elements)
+
+    return response

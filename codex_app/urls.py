@@ -22,7 +22,7 @@ urlpatterns = [
       path('del_employee/<id>', views.del_employee, name='del_employee'),
     path('edit_admin',views.edit_admin, name='edit_admin'),
     path('logged_out', views.logged_out, name='logged_out'),
-    path('login',views.login,name = 'login'),
+    path('login/',views.login,name = 'login'),
     path('logout', views.logout, name='logout'),
     path('admin_home',views.admin_home, name='admin_home'),
     path('adminn_details', views.adminn_details, name='adminn_details'),
@@ -183,12 +183,9 @@ path('payslip-list/', views.payslip_list, name='payslip_list'),
 path('payroll-reports/', views.payroll_reports, name='payroll_reports'),
 path('add-salary-structure-page/',views.add_salary_structure_page,name='add_salary_structure_page'),
 path('add_salary_structure/<int:id>/',views.add_salary_structure,name='add_salary_structure'),
-path(
-    'mark-payroll-paid/<int:id>/',
-    views.mark_payroll_paid,
-    name='mark_payroll_paid'
-),
-
+path('mark-payroll-paid/<int:id>/',views.mark_payroll_paid,name='mark_payroll_paid'),
+path('view-payslip/<int:id>/',views.view_payslip,name='view_payslip'),
+path('download-payslip-pdf/<int:id>/',views.download_payslip_pdf,name='download_payslip_pdf'),
 ]
 
 

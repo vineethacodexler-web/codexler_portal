@@ -1,0 +1,189 @@
+{% include 'admin_navbar.html' %}
+
+<main id="main" class="main">
+
+<div class="container mt-4">
+
+    <div class="card shadow-lg border-0">
+
+        <div class="card-header bg-info text-white">
+
+            <div class="d-flex justify-content-between">
+
+                <h3>
+
+                    Payslip
+
+                </h3>
+
+                <a href="{% url 'download_payslip_pdf' payroll.id %}"
+                   class="btn btn-danger btn-sm">
+
+
+                    Download PDF
+
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="card-body p-4">
+
+            <div class="text-center mb-4">
+
+                <h2>
+
+                    Codexler Technologies
+
+                </h2>
+
+                <p class="mb-0">
+
+                    Salary Payslip
+
+                </p>
+
+            </div>
+
+            <hr>
+
+            <div class="row mb-4">
+
+                <div class="col-md-6">
+
+                    <h5>Employee Details</h5>
+
+                    <p>
+                        <strong>Name:</strong>
+                        {{ payroll.employee.First_name }}
+                    </p>
+
+                    <p>
+                        <strong>Employee ID:</strong>
+                        {{ payroll.employee.Emp_Id }}
+                    </p>
+
+                    <p>
+                        <strong>Designation:</strong>
+                        {{ payroll.employee.Designation }}
+                    </p>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <h5>Payroll Details</h5>
+
+                    <p>
+                        <strong>Month:</strong>
+                        {{ payroll.month }}
+                    </p>
+
+                    <p>
+                        <strong>Year:</strong>
+                        {{ payroll.year }}
+                    </p>
+
+                    <p>
+                        <strong>Paid Date:</strong>
+                        {{ payroll.paid_date }}
+                    </p>
+
+                </div>
+
+            </div>
+
+            <table class="table table-bordered">
+
+                <thead class="table-info">
+
+                    <tr>
+
+                        <th>Earnings</th>
+
+                        <th>Amount</th>
+
+                        <th>Deductions</th>
+
+                        <th>Amount</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+
+                        <td>Gross Salary</td>
+
+                        <td>
+                            ₹ {{ payroll.gross_salary }}
+                        </td>
+
+                        <td>PF</td>
+
+                        <td>
+                            ₹ {{ payroll.pf_amount }}
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>Overtime</td>
+
+                        <td>
+                            ₹ {{ payroll.overtime_amount }}
+                        </td>
+
+                        <td>ESI</td>
+
+                        <td>
+                            ₹ {{ payroll.esi_amount }}
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td colspan="2"></td>
+
+                        <td>Leave Deduction</td>
+
+                        <td>
+                            ₹ {{ payroll.leave_deduction }}
+                        </td>
+
+                    </tr>
+
+                    <tr class="table-success">
+
+                        <th>
+
+                            Net Salary
+
+                        </th>
+
+                        <th>
+
+                            ₹ {{ payroll.net_salary }}
+
+                        </th>
+
+                        <th colspan="2"></th>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+</main>
