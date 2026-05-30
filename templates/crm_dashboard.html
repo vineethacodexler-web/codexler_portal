@@ -1,0 +1,193 @@
+{% include 'admin_navbar.html' %}
+
+<main id="main" class="main">
+
+<div class="container-fluid">
+
+    <div class="pagetitle">
+        <h1>CRM Dashboard</h1>
+    </div>
+
+    <section class="section">
+
+        <div class="row">
+
+            <!-- Total Leads -->
+            <div class="col-lg-3 col-md-6">
+
+                <div class="card info-card">
+
+                    <div class="card-body">
+
+                        <h5 class="card-title">
+                            Total Leads
+                        </h5>
+
+                        <h3>
+                            {{ total_leads }}
+                        </h3>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- New Leads -->
+            <div class="col-lg-3 col-md-6">
+
+                <div class="card info-card">
+
+                    <div class="card-body">
+
+                        <h5 class="card-title">
+                            New Leads
+                        </h5>
+
+                        <h3>
+                            {{ new_leads }}
+                        </h3>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Qualified Leads -->
+            <div class="col-lg-3 col-md-6">
+
+                <div class="card info-card">
+
+                    <div class="card-body">
+
+                        <h5 class="card-title">
+                            Qualified Leads
+                        </h5>
+
+                        <h3>
+                            {{ qualified_leads }}
+                        </h3>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Converted Leads -->
+            <div class="col-lg-3 col-md-6">
+
+                <div class="card info-card">
+
+                    <div class="card-body">
+
+                        <h5 class="card-title">
+                            Converted Leads
+                        </h5>
+
+                        <h3>
+                            {{ converted_leads }}
+                        </h3>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            <!-- Clients -->
+            <div class="col-lg-3 col-md-6">
+
+                <div class="card info-card">
+
+                    <div class="card-body">
+
+                        <h5 class="card-title">
+                            Total Clients
+                        </h5>
+
+                        <h3>
+                            {{ total_clients }}
+                        </h3>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Followups -->
+            <div class="col-lg-3 col-md-6">
+
+                <div class="card info-card">
+
+                    <div class="card-body">
+
+                        <h5 class="card-title">
+                            Pending Followups
+                        </h5>
+
+                        <h3>
+                            {{ pending_followups }}
+                        </h3>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Open Tickets -->
+            <div class="col-lg-3 col-md-6">
+
+                <div class="card info-card">
+
+                    <div class="card-body">
+
+                        <h5 class="card-title">
+                            Open Tickets
+                        </h5>
+
+                        <h3>
+                            {{ open_tickets }}
+                        </h3>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Resolved Tickets -->
+            <div class="col-lg-3 col-md-6">
+
+                <div class="card info-card">
+
+                    <div class="card-body">
+
+                        <h5 class="card-title">
+                            Resolved Tickets
+                        </h5>
+
+                        <h3>
+                            {{ resolved_tickets }}
+                        </h3>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+</main>

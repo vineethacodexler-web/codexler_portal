@@ -2558,18 +2558,75 @@ from django.core.mail import send_mail, BadHeaderError
 from django.shortcuts import render
 from django.conf import settings
 
+import re
+import requests
+
+from django.conf import settings
+from django.core.mail import send_mail, BadHeaderError
+from django.shortcuts import render
+
+
 def contact_view(request):
+
     context = {}
 
     if request.method == "POST":
+
+        # Honeypot protection
+        if request.POST.get('website'):
+            context['error'] = "Spam detected."
+            return render(request, 'contactus.html', context)
+
+        # Cloudflare Turnstile token
+        token = request.POST.get("cf-turnstile-response")
+
+        # Verify Turnstile
+        captcha_response = requests.post(
+            "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+            data={
+                "secret": "0x4AAAAAADTmhnjQuR310Gk1OUnaFDn8wys",
+                "response": token
+            }
+        )
+
+        captcha_result = captcha_response.json()
+
+        if not captcha_result.get("success"):
+            context['error'] = "Captcha verification failed."
+            return render(request, 'contactus.html', context)
+
         name = request.POST.get('name', '').strip()
         email = request.POST.get('email', '').strip()
         subject = request.POST.get('subject', '').strip()
         message = request.POST.get('message', '').strip()
 
-        # Validation
+        # Basic validation
         if not name or not email or not subject or not message:
             context['error'] = "All fields are required."
+            return render(request, 'contactus.html', context)
+
+        # Block URLs
+        if re.search(r'https?://|www\.', message.lower()):
+            context['error'] = "Links are not allowed."
+            return render(request, 'contactus.html', context)
+
+        # Block crypto spam keywords
+        blocked_words = [
+            "btc",
+            "bitcoin",
+            "crypto",
+            "wallet",
+            "withdraw",
+            "telegram"
+        ]
+
+        if any(word in message.lower() for word in blocked_words):
+            context['error'] = "Spam content detected."
+            return render(request, 'contactus.html', context)
+
+        # Length validation
+        if len(message) > 1000:
+            context['error'] = "Message is too long."
             return render(request, 'contactus.html', context)
 
         full_message = f"""
@@ -2581,6 +2638,7 @@ Message:
 """
 
         try:
+
             send_mail(
                 subject=subject,
                 message=full_message,
@@ -2588,13 +2646,16 @@ Message:
                 recipient_list=['codexlertechnologies@gmail.com'],
                 fail_silently=False,
             )
+
             context['success'] = "Your message has been sent successfully!"
 
         except BadHeaderError:
+
             context['error'] = "Invalid header found."
 
         except Exception as e:
-            print("EMAIL ERROR:", e)  # 👈 VERY IMPORTANT for debugging
+
+            print("EMAIL ERROR:", e)
             context['error'] = "Something went wrong. Please try again later."
 
     return render(request, 'contactus.html', context)
@@ -4202,3 +4263,278 @@ def download_payslip_pdf(request, id):
     doc.build(elements)
 
     return response
+
+
+# =========================
+# LEAD LIST
+# =========================
+def lead_list(request):
+
+    leads = Lead.objects.all().order_by('-id')
+
+    return render(
+        request,
+        'lead_list.html',
+        {'leads': leads}
+    )
+
+
+# =========================
+# ADD LEAD
+# =========================
+def add_lead(request):
+
+    employees = Registration.objects.all()
+
+    if request.method == 'POST':
+
+        Lead.objects.create(
+
+            name=request.POST.get('name'),
+            email=request.POST.get('email'),
+            phone=request.POST.get('phone'),
+            company=request.POST.get('company'),
+            source=request.POST.get('source'),
+            status=request.POST.get('status'),
+            notes=request.POST.get('notes'),
+
+            assigned_to_id=request.POST.get('assigned_to')
+        )
+
+        return redirect('lead_list')
+
+    return render(
+        request,
+        'add_lead.html',
+        {'employees': employees}
+    )
+
+
+
+# =========================
+# FOLLOW UP LIST
+# =========================
+def followup_list(request):
+
+    followups = FollowUp.objects.all().order_by('followup_date')
+
+    return render(
+        request,
+        'followup_list.html',
+        {'followups': followups}
+    )
+
+
+# =========================
+# ADD FOLLOW UP
+# =========================
+def add_followup(request):
+
+    leads = Lead.objects.all()
+
+    employees = Registration.objects.all()
+
+    if request.method == 'POST':
+
+        FollowUp.objects.create(
+
+            lead_id=request.POST.get('lead'),
+
+            followup_date=request.POST.get('followup_date'),
+
+            remarks=request.POST.get('remarks'),
+
+            status=request.POST.get('status'),
+
+            created_by_id=request.POST.get('created_by')
+
+        )
+
+        return redirect('followup_list')
+
+    return render(
+        request,
+        'add_followup.html',
+        {
+            'leads': leads,
+            'employees': employees
+        }
+    )
+
+
+def communication_list(request):
+
+    communications = CommunicationHistory.objects.all().order_by('-id')
+
+    context = {
+        'communications': communications
+    }
+
+    return render(
+        request,
+        'communication_list.html',
+        context
+
+    )
+
+
+def add_communication(request):
+
+    clients = Client.objects.all()
+
+    employees = Registration.objects.all()
+
+    if request.method == 'POST':
+
+        CommunicationHistory.objects.create(
+
+            client_id=request.POST.get('client'),
+
+            communication_type=request.POST.get(
+                'communication_type'
+            ),
+
+            subject=request.POST.get('subject'),
+
+            message=request.POST.get('message'),
+
+            handled_by_id=request.POST.get(
+                'handled_by'
+            )
+        )
+
+        return redirect('communication_list')
+
+    context = {
+
+        'clients': clients,
+        'employees': employees
+
+    }
+
+    return render(
+        request,
+        'add_communication.html',
+        context
+    )
+
+
+def support_ticket_list(request):
+
+    tickets = SupportTicket.objects.all().order_by('-id')
+
+    context = {
+        'tickets': tickets
+    }
+
+    return render(
+        request,
+        'support_ticket_list.html',
+        context
+    )
+
+
+
+def add_support_ticket(request):
+
+    clients = Client.objects.all()
+
+    projects = Project.objects.all()
+
+    employees = Registration.objects.all()
+
+    if request.method == 'POST':
+
+        SupportTicket.objects.create(
+
+            client_id=request.POST.get('client'),
+
+            project_id=request.POST.get('project'),
+
+            subject=request.POST.get('subject'),
+
+            description=request.POST.get('description'),
+
+            priority=request.POST.get('priority'),
+
+            status=request.POST.get('status'),
+
+            assigned_to_id=request.POST.get(
+                'assigned_to'
+            ),
+
+            attachment=request.FILES.get(
+                'attachment'
+            )
+        )
+
+        return redirect(
+            'support_ticket_list'
+        )
+
+    context = {
+
+        'clients': clients,
+        'projects': projects,
+        'employees': employees
+
+    }
+
+    return render(
+        request,
+        'add_support_ticket.html',
+        context
+    )
+
+
+from django.db.models import Count
+from django.shortcuts import render
+
+def crm_dashboard(request):
+
+    total_leads = Lead.objects.count()
+
+    new_leads = Lead.objects.filter(
+        status='New'
+    ).count()
+
+    qualified_leads = Lead.objects.filter(
+        status='Qualified'
+    ).count()
+
+    converted_leads = Lead.objects.filter(
+        status='Converted'
+    ).count()
+
+    total_clients = Client.objects.count()
+
+    pending_followups = FollowUp.objects.filter(
+        status='Pending'
+    ).count()
+
+    open_tickets = SupportTicket.objects.filter(
+        status='Open'
+    ).count()
+
+    resolved_tickets = SupportTicket.objects.filter(
+        status='Resolved'
+    ).count()
+
+    context = {
+
+        'total_leads': total_leads,
+        'new_leads': new_leads,
+        'qualified_leads': qualified_leads,
+        'converted_leads': converted_leads,
+        'total_clients': total_clients,
+        'pending_followups': pending_followups,
+        'open_tickets': open_tickets,
+        'resolved_tickets': resolved_tickets,
+
+    }
+
+    return render(
+        request,
+        'crm_dashboard.html',
+        context
+    )

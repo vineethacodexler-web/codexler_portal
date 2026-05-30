@@ -186,6 +186,49 @@ path('add_salary_structure/<int:id>/',views.add_salary_structure,name='add_salar
 path('mark-payroll-paid/<int:id>/',views.mark_payroll_paid,name='mark_payroll_paid'),
 path('view-payslip/<int:id>/',views.view_payslip,name='view_payslip'),
 path('download-payslip-pdf/<int:id>/',views.download_payslip_pdf,name='download_payslip_pdf'),
+path('lead-list/', views.lead_list, name='lead_list'),
+
+path('add-lead/', views.add_lead, name='add_lead'),
+path(
+    'followup-list/',
+    views.followup_list,
+    name='followup_list'
+),
+
+path(
+    'add-followup/',
+    views.add_followup,
+    name='add_followup'
+),
+
+path(
+    'communication-list/',
+    views.communication_list,
+    name='communication_list'
+),
+
+path(
+    'add-communication/',
+    views.add_communication,
+    name='add_communication'
+),
+
+path(
+    'support-ticket-list/',
+    views.support_ticket_list,
+    name='support_ticket_list'
+),
+
+path(
+    'add-support-ticket/',
+    views.add_support_ticket,
+    name='add_support_ticket'
+),
+path(
+    'crm-dashboard/',
+    views.crm_dashboard,
+    name='crm_dashboard'
+),
 ]
 
 

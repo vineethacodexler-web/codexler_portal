@@ -54,17 +54,47 @@
 
       </div>
 
-      <!-- RIGHT SIDE (FORM) -->
-      <form method="POST" class="contact-form fade-up">
-        {% csrf_token %}
+  <form method="POST" class="contact-form fade-up">
+    {% csrf_token %}
 
-        <input type="text" name="name" placeholder="Your Name" required>
-        <input type="email" name="email" placeholder="Your Email" required>
-        <input type="text" name="subject" placeholder="Subject" required>
-        <textarea name="message" rows="5" placeholder="Message" required></textarea>
+    <!-- Honeypot -->
+    <input type="text"
+           name="website"
+           style="display:none">
 
-        <button type="submit">Send Message →</button>
-      </form>
+    <input type="text"
+           name="name"
+           placeholder="Your Name"
+           required>
+
+    <input type="email"
+           name="email"
+           placeholder="Your Email"
+           required>
+
+    <input type="text"
+           name="subject"
+           placeholder="Subject"
+           required>
+
+    <textarea name="message"
+              rows="5"
+              placeholder="Message"
+              required></textarea>
+
+    <!-- Cloudflare Turnstile -->
+    <div class="cf-turnstile mt-3"
+         data-sitekey="0x4AAAAAADTmhkZLIMKF3-zF"></div>
+
+    <button type="submit">
+        Send Message →
+    </button>
+</form>
+
+<!-- Turnstile Script -->
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+        async
+        defer></script>
 
     </div>
 

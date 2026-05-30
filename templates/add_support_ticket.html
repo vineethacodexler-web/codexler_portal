@@ -1,0 +1,194 @@
+{% include 'admin_navbar.html' %}
+
+<main id="main" class="main">
+
+<div class="container-fluid mt-4">
+
+    <div class="card">
+
+        <div class="card-header">
+            <h4>Create Support Ticket</h4>
+        </div>
+
+        <div class="card-body">
+
+            <form method="POST" enctype="multipart/form-data">
+
+                {% csrf_token %}
+
+                <div class="row">
+
+                    <!-- Client -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Client</label>
+
+                        <select name="client" class="form-select" required>
+
+                            <option value="">Select Client</option>
+
+                            {% for client in clients %}
+
+                            <option value="{{ client.id }}">
+                                {{ client.name }}
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+                    </div>
+
+                    <!-- Project -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Project</label>
+
+                        <select name="project" class="form-select">
+
+                            <option value="">Select Project</option>
+
+                            {% for project in projects %}
+
+                            <option value="{{ project.id }}">
+                                {{ project.name }}
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+                    </div>
+
+                    <!-- Subject -->
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">Subject</label>
+
+                        <input
+                            type="text"
+                            name="subject"
+                            class="form-control"
+                            placeholder="Enter ticket subject"
+                            required>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">Description</label>
+
+                        <textarea
+                            name="description"
+                            rows="5"
+                            class="form-control"
+                            placeholder="Describe the issue..."
+                            required></textarea>
+                    </div>
+
+                    <!-- Priority -->
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Priority</label>
+
+                        <select
+                            name="priority"
+                            class="form-select">
+
+                            <option value="Low">Low</option>
+                            <option value="Medium" selected>Medium</option>
+                            <option value="High">High</option>
+
+                        </select>
+                    </div>
+
+                    <!-- Status -->
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Status</label>
+
+                        <select
+                            name="status"
+                            class="form-select">
+
+                            <option value="Open" selected>
+                                Open
+                            </option>
+
+                            <option value="In Progress">
+                                In Progress
+                            </option>
+
+                            <option value="Resolved">
+                                Resolved
+                            </option>
+
+                            <option value="Closed">
+                                Closed
+                            </option>
+
+                        </select>
+                    </div>
+
+                    <!-- Assigned Employee -->
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">
+                            Assigned Employee
+                        </label>
+
+                        <select
+                            name="assigned_to"
+                            class="form-select">
+
+                            <option value="">
+                                Select Employee
+                            </option>
+
+                            {% for employee in employees %}
+
+                            <option value="{{ employee.id }}">
+                                {{ employee.First_name }}
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+                    </div>
+
+                    <!-- Attachment -->
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">
+                            Attachment
+                        </label>
+
+                        <input
+                            type="file"
+                            name="attachment"
+                            class="form-control">
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="col-md-12">
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary">
+
+                            <i class="bi bi-save"></i>
+                            Create Ticket
+
+                        </button>
+
+                        <a href="{% url 'support_ticket_list' %}"
+                           class="btn btn-secondary">
+
+                            <i class="bi bi-arrow-left"></i>
+                            Back
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+</main>

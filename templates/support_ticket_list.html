@@ -1,0 +1,62 @@
+{% include 'admin_navbar.html' %}
+
+<main id="main" class="main">
+
+<div class="container-fluid">
+
+<div class="card">
+
+<div class="card-header">
+<h4>Support Tickets</h4>
+</div>
+
+<div class="card-body">
+
+<table class="table table-bordered">
+
+<thead>
+
+<tr>
+<th>Client</th>
+<th>Project</th>
+<th>Subject</th>
+<th>Priority</th>
+<th>Status</th>
+<th>Assigned To</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for ticket in tickets %}
+
+<tr>
+
+<td>{{ ticket.client }}</td>
+
+<td>{{ ticket.project }}</td>
+
+<td>{{ ticket.subject }}</td>
+
+<td>{{ ticket.priority }}</td>
+
+<td>{{ ticket.status }}</td>
+
+<td>{{ ticket.assigned_to }}</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+</main>

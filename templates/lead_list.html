@@ -1,0 +1,131 @@
+{% include 'admin_navbar.html' %}
+
+<main id="main" class="main">
+
+<div class="container-fluid mt-4">
+
+    <div class="card">
+
+        <div class="card-header d-flex justify-content-between align-items-center">
+
+            <h4 class="mb-0">Lead Management</h4>
+
+            <a href="{% url 'add_lead' %}" class="btn btn-primary">
+
+                <i class="bi bi-plus-circle"></i>
+
+                Add Lead
+
+            </a>
+
+        </div>
+
+        <div class="card-body mt-3">
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered table-hover">
+
+                    <thead class="table-light">
+
+                        <tr>
+
+                            <th>#</th>
+
+                            <th>Name</th>
+
+                            <th>Company</th>
+
+                            <th>Email</th>
+
+                            <th>Phone</th>
+
+                            <th>Source</th>
+
+                            <th>Status</th>
+
+                            <th>Assigned To</th>
+
+                            <th>Created</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for lead in leads %}
+
+                        <tr>
+
+                            <td>{{ forloop.counter }}</td>
+
+                            <td>{{ lead.name }}</td>
+
+                            <td>{{ lead.company }}</td>
+
+                            <td>{{ lead.email }}</td>
+
+                            <td>{{ lead.phone }}</td>
+
+                            <td>{{ lead.source }}</td>
+
+                            <td>
+
+                                {% if lead.status == 'Converted' %}
+                                    <span class="badge bg-success">
+                                        {{ lead.status }}
+                                    </span>
+
+                                {% elif lead.status == 'Lost' %}
+                                    <span class="badge bg-danger">
+                                        {{ lead.status }}
+                                    </span>
+
+                                {% elif lead.status == 'Qualified' %}
+                                    <span class="badge bg-info">
+                                        {{ lead.status }}
+                                    </span>
+
+                                {% else %}
+                                    <span class="badge bg-warning text-dark">
+                                        {{ lead.status }}
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>{{ lead.assigned_to }}</td>
+
+                            <td>{{ lead.created_at|date:"d-m-Y" }}</td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td colspan="9" class="text-center">
+
+                                No Leads Found
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</main>

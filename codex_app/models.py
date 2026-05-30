@@ -485,3 +485,162 @@ class Payroll(models.Model):
 
     def __str__(self):
         return f"{self.employee.First_name} - {self.month}/{self.year}"
+
+
+class Lead(models.Model):
+
+    STATUS_CHOICES = (
+        ('New', 'New'),
+        ('Contacted', 'Contacted'),
+        ('Qualified', 'Qualified'),
+        ('Converted', 'Converted'),
+        ('Lost', 'Lost'),
+    )
+
+    name = models.CharField(max_length=200)
+
+    email = models.EmailField(blank=True, null=True)
+
+    phone = models.CharField(max_length=20, blank=True, null=True)
+
+    company = models.CharField(max_length=200, blank=True, null=True)
+
+    source = models.CharField(max_length=100, blank=True, null=True)
+
+    status = models.CharField(
+        max_length=50,
+        choices=STATUS_CHOICES,
+        default='New'
+    )
+
+    assigned_to = models.ForeignKey(
+        Registration,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+
+    notes = models.TextField(blank=True, null=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+class FollowUp(models.Model):
+
+    lead = models.ForeignKey(
+        Lead,
+        on_delete=models.CASCADE,
+        related_name='followups'
+    )
+
+    followup_date = models.DateTimeField()
+
+    remarks = models.TextField(blank=True, null=True)
+
+    status = models.CharField(
+        max_length=50,
+        choices=(
+            ('Pending', 'Pending'),
+            ('Completed', 'Completed'),
+            ('Missed', 'Missed'),
+        ),
+        default='Pending'
+    )
+
+    created_by = models.ForeignKey(
+        Registration,
+        on_delete=models.SET_NULL,
+        null=True
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+class CommunicationHistory(models.Model):
+
+    TYPE_CHOICES = (
+        ('Call', 'Call'),
+        ('Email', 'Email'),
+        ('Meeting', 'Meeting'),
+        ('WhatsApp', 'WhatsApp'),
+    )
+
+    client = models.ForeignKey(
+        Client,
+        on_delete=models.CASCADE
+    )
+
+    communication_type = models.CharField(
+        max_length=50,
+        choices=TYPE_CHOICES
+    )
+
+    subject = models.CharField(max_length=255)
+
+    message = models.TextField()
+
+    communication_date = models.DateTimeField(auto_now_add=True)
+
+    handled_by = models.ForeignKey(
+        Registration,
+        on_delete=models.SET_NULL,
+        null=True
+    )
+
+
+class SupportTicket(models.Model):
+
+    PRIORITY_CHOICES = (
+        ('Low', 'Low'),
+        ('Medium', 'Medium'),
+        ('High', 'High'),
+    )
+
+    STATUS_CHOICES = (
+        ('Open', 'Open'),
+        ('In Progress', 'In Progress'),
+        ('Resolved', 'Resolved'),
+        ('Closed', 'Closed'),
+    )
+
+    client = models.ForeignKey(
+        Client,
+        on_delete=models.CASCADE
+    )
+
+    project = models.ForeignKey(
+        Project,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+
+    subject = models.CharField(max_length=255)
+
+    description = models.TextField()
+
+    priority = models.CharField(
+        max_length=20,
+        choices=PRIORITY_CHOICES,
+        default='Medium'
+    )
+
+    status = models.CharField(
+        max_length=50,
+        choices=STATUS_CHOICES,
+        default='Open'
+    )
+
+    assigned_to = models.ForeignKey(
+        Registration,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+    attachment = models.FileField(
+        upload_to='tickets/',
+        null=True,
+        blank=True
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
