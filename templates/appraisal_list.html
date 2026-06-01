@@ -1,0 +1,142 @@
+{% include 'admin_navbar.html' %}
+
+<main id="main" class="main">
+
+<div class="card">
+
+    <div class="card-header d-flex justify-content-between">
+
+        <h4>Employee Appraisals</h4>
+
+        <a href="{% url 'add_appraisal' %}"
+           class="btn btn-primary">
+
+            Add Appraisal
+
+        </a>
+
+    </div>
+
+    <div class="card-body mt-3">
+
+        <table class="table table-bordered table-striped">
+
+            <thead>
+
+                <tr>
+                    <th>Employee</th>
+                    <th>Review Date</th>
+                    <th>Period</th>
+                    <th>Rating</th>
+                    <th>Current Salary</th>
+                    <th>Proposed Salary</th>
+                    <th>Hike</th>
+                    <th>Promotion</th>
+                    <th>Action</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for appraisal in appraisals %}
+
+                <tr>
+
+                    <td>
+                        {{ appraisal.employee.First_name }}
+                    </td>
+
+                    <td>
+                        {{ appraisal.review_date }}
+                    </td>
+
+                    <td>
+                        {{ appraisal.review_period }}
+                    </td>
+
+                    <td>
+
+                        {% if appraisal.rating == 5 %}
+                        ⭐⭐⭐⭐⭐
+                        {% elif appraisal.rating == 4 %}
+                        ⭐⭐⭐⭐
+                        {% elif appraisal.rating == 3 %}
+                        ⭐⭐⭐
+                        {% elif appraisal.rating == 2 %}
+                        ⭐⭐
+                        {% else %}
+                        ⭐
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+                        ₹{{ appraisal.current_salary }}
+                    </td>
+
+                    <td>
+                        ₹{{ appraisal.proposed_salary }}
+                    </td>
+
+                    <td>
+                        ₹{{ appraisal.salary_hike }}
+                    </td>
+
+                    <td>
+
+                        {% if appraisal.promotion %}
+                        <span class="badge bg-success">
+                            Yes
+                        </span>
+                        {% else %}
+                        <span class="badge bg-secondary">
+                            No
+                        </span>
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+
+                        <a href="{% url 'edit_appraisal' appraisal.id %}"
+                           class="btn btn-warning btn-sm">
+
+                            Edit
+
+                        </a>
+
+                        <a href="{% url 'delete_appraisal' appraisal.id %}"
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Delete appraisal record?')">
+
+                            Delete
+
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                {% empty %}
+
+                <tr>
+                    <td colspan="9"
+                        class="text-center">
+
+                        No appraisal records found
+
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+</main>

@@ -229,6 +229,258 @@ path(
     views.crm_dashboard,
     name='crm_dashboard'
 ),
+path('department/add/', views.add_department, name='add_department'),
+path('department/list/', views.department_list, name='department_list'),
+path('department/edit/<int:id>/', views.edit_department, name='edit_department'),
+path('department/delete/<int:id>/', views.delete_department, name='delete_department'),
+path(
+    'designation/add/',
+    views.add_designation,
+    name='add_designation'
+),
+
+path(
+    'designation/list/',
+    views.designation_list,
+    name='designation_list'
+),
+
+path(
+    'designation/edit/<int:id>/',
+    views.edit_designation,
+    name='edit_designation'
+),
+
+path(
+    'designation/delete/<int:id>/',
+    views.delete_designation,
+    name='delete_designation'
+),
+path(
+    'employee-document/add/',
+    views.add_employee_document,
+    name='add_employee_document'
+
+),
+
+path(
+    'employee-document/list/',
+    views.employee_document_list,
+    name='employee_document_list'
+),
+
+path(
+    'employee-document/edit/<int:id>/',
+    views.edit_employee_document,
+    name='edit_employee_document'
+),
+
+path(
+    'employee-document/delete/<int:id>/',
+    views.delete_employee_document,
+    name='delete_employee_document'
+),
+
+path(
+    'experience/add/',
+    views.add_experience,
+    name='add_experience'
+),
+
+path(
+    'experience/list/',
+    views.experience_list,
+    name='experience_list'
+),
+
+path(
+    'experience/edit/<int:id>/',
+    views.edit_experience,
+    name='edit_experience'
+),
+
+path(
+    'experience/delete/<int:id>/',
+    views.delete_experience,
+    name='delete_experience'
+),
+
+path(
+    'appraisal/add/',
+    views.add_appraisal,
+    name='add_appraisal'
+),
+
+path(
+    'appraisal/list/',
+    views.appraisal_list,
+    name='appraisal_list'
+),
+
+path(
+    'appraisal/edit/<int:id>/',
+    views.edit_appraisal,
+    name='edit_appraisal'
+),
+
+path(
+    'appraisal/delete/<int:id>/',
+    views.delete_appraisal,
+    name='delete_appraisal'
+),
+
+path(
+    'project-members/',
+    views.project_member_list,
+    name='project_member_list'
+),
+
+path(
+    'project-members/add/',
+    views.add_project_member,
+    name='add_project_member'
+),
+
+path(
+    'project-members/edit/<int:id>/',
+    views.edit_project_member,
+    name='edit_project_member'
+),
+
+path(
+    'project-members/delete/<int:id>/',
+    views.delete_project_member,
+    name='delete_project_member'
+),
+
+path(
+    'task/list/',
+    views.task_list,
+    name='task_list'
+),
+
+path(
+    'task/add/',
+    views.add_task,
+    name='add_task'
+),
+
+path(
+    'task/edit/<int:id>/',
+    views.edit_task,
+    name='edit_task'
+),
+
+path(
+    'task/delete/<int:id>/',
+    views.delete_task,
+    name='delete_task'
+),
+path(
+    'milestone/list/',
+    views.milestone_list,
+    name='milestone_list'
+),
+
+path(
+    'milestone/add/',
+    views.add_milestone,
+    name='add_milestone'
+),
+
+path(
+    'milestone/edit/<int:id>/',
+    views.edit_milestone,
+    name='edit_milestone'
+),
+
+path(
+    'milestone/delete/<int:id>/',
+    views.delete_milestone,
+    name='delete_milestone'
+),
+path(
+    'bug/list/',
+    views.bug_list,
+    name='bug_list'
+),
+
+path(
+    'bug/add/',
+    views.add_bug,
+    name='add_bug'
+),
+
+path(
+    'bug/edit/<int:id>/',
+    views.edit_bug,
+    name='edit_bug'
+),
+
+path(
+    'bug/delete/<int:id>/',
+    views.delete_bug,
+    name='delete_bug'
+),
+path(
+    'project-file/list/',
+    views.project_file_list,
+    name='project_file_list'
+),
+
+path(
+    'project-file/add/',
+    views.add_project_file,
+    name='add_project_file'
+),
+
+path(
+    'project-file/edit/<int:id>/',
+    views.edit_project_file,
+    name='edit_project_file'
+),
+
+path(
+    'project-file/delete/<int:id>/',
+    views.delete_project_file,
+    name='delete_project_file'
+),
+path(
+    'project-dashboard/',
+    views.project_dashboard,
+    name='project_dashboard'
+),
+path(
+    'weekly-attendance-report/',
+    views.weekly_attendance_report,
+    name='weekly_attendance_report'
+),
+path(
+    'monthly-attendance-report/',
+    views.monthly_attendance_report,
+    name='monthly_attendance_report'
+),
+path(
+    'overtime-report/',
+    views.overtime_report,
+    name='overtime_report'
+),
+path(
+    'ticket-resolution-list/',
+    views.ticket_resolution_list,
+    name='ticket_resolution_list'
+),
+
+path(
+    'ticket-resolution-add/<int:ticket_id>/',
+    views.ticket_resolution_add,
+    name='ticket_resolution_add'
+),
+path(
+    'helpdesk-report/',
+    views.helpdesk_report,
+    name='helpdesk_report'
+),
 ]
 
 

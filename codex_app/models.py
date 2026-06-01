@@ -4,13 +4,62 @@ from django.utils.timezone import now
 from datetime import timedelta
 
 
+class Department(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    description = models.TextField(null=True, blank=True)
+    status = models.BooleanField(default=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Designation(models.Model):
+
+    department = models.ForeignKey(
+        Department,
+        on_delete=models.CASCADE,
+        related_name='designations'
+    )
+
+    title = models.CharField(max_length=100)
+
+    description = models.TextField(
+        null=True,
+        blank=True
+    )
+
+    status = models.BooleanField(default=True)
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    def __str__(self):
+        return self.title
+
+
+
 # =========================
 # Registration Model
 # =========================
 class Registration(models.Model):
     Emp_Id = models.CharField(max_length=200, null=True, blank=True)
     First_name = models.CharField(max_length=200, null=True, blank=True)
-    Designation = models.CharField(max_length=200, null=True, blank=True)
+    department = models.ForeignKey(
+        Department,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+
+    designation = models.ForeignKey(
+        Designation,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
     Email = models.EmailField(max_length=200, null=True, blank=True)
     Password = models.CharField(max_length=200, null=True, blank=True)
     Mobile_Number = models.CharField(max_length=200, null=True, blank=True)
@@ -31,6 +80,164 @@ class Registration(models.Model):
     def __str__(self):
         return self.First_name or "Employee"
 
+
+
+
+class EmployeeDocument(models.Model):
+
+    DOCUMENT_TYPES = (
+        ('Aadhaar', 'Aadhaar'),
+        ('PAN', 'PAN'),
+        ('Resume', 'Resume'),
+        ('Offer Letter', 'Offer Letter'),
+        ('Experience Certificate', 'Experience Certificate'),
+        ('Educational Certificate', 'Educational Certificate'),
+        ('Other', 'Other'),
+    )
+
+    employee = models.ForeignKey(
+        Registration,
+        on_delete=models.CASCADE,
+        related_name='documents'
+    )
+
+    document_type = models.CharField(
+        max_length=100,
+        choices=DOCUMENT_TYPES
+    )
+
+    document_name = models.CharField(
+        max_length=255
+    )
+
+    document_file = models.FileField(
+        upload_to='employee_documents/'
+    )
+
+    remarks = models.TextField(
+        null=True,
+        blank=True
+    )
+
+    uploaded_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    def __str__(self):
+        return f"{self.employee.First_name} - {self.document_name}"
+
+
+
+class EmployeeExperience(models.Model):
+
+    employee = models.ForeignKey(
+        Registration,
+        on_delete=models.CASCADE,
+        related_name='experiences'
+    )
+
+    company_name = models.CharField(
+        max_length=200
+    )
+
+    designation = models.CharField(
+        max_length=200
+    )
+
+    start_date = models.DateField()
+
+    end_date = models.DateField(
+        null=True,
+        blank=True
+    )
+
+    salary = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        null=True,
+        blank=True
+    )
+
+    responsibilities = models.TextField(
+        null=True,
+        blank=True
+    )
+
+    experience_certificate = models.FileField(
+        upload_to='experience_certificates/',
+        null=True,
+        blank=True
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    def __str__(self):
+        return f"{self.employee.First_name} - {self.company_name}"
+
+
+
+
+class Appraisal(models.Model):
+
+    employee = models.ForeignKey(
+        Registration,
+        on_delete=models.CASCADE,
+        related_name='appraisals'
+    )
+
+    review_date = models.DateField()
+
+    review_period = models.CharField(
+        max_length=100,
+        help_text="Example: Jan 2026 - Jun 2026"
+    )
+
+    rating = models.IntegerField(
+        default=1
+    )
+
+    current_salary = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    proposed_salary = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    salary_hike = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    promotion = models.BooleanField(
+        default=False
+    )
+
+    remarks = models.TextField(
+        null=True,
+        blank=True
+    )
+
+    reviewed_by = models.ForeignKey(
+        Registration,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='reviews_given'
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    def __str__(self):
+        return f"{self.employee.First_name} - {self.review_date}"
 
 # =========================
 # Attendance
@@ -296,6 +503,8 @@ class Project(models.Model):
 
     def __str__(self):
         return self.name
+
+
 
 
 # Income Model (MAIN)
@@ -644,3 +853,297 @@ class SupportTicket(models.Model):
     )
 
     created_at = models.DateTimeField(auto_now_add=True)
+
+
+class TicketResolution(models.Model):
+
+    ticket = models.ForeignKey(
+        SupportTicket,
+        on_delete=models.CASCADE,
+        related_name='resolutions'
+    )
+
+    status = models.CharField(
+        max_length=50
+    )
+
+    remarks = models.TextField()
+
+    updated_by = models.ForeignKey(
+        Registration,
+        on_delete=models.SET_NULL,
+        null=True
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    def __str__(self):
+        return f"{self.ticket.subject} - {self.status}"
+
+class ProjectMember(models.Model):
+
+    project = models.ForeignKey(
+        Project,
+        on_delete=models.CASCADE,
+        related_name='members'
+    )
+
+    employee = models.ForeignKey(
+        Registration,
+        on_delete=models.CASCADE
+    )
+
+    role = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True
+    )
+
+    assigned_date = models.DateField(
+        auto_now_add=True
+    )
+
+    class Meta:
+        unique_together = (
+            'project',
+            'employee'
+        )
+
+    def __str__(self):
+        return f"{self.project.name} - {self.employee.First_name}"
+
+
+class Task(models.Model):
+
+    STATUS_CHOICES = (
+        ('Pending', 'Pending'),
+        ('In Progress', 'In Progress'),
+        ('Completed', 'Completed'),
+        ('On Hold', 'On Hold'),
+    )
+
+    PRIORITY_CHOICES = (
+        ('Low', 'Low'),
+        ('Medium', 'Medium'),
+        ('High', 'High'),
+        ('Critical', 'Critical'),
+    )
+
+    project = models.ForeignKey(
+        Project,
+        on_delete=models.CASCADE
+    )
+
+    assigned_to = models.ForeignKey(
+        Registration,
+        on_delete=models.CASCADE
+    )
+
+    title = models.CharField(
+        max_length=255
+    )
+
+    description = models.TextField(
+        null=True,
+        blank=True
+    )
+
+    start_date = models.DateField()
+
+    due_date = models.DateField()
+
+    priority = models.CharField(
+        max_length=20,
+        choices=PRIORITY_CHOICES,
+        default='Medium'
+    )
+
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='Pending'
+    )
+
+    progress = models.IntegerField(
+        default=0
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    def __str__(self):
+        return self.title
+
+
+
+class ProjectMilestone(models.Model):
+
+    STATUS_CHOICES = (
+        ('Pending', 'Pending'),
+        ('In Progress', 'In Progress'),
+        ('Completed', 'Completed'),
+    )
+
+    project = models.ForeignKey(
+        Project,
+        on_delete=models.CASCADE,
+        related_name='milestones'
+    )
+
+    title = models.CharField(
+        max_length=255
+    )
+
+    description = models.TextField(
+        null=True,
+        blank=True
+    )
+
+    start_date = models.DateField()
+
+    target_date = models.DateField()
+
+    completed_date = models.DateField(
+        null=True,
+        blank=True
+    )
+
+    status = models.CharField(
+        max_length=50,
+        choices=STATUS_CHOICES,
+        default='Pending'
+    )
+
+    progress = models.IntegerField(
+        default=0
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    def __str__(self):
+        return self.title
+
+
+
+class Bug(models.Model):
+
+    PRIORITY_CHOICES = (
+        ('Low', 'Low'),
+        ('Medium', 'Medium'),
+        ('High', 'High'),
+        ('Critical', 'Critical'),
+    )
+
+    STATUS_CHOICES = (
+        ('Open', 'Open'),
+        ('In Progress', 'In Progress'),
+        ('Testing', 'Testing'),
+        ('Resolved', 'Resolved'),
+        ('Closed', 'Closed'),
+    )
+
+    project = models.ForeignKey(
+        Project,
+        on_delete=models.CASCADE
+    )
+
+    task = models.ForeignKey(
+        Task,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+
+    reported_by = models.ForeignKey(
+        Registration,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='bugs_reported'
+    )
+
+    assigned_to = models.ForeignKey(
+        Registration,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='bugs_assigned'
+    )
+
+    title = models.CharField(
+        max_length=255
+    )
+
+    description = models.TextField()
+
+    priority = models.CharField(
+        max_length=20,
+        choices=PRIORITY_CHOICES,
+        default='Medium'
+    )
+
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='Open'
+    )
+
+    attachment = models.FileField(
+        upload_to='bug_files/',
+        null=True,
+        blank=True
+    )
+
+    resolution_notes = models.TextField(
+        null=True,
+        blank=True
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
+    def __str__(self):
+        return self.title
+
+
+class ProjectFile(models.Model):
+
+    project = models.ForeignKey(
+        Project,
+        on_delete=models.CASCADE,
+        related_name='files'
+    )
+
+    uploaded_by = models.ForeignKey(
+        Registration,
+        on_delete=models.SET_NULL,
+        null=True
+    )
+
+    title = models.CharField(
+        max_length=255
+    )
+
+    description = models.TextField(
+        null=True,
+        blank=True
+    )
+
+    file = models.FileField(
+        upload_to='project_files/'
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    def __str__(self):
+        return self.title

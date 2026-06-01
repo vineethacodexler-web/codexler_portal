@@ -1,0 +1,80 @@
+{% include 'admin_navbar.html' %}
+
+<main id="main" class="main">
+
+<div class="container-fluid">
+
+<div class="card">
+
+<div class="card-header">
+<h4>Add Resolution</h4>
+</div>
+
+<div class="card-body">
+
+<form method="POST">
+
+{% csrf_token %}
+
+<div class="mb-3">
+
+<label>Ticket Subject</label>
+
+<input type="text"
+       class="form-control"
+       value="{{ ticket.subject }}"
+       readonly>
+
+</div>
+
+<div class="mb-3">
+
+<label>Status</label>
+
+<select name="status"
+        class="form-control">
+
+<option value="Open">Open</option>
+
+<option value="In Progress">
+In Progress
+</option>
+
+<option value="Resolved">
+Resolved
+</option>
+
+<option value="Closed">
+Closed
+</option>
+
+</select>
+
+</div>
+
+<div class="mb-3">
+
+<label>Remarks</label>
+
+<textarea name="remarks"
+          class="form-control"
+          rows="5"></textarea>
+
+</div>
+
+<button type="submit"
+        class="btn btn-success">
+
+Save Resolution
+
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+</main>

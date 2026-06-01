@@ -1,0 +1,95 @@
+{% include 'admin_navbar.html' %}
+
+<main id="main" class="main">
+
+<div class="card">
+
+<div class="card-header">
+<h4>Upload Project File</h4>
+</div>
+
+<div class="card-body mt-3">
+
+<form method="POST"
+      enctype="multipart/form-data">
+
+{% csrf_token %}
+
+<div class="row">
+
+<div class="col-md-6 mb-3">
+
+<label>Project</label>
+
+<select name="project"
+        class="form-control">
+
+{% for project in projects %}
+<option value="{{ project.id }}">
+{{ project.name }}
+</option>
+{% endfor %}
+
+</select>
+
+</div>
+
+<div class="col-md-6 mb-3">
+
+<label>Uploaded By</label>
+
+<select name="uploaded_by"
+        class="form-control">
+
+{% for employee in employees %}
+<option value="{{ employee.id }}">
+{{ employee.First_name }}
+</option>
+{% endfor %}
+
+</select>
+
+</div>
+
+<div class="col-md-12 mb-3">
+
+<label>Title</label>
+
+<input type="text"
+       name="title"
+       class="form-control">
+
+</div>
+
+<div class="col-md-12 mb-3">
+
+<label>Description</label>
+
+<textarea name="description"
+          class="form-control"></textarea>
+
+</div>
+
+<div class="col-md-12 mb-3">
+
+<label>File</label>
+
+<input type="file"
+       name="file"
+       class="form-control">
+
+</div>
+
+<button class="btn btn-primary">
+
+Upload File
+
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+</main>

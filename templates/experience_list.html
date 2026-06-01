@@ -1,0 +1,84 @@
+{% include 'admin_navbar.html' %}
+
+<main id="main" class="main">
+
+<div class="card">
+
+<div class="card-header d-flex justify-content-between">
+
+<h4>Employee Experience</h4>
+
+<a href="{% url 'add_experience' %}"
+class="btn btn-success">
+
+Add Experience
+
+</a>
+
+</div>
+
+<div class="card-body mt-3">
+
+<table class="table table-bordered">
+
+<thead>
+
+<tr>
+<th>Employee</th>
+<th>Company</th>
+<th>Designation</th>
+<th>Start</th>
+<th>End</th>
+<th>Action</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for experience in experiences %}
+
+<tr>
+
+<td>{{ experience.employee.First_name }}</td>
+
+<td>{{ experience.company_name }}</td>
+
+<td>{{ experience.designation }}</td>
+
+<td>{{ experience.start_date }}</td>
+
+<td>{{ experience.end_date }}</td>
+
+<td>
+
+<a href="{% url 'edit_experience' experience.id %}"
+class="btn btn-warning btn-sm">
+
+Edit
+
+</a>
+
+<a href="{% url 'delete_experience' experience.id %}"
+class="btn btn-danger btn-sm"
+onclick="return confirm('Delete record?')">
+
+Delete
+
+</a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</main>

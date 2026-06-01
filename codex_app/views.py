@@ -4538,3 +4538,1571 @@ def crm_dashboard(request):
         'crm_dashboard.html',
         context
     )
+
+
+def add_department(request):
+
+    if request.method == "POST":
+
+        name = request.POST.get('name')
+        description = request.POST.get('description')
+
+        Department.objects.create(
+            name=name,
+            description=description
+        )
+
+        return redirect('department_list')
+
+    return render(request, 'add_department.html')
+
+
+def department_list(request):
+
+    departments = Department.objects.all().order_by('-id')
+
+    context = {
+        'departments': departments
+    }
+
+    return render(
+        request,
+        'department_list.html',
+        context
+    )
+
+
+def edit_department(request, id):
+
+    department = get_object_or_404(
+        Department,
+        id=id
+    )
+
+    if request.method == "POST":
+
+        department.name = request.POST.get('name')
+        department.description = request.POST.get('description')
+
+        department.save()
+
+        return redirect('department_list')
+
+    context = {
+        'department': department
+    }
+
+    return render(
+        request,
+        'edit_department.html',
+        context
+    )
+
+
+def delete_department(request, id):
+
+    department = get_object_or_404(
+        Department,
+        id=id
+    )
+
+    department.delete()
+
+    return redirect('department_list')
+
+
+def add_designation(request):
+
+    departments = Department.objects.filter(
+        status=True
+    )
+
+    if request.method == "POST":
+
+        department_id = request.POST.get(
+            'department'
+        )
+
+        title = request.POST.get(
+            'title'
+        )
+
+        description = request.POST.get(
+            'description'
+        )
+
+        Designation.objects.create(
+            department_id=department_id,
+            title=title,
+            description=description
+        )
+
+        return redirect(
+            'designation_list'
+        )
+
+    return render(
+        request,
+        'add_designation.html',
+        {
+            'departments': departments
+        }
+    )
+
+def designation_list(request):
+
+    designations = Designation.objects.select_related(
+        'department'
+    ).order_by('-id')
+
+    return render(
+        request,
+        'designation_list.html',
+        {
+            'designations': designations
+        }
+    )
+
+
+def edit_designation(request, id):
+
+    designation = get_object_or_404(
+        Designation,
+        id=id
+    )
+
+    departments = Department.objects.filter(
+        status=True
+    )
+
+    if request.method == "POST":
+
+        designation.department_id = request.POST.get(
+            'department'
+        )
+
+        designation.title = request.POST.get(
+            'title'
+        )
+
+        designation.description = request.POST.get(
+            'description'
+        )
+
+        designation.save()
+
+        return redirect(
+            'designation_list'
+        )
+
+    return render(
+        request,
+        'edit_designation.html',
+        {
+            'designation': designation,
+            'departments': departments
+        }
+    )
+
+
+def delete_designation(request, id):
+
+    designation = get_object_or_404(
+        Designation,
+        id=id
+    )
+
+    designation.delete()
+
+    return redirect(
+        'designation_list'
+    )
+
+
+def add_employee_document(request):
+
+    employees = Registration.objects.all()
+
+    if request.method == "POST":
+
+        employee = request.POST.get('employee')
+        document_type = request.POST.get('document_type')
+        document_name = request.POST.get('document_name')
+        remarks = request.POST.get('remarks')
+
+        EmployeeDocument.objects.create(
+            employee_id=employee,
+            document_type=document_type,
+            document_name=document_name,
+            document_file=request.FILES.get('document_file'),
+            remarks=remarks
+        )
+
+        return redirect('employee_document_list')
+
+    return render(
+        request,
+        'add_employee_document.html',
+        {
+            'employees': employees
+        }
+    )
+
+
+def employee_document_list(request):
+
+    documents = EmployeeDocument.objects.select_related(
+        'employee'
+    ).order_by('-id')
+
+    return render(
+        request,
+        'employee_document_list.html',
+        {
+            'documents': documents
+        }
+    )
+
+
+def edit_employee_document(request, id):
+
+    document = get_object_or_404(
+        EmployeeDocument,
+        id=id
+    )
+
+    employees = Registration.objects.all()
+
+    if request.method == "POST":
+
+        document.employee_id = request.POST.get('employee')
+        document.document_type = request.POST.get('document_type')
+        document.document_name = request.POST.get('document_name')
+        document.remarks = request.POST.get('remarks')
+
+        if request.FILES.get('document_file'):
+            document.document_file = request.FILES.get(
+                'document_file'
+            )
+
+        document.save()
+
+        return redirect(
+            'employee_document_list'
+        )
+
+    return render(
+        request,
+        'edit_employee_document.html',
+        {
+            'document': document,
+            'employees': employees
+        }
+    )
+
+def delete_employee_document(request, id):
+
+    document = get_object_or_404(
+        EmployeeDocument,
+        id=id
+    )
+
+    document.delete()
+
+    return redirect(
+        'employee_document_list'
+    )
+
+def add_experience(request):
+
+    employees = Registration.objects.all()
+
+    if request.method == "POST":
+
+        EmployeeExperience.objects.create(
+            employee_id=request.POST.get('employee'),
+            company_name=request.POST.get('company_name'),
+            designation=request.POST.get('designation'),
+            start_date=request.POST.get('start_date'),
+            end_date=request.POST.get('end_date'),
+            salary=request.POST.get('salary'),
+            responsibilities=request.POST.get('responsibilities'),
+            experience_certificate=request.FILES.get(
+                'experience_certificate'
+            )
+        )
+
+        return redirect('experience_list')
+
+    return render(
+        request,
+        'add_experience.html',
+        {
+            'employees': employees
+        }
+    )
+
+def experience_list(request):
+
+    experiences = EmployeeExperience.objects.select_related(
+        'employee'
+    ).order_by('-id')
+
+    return render(
+        request,
+        'experience_list.html',
+        {
+            'experiences': experiences
+        }
+    )
+
+
+def edit_experience(request, id):
+
+    experience = get_object_or_404(
+        EmployeeExperience,
+        id=id
+    )
+
+    employees = Registration.objects.all()
+
+    if request.method == "POST":
+
+        experience.employee_id = request.POST.get(
+            'employee'
+        )
+
+        experience.company_name = request.POST.get(
+            'company_name'
+        )
+
+        experience.designation = request.POST.get(
+            'designation'
+        )
+
+        experience.start_date = request.POST.get(
+            'start_date'
+        )
+
+        experience.end_date = request.POST.get(
+            'end_date'
+        )
+
+        experience.salary = request.POST.get(
+            'salary'
+        )
+
+        experience.responsibilities = request.POST.get(
+            'responsibilities'
+        )
+
+        if request.FILES.get(
+            'experience_certificate'
+        ):
+            experience.experience_certificate = request.FILES.get(
+                'experience_certificate'
+            )
+
+        experience.save()
+
+        return redirect(
+            'experience_list'
+        )
+
+    return render(
+        request,
+        'edit_experience.html',
+        {
+            'experience': experience,
+            'employees': employees
+        }
+    )
+
+
+def delete_experience(request, id):
+
+    experience = get_object_or_404(
+        EmployeeExperience,
+        id=id
+    )
+
+    experience.delete()
+
+    return redirect(
+        'experience_list'
+    )
+
+
+def add_appraisal(request):
+
+    employees = Registration.objects.all()
+
+    if request.method == "POST":
+
+        Appraisal.objects.create(
+            employee_id=request.POST.get('employee'),
+            review_date=request.POST.get('review_date'),
+            review_period=request.POST.get('review_period'),
+            rating=request.POST.get('rating'),
+            current_salary=request.POST.get('current_salary'),
+            proposed_salary=request.POST.get('proposed_salary'),
+            salary_hike=request.POST.get('salary_hike'),
+            promotion=True if request.POST.get('promotion') else False,
+            remarks=request.POST.get('remarks'),
+            reviewed_by=request.user.registration
+        )
+
+        return redirect('appraisal_list')
+
+    return render(
+        request,
+        'add_appraisal.html',
+        {
+            'employees': employees
+        }
+    )
+
+
+def appraisal_list(request):
+
+    appraisals = Appraisal.objects.select_related(
+        'employee'
+    ).order_by('-id')
+
+    return render(
+        request,
+        'appraisal_list.html',
+        {
+            'appraisals': appraisals
+        }
+    )
+
+
+def edit_appraisal(request, id):
+
+    appraisal = get_object_or_404(
+        Appraisal,
+        id=id
+    )
+
+    employees = Registration.objects.all()
+
+    if request.method == "POST":
+
+        appraisal.employee_id = request.POST.get(
+            'employee'
+        )
+
+        appraisal.review_date = request.POST.get(
+            'review_date'
+        )
+
+        appraisal.review_period = request.POST.get(
+            'review_period'
+        )
+
+        appraisal.rating = request.POST.get(
+            'rating'
+        )
+
+        appraisal.current_salary = request.POST.get(
+            'current_salary'
+        )
+
+        appraisal.proposed_salary = request.POST.get(
+            'proposed_salary'
+        )
+
+        appraisal.salary_hike = request.POST.get(
+            'salary_hike'
+        )
+
+        appraisal.promotion = (
+            True if request.POST.get('promotion')
+            else False
+        )
+
+        appraisal.remarks = request.POST.get(
+            'remarks'
+        )
+
+        appraisal.save()
+
+        return redirect(
+            'appraisal_list'
+        )
+
+    return render(
+        request,
+        'edit_appraisal.html',
+        {
+            'appraisal': appraisal,
+            'employees': employees
+        }
+    )
+
+
+def delete_appraisal(request, id):
+
+    appraisal = get_object_or_404(
+        Appraisal,
+        id=id
+    )
+
+    appraisal.delete()
+
+    return redirect(
+        'appraisal_list'
+    )
+
+
+def add_project_member(request):
+
+    projects = Project.objects.all()
+    employees = Registration.objects.all()
+
+    if request.method == "POST":
+
+        ProjectMember.objects.create(
+            project_id=request.POST.get('project'),
+            employee_id=request.POST.get('employee'),
+            role=request.POST.get('role')
+        )
+
+        return redirect(
+            'project_member_list'
+        )
+
+    return render(
+        request,
+        'add_project_member.html',
+        {
+            'projects': projects,
+            'employees': employees
+        }
+    )
+
+
+def project_member_list(request):
+
+    members = ProjectMember.objects.select_related(
+        'project',
+        'employee'
+    ).order_by('-id')
+
+    return render(
+        request,
+        'project_member_list.html',
+        {
+            'members': members
+        }
+    )
+
+
+def edit_project_member(request, id):
+
+    member = get_object_or_404(
+        ProjectMember,
+        id=id
+    )
+
+    projects = Project.objects.all()
+    employees = Registration.objects.all()
+
+    if request.method == "POST":
+
+        member.project_id = request.POST.get(
+            'project'
+        )
+
+        member.employee_id = request.POST.get(
+            'employee'
+        )
+
+        member.role = request.POST.get(
+            'role'
+        )
+
+        member.save()
+
+        return redirect(
+            'project_member_list'
+        )
+
+    return render(
+        request,
+        'edit_project_member.html',
+        {
+            'member': member,
+            'projects': projects,
+            'employees': employees
+        }
+    )
+
+
+def delete_project_member(request, id):
+
+    member = get_object_or_404(
+        ProjectMember,
+        id=id
+    )
+
+    member.delete()
+
+    return redirect(
+        'project_member_list'
+    )
+
+
+def add_task(request):
+
+    projects = Project.objects.all()
+    employees = Registration.objects.all()
+
+    if request.method == "POST":
+
+        Task.objects.create(
+
+            project_id=request.POST.get(
+                'project'
+            ),
+
+            assigned_to_id=request.POST.get(
+                'assigned_to'
+            ),
+
+            title=request.POST.get(
+                'title'
+            ),
+
+            description=request.POST.get(
+                'description'
+            ),
+
+            start_date=request.POST.get(
+                'start_date'
+            ),
+
+            due_date=request.POST.get(
+                'due_date'
+            ),
+
+            priority=request.POST.get(
+                'priority'
+            ),
+
+            status=request.POST.get(
+                'status'
+            ),
+
+            progress=request.POST.get(
+                'progress'
+            )
+        )
+
+        return redirect(
+            'task_list'
+        )
+
+    return render(
+        request,
+        'add_task.html',
+        {
+            'projects': projects,
+            'employees': employees
+        }
+    )
+
+
+def task_list(request):
+
+    tasks = Task.objects.select_related(
+        'project',
+        'assigned_to'
+    ).order_by('-id')
+
+    return render(
+        request,
+        'task_list.html',
+        {
+            'tasks': tasks
+        }
+    )
+
+def edit_task(request, id):
+
+    task = get_object_or_404(
+        Task,
+        id=id
+    )
+
+    projects = Project.objects.all()
+    employees = Registration.objects.all()
+
+    if request.method == "POST":
+
+        task.project_id = request.POST.get(
+            'project'
+        )
+
+        task.assigned_to_id = request.POST.get(
+            'assigned_to'
+        )
+
+        task.title = request.POST.get(
+            'title'
+        )
+
+        task.description = request.POST.get(
+            'description'
+        )
+
+        task.start_date = request.POST.get(
+            'start_date'
+        )
+
+        task.due_date = request.POST.get(
+            'due_date'
+        )
+
+        task.priority = request.POST.get(
+            'priority'
+        )
+
+        task.status = request.POST.get(
+            'status'
+        )
+
+        task.progress = request.POST.get(
+            'progress'
+        )
+
+        task.save()
+
+        return redirect(
+            'task_list'
+        )
+
+    return render(
+        request,
+        'edit_task.html',
+        {
+            'task': task,
+            'projects': projects,
+            'employees': employees
+        }
+    )
+
+def delete_task(request, id):
+
+    task = get_object_or_404(
+        Task,
+        id=id
+    )
+
+    task.delete()
+
+    return redirect(
+        'task_list'
+    )
+
+
+def add_milestone(request):
+
+    projects = Project.objects.all()
+
+    if request.method == "POST":
+
+        ProjectMilestone.objects.create(
+
+            project_id=request.POST.get(
+                'project'
+            ),
+
+            title=request.POST.get(
+                'title'
+            ),
+
+            description=request.POST.get(
+                'description'
+            ),
+
+            start_date=request.POST.get(
+                'start_date'
+            ),
+
+            target_date=request.POST.get(
+                'target_date'
+            ),
+
+            status=request.POST.get(
+                'status'
+            ),
+
+            progress=request.POST.get(
+                'progress'
+            )
+        )
+
+        return redirect(
+            'milestone_list'
+        )
+
+    return render(
+        request,
+        'add_milestone.html',
+        {
+            'projects': projects
+        }
+    )
+
+def milestone_list(request):
+
+    milestones = ProjectMilestone.objects.select_related(
+        'project'
+    ).order_by('-id')
+
+    return render(
+        request,
+        'milestone_list.html',
+        {
+            'milestones': milestones
+        }
+    )
+
+
+def edit_milestone(request, id):
+
+    milestone = get_object_or_404(
+        ProjectMilestone,
+        id=id
+    )
+
+    projects = Project.objects.all()
+
+    if request.method == "POST":
+
+        milestone.project_id = request.POST.get(
+            'project'
+        )
+
+        milestone.title = request.POST.get(
+            'title'
+        )
+
+        milestone.description = request.POST.get(
+            'description'
+        )
+
+        milestone.start_date = request.POST.get(
+            'start_date'
+        )
+
+        milestone.target_date = request.POST.get(
+            'target_date'
+        )
+
+        milestone.completed_date = request.POST.get(
+            'completed_date'
+        )
+
+        milestone.status = request.POST.get(
+            'status'
+        )
+
+        milestone.progress = request.POST.get(
+            'progress'
+        )
+
+        milestone.save()
+
+        return redirect(
+            'milestone_list'
+        )
+
+    return render(
+        request,
+        'edit_milestone.html',
+        {
+            'milestone': milestone,
+            'projects': projects
+        }
+    )
+
+
+def delete_milestone(request, id):
+
+    milestone = get_object_or_404(
+        ProjectMilestone,
+        id=id
+    )
+
+    milestone.delete()
+
+    return redirect(
+        'milestone_list'
+    )
+
+def add_bug(request):
+
+    projects = Project.objects.all()
+    tasks = Task.objects.all()
+    employees = Registration.objects.all()
+
+    if request.method == "POST":
+
+        Bug.objects.create(
+
+            project_id=request.POST.get(
+                'project'
+            ),
+
+            task_id=request.POST.get(
+                'task'
+            ) or None,
+
+            reported_by_id=request.POST.get(
+                'reported_by'
+            ),
+
+            assigned_to_id=request.POST.get(
+                'assigned_to'
+            ),
+
+            title=request.POST.get(
+                'title'
+            ),
+
+            description=request.POST.get(
+                'description'
+            ),
+
+            priority=request.POST.get(
+                'priority'
+            ),
+
+            status=request.POST.get(
+                'status'
+            ),
+
+            attachment=request.FILES.get(
+                'attachment'
+            ),
+
+            resolution_notes=request.POST.get(
+                'resolution_notes'
+            )
+        )
+
+        return redirect(
+            'bug_list'
+        )
+
+    return render(
+        request,
+        'add_bug.html',
+        {
+            'projects': projects,
+            'tasks': tasks,
+            'employees': employees
+        }
+    )
+
+def bug_list(request):
+
+    bugs = Bug.objects.select_related(
+        'project',
+        'assigned_to',
+        'reported_by'
+    ).order_by('-id')
+
+    return render(
+        request,
+        'bug_list.html',
+        {
+            'bugs': bugs
+        }
+    )
+
+
+
+def edit_bug(request, id):
+
+    bug = get_object_or_404(
+        Bug,
+        id=id
+    )
+
+    projects = Project.objects.all()
+    tasks = Task.objects.all()
+    employees = Registration.objects.all()
+
+    if request.method == "POST":
+
+        bug.project_id = request.POST.get(
+            'project'
+        )
+
+        bug.task_id = request.POST.get(
+            'task'
+        ) or None
+
+        bug.reported_by_id = request.POST.get(
+            'reported_by'
+        )
+
+        bug.assigned_to_id = request.POST.get(
+            'assigned_to'
+        )
+
+        bug.title = request.POST.get(
+            'title'
+        )
+
+        bug.description = request.POST.get(
+            'description'
+        )
+
+        bug.priority = request.POST.get(
+            'priority'
+        )
+
+        bug.status = request.POST.get(
+            'status'
+        )
+
+        bug.resolution_notes = request.POST.get(
+            'resolution_notes'
+        )
+
+        if request.FILES.get(
+            'attachment'
+        ):
+            bug.attachment = request.FILES.get(
+                'attachment'
+            )
+
+        bug.save()
+
+        return redirect(
+            'bug_list'
+        )
+
+    return render(
+        request,
+        'edit_bug.html',
+        {
+            'bug': bug,
+            'projects': projects,
+            'tasks': tasks,
+            'employees': employees
+        }
+    )
+
+
+
+def delete_bug(request, id):
+
+    bug = get_object_or_404(
+        Bug,
+        id=id
+    )
+
+    bug.delete()
+
+    return redirect(
+        'bug_list'
+    )
+
+def add_project_file(request):
+
+    projects = Project.objects.all()
+    employees = Registration.objects.all()
+
+    if request.method == "POST":
+
+        ProjectFile.objects.create(
+
+            project_id=request.POST.get(
+                'project'
+            ),
+
+            uploaded_by_id=request.POST.get(
+                'uploaded_by'
+            ),
+
+            title=request.POST.get(
+                'title'
+            ),
+
+            description=request.POST.get(
+                'description'
+            ),
+
+            file=request.FILES.get(
+                'file'
+            )
+        )
+
+        return redirect(
+            'project_file_list'
+        )
+
+    return render(
+        request,
+        'add_project_file.html',
+        {
+            'projects': projects,
+            'employees': employees
+        }
+    )
+
+
+def project_file_list(request):
+
+    files = ProjectFile.objects.select_related(
+        'project',
+        'uploaded_by'
+    ).order_by('-id')
+
+    return render(
+        request,
+        'project_file_list.html',
+        {
+            'files': files
+        }
+    )
+
+def edit_project_file(request, id):
+
+    file_obj = get_object_or_404(
+        ProjectFile,
+        id=id
+    )
+
+    projects = Project.objects.all()
+    employees = Registration.objects.all()
+
+    if request.method == "POST":
+
+        file_obj.project_id = request.POST.get(
+            'project'
+        )
+
+        file_obj.uploaded_by_id = request.POST.get(
+            'uploaded_by'
+        )
+
+        file_obj.title = request.POST.get(
+            'title'
+        )
+
+        file_obj.description = request.POST.get(
+            'description'
+        )
+
+        if request.FILES.get('file'):
+            file_obj.file = request.FILES.get(
+                'file'
+            )
+
+        file_obj.save()
+
+        return redirect(
+            'project_file_list'
+        )
+
+    return render(
+        request,
+        'edit_project_file.html',
+        {
+            'file_obj': file_obj,
+            'projects': projects,
+            'employees': employees
+        }
+    )
+
+def delete_project_file(request, id):
+
+    file_obj = get_object_or_404(
+        ProjectFile,
+        id=id
+    )
+
+    file_obj.delete()
+
+    return redirect(
+        'project_file_list'
+    )
+
+def project_dashboard(request):
+
+    total_projects = Project.objects.count()
+
+    total_tasks = Task.objects.count()
+
+    completed_tasks = Task.objects.filter(
+        status='Completed'
+    ).count()
+
+    pending_tasks = Task.objects.exclude(
+        status='Completed'
+    ).count()
+
+    total_bugs = Bug.objects.count()
+
+    open_bugs = Bug.objects.exclude(
+        status='Closed'
+    ).count()
+
+    total_milestones = ProjectMilestone.objects.count()
+
+    completed_milestones = ProjectMilestone.objects.filter(
+        status='Completed'
+    ).count()
+
+    task_percentage = 0
+
+    if total_tasks > 0:
+        task_percentage = round(
+            (completed_tasks / total_tasks) * 100,
+            2
+        )
+
+    context = {
+
+        'total_projects': total_projects,
+
+        'total_tasks': total_tasks,
+
+        'completed_tasks': completed_tasks,
+
+        'pending_tasks': pending_tasks,
+
+        'total_bugs': total_bugs,
+
+        'open_bugs': open_bugs,
+
+        'total_milestones': total_milestones,
+
+        'completed_milestones': completed_milestones,
+
+        'task_percentage': task_percentage,
+    }
+
+    return render(
+        request,
+        'project_dashboard.html',
+        context
+    )
+
+
+
+
+
+def monthly_attendance_report(request):
+
+    employees = Registration.objects.all()
+
+    report_data = []
+
+    month = request.GET.get('month')
+    year = request.GET.get('year')
+
+    if month and year:
+
+        for employee in employees:
+
+            attendance = Attendance.objects.filter(
+                employee=employee,
+                date__month=month,
+                date__year=year
+            )
+
+            present = attendance.filter(
+                status='Present'
+            ).count()
+
+            absent = attendance.filter(
+                status='Absent'
+            ).count()
+
+            leave = attendance.filter(
+                status='Leave'
+            ).count()
+
+            total_hours = attendance.aggregate(
+                total=Sum('total_working_hours')
+            )['total'] or 0
+
+            report_data.append({
+
+                'employee': employee,
+
+                'present': present,
+
+                'absent': absent,
+
+                'leave': leave,
+
+                'hours': round(total_hours, 2)
+
+            })
+
+    context = {
+
+        'report_data': report_data,
+
+        'month': month,
+        'year': year
+
+    }
+
+    return render(
+        request,
+        'monthly_attendance_report.html',
+        context
+    )
+
+
+from datetime import datetime, timedelta
+from django.db.models import Sum
+
+def weekly_attendance_report(request):
+
+    report_data = []
+
+    week_start = request.GET.get('week_start')
+
+    if week_start:
+
+        start_date = datetime.strptime(
+            week_start,
+            '%Y-%m-%d'
+        ).date()
+
+        end_date = start_date + timedelta(days=6)
+
+        employees = Registration.objects.all()
+
+        for employee in employees:
+
+            attendance = Attendance.objects.filter(
+                employee=employee,
+                date__range=[start_date, end_date]
+            )
+
+            report_data.append({
+
+                'employee': employee,
+
+                'present': attendance.filter(
+                    status='Present'
+                ).count(),
+
+                'absent': attendance.filter(
+                    status='Absent'
+                ).count(),
+
+                'leave': attendance.filter(
+                    status='Leave'
+                ).count(),
+
+                'hours': attendance.aggregate(
+                    total=Sum(
+                        'total_working_hours'
+                    )
+                )['total'] or 0
+
+            })
+
+    return render(
+        request,
+        'weekly_attendance_report.html',
+        {
+            'report_data': report_data
+        }
+    )
+
+def overtime_report(request):
+
+    employees = Registration.objects.all()
+
+    report_data = []
+
+    month = request.GET.get('month')
+    year = request.GET.get('year')
+
+    if month and year:
+
+        for employee in employees:
+
+            overtime_records = ExtraWorkingDay.objects.filter(
+                staff=employee.user,
+                date__month=month,
+                date__year=year
+            )
+
+            total_overtime = overtime_records.aggregate(
+                total=Sum('hours')
+            )['total'] or 0
+
+            payroll = Payroll.objects.filter(
+                employee=employee,
+                month=month,
+                year=year
+            ).first()
+
+            overtime_amount = 0
+
+            if payroll:
+                overtime_amount = payroll.overtime_amount
+
+            report_data.append({
+
+                'employee': employee,
+
+                'hours': total_overtime,
+
+                'amount': overtime_amount
+
+            })
+
+    months = [
+
+        (1, 'January'),
+        (2, 'February'),
+        (3, 'March'),
+        (4, 'April'),
+        (5, 'May'),
+        (6, 'June'),
+        (7, 'July'),
+        (8, 'August'),
+        (9, 'September'),
+        (10, 'October'),
+        (11, 'November'),
+        (12, 'December'),
+
+    ]
+
+    return render(
+        request,
+        'overtime_report.html',
+        {
+            'report_data': report_data,
+            'months': months
+        }
+    )
+
+
+def ticket_resolution_list(request):
+
+    resolutions = TicketResolution.objects.select_related(
+        'ticket',
+        'updated_by'
+    ).order_by('-created_at')
+
+    return render(
+        request,
+        'ticket_resolution_list.html',
+        {
+            'resolutions': resolutions
+        }
+    )
+
+def ticket_resolution_add(request, ticket_id):
+
+    ticket = get_object_or_404(
+        SupportTicket,
+        id=ticket_id
+    )
+
+    if request.method == 'POST':
+
+        status = request.POST.get('status')
+        remarks = request.POST.get('remarks')
+
+        employee = Registration.objects.filter(
+            user=request.user
+        ).first()
+
+        TicketResolution.objects.create(
+
+            ticket=ticket,
+
+            status=status,
+
+            remarks=remarks,
+
+            updated_by=employee
+
+        )
+
+        ticket.status = status
+        ticket.save()
+
+        messages.success(
+            request,
+            'Resolution Added Successfully'
+        )
+
+        return redirect(
+            'ticket_resolution_list'
+        )
+
+    return render(
+        request,
+        'ticket_resolution_add.html',
+        {
+            'ticket': ticket
+        }
+    )
+
+
+def helpdesk_report(request):
+
+    total_tickets = SupportTicket.objects.count()
+
+    open_tickets = SupportTicket.objects.filter(
+        status='Open'
+    ).count()
+
+    closed_tickets = SupportTicket.objects.filter(
+        status='Closed'
+    ).count()
+
+    resolved_tickets = SupportTicket.objects.filter(
+        status='Resolved'
+    ).count()
+
+    high_priority = SupportTicket.objects.filter(
+        priority='High'
+    ).count()
+
+    tickets_by_staff = SupportTicket.objects.values(
+        'assigned_to__First_name'
+    ).annotate(
+        total=Count('id')
+    )
+
+    context = {
+
+        'total_tickets': total_tickets,
+
+        'open_tickets': open_tickets,
+
+        'closed_tickets': closed_tickets,
+
+        'resolved_tickets': resolved_tickets,
+
+        'high_priority': high_priority,
+
+        'tickets_by_staff': tickets_by_staff
+
+    }
+
+    return render(
+        request,
+        'helpdesk_report.html',
+        context
+    )

@@ -1,0 +1,91 @@
+{% include 'admin_navbar.html' %}
+
+<main id="main" class="main">
+
+<div class="card">
+
+<div class="card-header d-flex justify-content-between">
+
+<h4>Employee Documents</h4>
+
+<a href="{% url 'add_employee_document' %}"
+class="btn btn-success">
+
+Upload Document
+
+</a>
+
+</div>
+
+<div class="card-body mt-3">
+
+<table class="table table-bordered">
+
+<thead>
+
+<tr>
+<th>Employee</th>
+<th>Type</th>
+<th>Document</th>
+<th>File</th>
+<th>Action</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for document in documents %}
+
+<tr>
+
+<td>{{ document.employee.First_name }}</td>
+
+<td>{{ document.document_type }}</td>
+
+<td>{{ document.document_name }}</td>
+
+<td>
+<a
+href="{{ document.document_file.url }}"
+target="_blank">
+
+View File
+
+</a>
+</td>
+
+<td>
+
+<a
+href="{% url 'edit_employee_document' document.id %}"
+class="btn btn-warning btn-sm">
+
+Edit
+
+</a>
+
+<a
+href="{% url 'delete_employee_document' document.id %}"
+class="btn btn-danger btn-sm"
+onclick="return confirm('Delete document?')">
+
+Delete
+
+</a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</main>

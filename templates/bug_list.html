@@ -1,0 +1,86 @@
+{% include 'admin_navbar.html' %}
+
+<main id="main" class="main">
+
+<div class="card">
+
+<div class="card-header d-flex justify-content-between">
+
+<h4>Bug Tracking</h4>
+
+<a href="{% url 'add_bug' %}"
+class="btn btn-primary">
+
+Report Bug
+
+</a>
+
+</div>
+
+<div class="card-body mt-3">
+
+<table class="table table-bordered">
+
+<thead>
+
+<tr>
+<th>Project</th>
+<th>Title</th>
+<th>Priority</th>
+<th>Status</th>
+<th>Assigned To</th>
+<th>Created</th>
+<th>Action</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for bug in bugs %}
+
+<tr>
+
+<td>{{ bug.project.name }}</td>
+
+<td>{{ bug.title }}</td>
+
+<td>{{ bug.priority }}</td>
+
+<td>{{ bug.status }}</td>
+
+<td>{{ bug.assigned_to.First_name }}</td>
+
+<td>{{ bug.created_at|date:"d-m-Y" }}</td>
+
+<td>
+
+<a href="{% url 'edit_bug' bug.id %}"
+class="btn btn-warning btn-sm">
+
+Edit
+
+</a>
+
+<a href="{% url 'delete_bug' bug.id %}"
+class="btn btn-danger btn-sm">
+
+Delete
+
+</a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</main>

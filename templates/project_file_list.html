@@ -1,0 +1,93 @@
+{% include 'admin_navbar.html' %}
+
+<main id="main" class="main">
+
+<div class="card">
+
+<div class="card-header d-flex justify-content-between">
+
+<h4>Project Files</h4>
+
+<a href="{% url 'add_project_file' %}"
+class="btn btn-primary">
+
+Upload File
+
+</a>
+
+</div>
+
+<div class="card-body mt-3">
+
+<table class="table table-bordered">
+
+<thead>
+
+<tr>
+<th>Project</th>
+<th>Title</th>
+<th>Uploaded By</th>
+<th>Date</th>
+<th>File</th>
+<th>Action</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for file in files %}
+
+<tr>
+
+<td>{{ file.project.name }}</td>
+
+<td>{{ file.title }}</td>
+
+<td>{{ file.uploaded_by.First_name }}</td>
+
+<td>{{ file.created_at|date:"d-m-Y" }}</td>
+
+<td>
+
+<a href="{{ file.file.url }}"
+   target="_blank"
+   class="btn btn-info btn-sm">
+
+View
+
+</a>
+
+</td>
+
+<td>
+
+<a href="{% url 'edit_project_file' file.id %}"
+class="btn btn-warning btn-sm">
+
+Edit
+
+</a>
+
+<a href="{% url 'delete_project_file' file.id %}"
+class="btn btn-danger btn-sm">
+
+Delete
+
+</a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</main>

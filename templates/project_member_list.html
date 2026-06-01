@@ -1,0 +1,81 @@
+{% include 'admin_navbar.html' %}
+
+<main id="main" class="main">
+
+<div class="card">
+
+<div class="card-header d-flex justify-content-between">
+
+<h4>Project Members</h4>
+
+<a href="{% url 'add_project_member' %}"
+   class="btn btn-primary">
+
+Assign Member
+
+</a>
+
+</div>
+
+<div class="card-body mt-3">
+
+<table class="table table-bordered">
+
+<thead>
+
+<tr>
+<th>Project</th>
+<th>Employee</th>
+<th>Role</th>
+<th>Assigned Date</th>
+<th>Action</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for member in members %}
+
+<tr>
+
+<td>{{ member.project.name }}</td>
+
+<td>{{ member.employee.First_name }}</td>
+
+<td>{{ member.role }}</td>
+
+<td>{{ member.assigned_date }}</td>
+
+<td>
+
+<a href="{% url 'edit_project_member' member.id %}"
+   class="btn btn-warning btn-sm">
+
+Edit
+
+</a>
+
+<a href="{% url 'delete_project_member' member.id %}"
+   class="btn btn-danger btn-sm"
+   onclick="return confirm('Delete member?')">
+
+Delete
+
+</a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</main>

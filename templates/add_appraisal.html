@@ -1,0 +1,117 @@
+{% include 'admin_navbar.html' %}
+
+<main id="main" class="main">
+
+<div class="card">
+
+    <div class="card-header">
+        <h4>Add Employee Appraisal</h4>
+    </div>
+
+    <div class="card-body mt-3">
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="row">
+
+                <div class="col-md-6 mb-3">
+                    <label>Employee</label>
+                    <select name="employee" class="form-control" required>
+                        <option value="">Select Employee</option>
+
+                        {% for employee in employees %}
+                        <option value="{{ employee.id }}">
+                            {{ employee.First_name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label>Review Date</label>
+                    <input type="date"
+                           name="review_date"
+                           class="form-control"
+                           required>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label>Review Period</label>
+                    <input type="text"
+                           name="review_period"
+                           class="form-control"
+                           placeholder="Jan 2026 - Jun 2026">
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label>Rating (1-5)</label>
+                    <select name="rating"
+                            class="form-control">
+
+                        <option value="1">1 - Poor</option>
+                        <option value="2">2 - Average</option>
+                        <option value="3">3 - Good</option>
+                        <option value="4">4 - Very Good</option>
+                        <option value="5">5 - Excellent</option>
+
+                    </select>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label>Current Salary</label>
+                    <input type="number"
+                           name="current_salary"
+                           class="form-control">
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label>Proposed Salary</label>
+                    <input type="number"
+                           name="proposed_salary"
+                           class="form-control">
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label>Salary Hike</label>
+                    <input type="number"
+                           name="salary_hike"
+                           class="form-control">
+                </div>
+
+                <div class="col-md-6 mb-3 mt-4">
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               name="promotion">
+
+                        <label class="form-check-label">
+                            Promotion Recommended
+                        </label>
+                    </div>
+                </div>
+
+                <div class="col-md-12 mb-3">
+                    <label>Remarks</label>
+                    <textarea name="remarks"
+                              rows="4"
+                              class="form-control"></textarea>
+                </div>
+
+            </div>
+
+            <button type="submit"
+                    class="btn btn-primary">
+
+                Save Appraisal
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+</main>

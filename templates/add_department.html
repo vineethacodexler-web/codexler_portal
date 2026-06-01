@@ -1,0 +1,47 @@
+{% include 'admin_navbar.html' %}
+
+<main id="main" class="main">
+
+<div class="card">
+    <div class="card-header">
+        <h4>Add Department</h4>
+    </div>
+
+    <div class="card-body">
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label>Department Name</label>
+
+                <input
+                    type="text"
+                    name="name"
+                    class="form-control"
+                    required
+                >
+            </div>
+
+            <div class="mb-3">
+                <label>Description</label>
+
+                <textarea
+                    name="description"
+                    class="form-control"
+                    rows="4"></textarea>
+            </div>
+
+            <button
+                type="submit"
+                class="btn btn-primary">
+                Save Department
+            </button>
+
+        </form>
+
+    </div>
+</div>
+
+</main>

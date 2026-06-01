@@ -1,0 +1,102 @@
+{% include 'admin_navbar.html' %}
+
+<main id="main" class="main">
+
+<div class="card">
+
+<div class="card-header">
+<h4>Upload Employee Document</h4>
+</div>
+
+<div class="card-body">
+
+<form method="POST"
+      enctype="multipart/form-data">
+
+{% csrf_token %}
+
+<div class="mb-3">
+<label>Employee</label>
+
+<select
+name="employee"
+class="form-control"
+required>
+
+<option value="">Select Employee</option>
+
+{% for employee in employees %}
+<option value="{{ employee.id }}">
+{{ employee.First_name }}
+</option>
+{% endfor %}
+
+</select>
+</div>
+
+<div class="mb-3">
+<label>Document Type</label>
+
+<select
+name="document_type"
+class="form-control">
+
+<option>Aadhaar</option>
+<option>PAN</option>
+<option>Resume</option>
+<option>Offer Letter</option>
+<option>Experience Certificate</option>
+<option>Educational Certificate</option>
+<option>Other</option>
+
+</select>
+</div>
+
+<div class="mb-3">
+
+<label>Document Name</label>
+
+<input
+type="text"
+name="document_name"
+class="form-control"
+required>
+
+</div>
+
+<div class="mb-3">
+
+<label>Upload File</label>
+
+<input
+type="file"
+name="document_file"
+class="form-control"
+required>
+
+</div>
+
+<div class="mb-3">
+
+<label>Remarks</label>
+
+<textarea
+name="remarks"
+class="form-control"></textarea>
+
+</div>
+
+<button
+class="btn btn-primary">
+
+Upload Document
+
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+</main>

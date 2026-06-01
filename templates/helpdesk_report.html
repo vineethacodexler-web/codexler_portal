@@ -1,0 +1,132 @@
+{% include 'admin_navbar.html' %}
+
+<main id="main" class="main">
+
+<div class="container-fluid">
+
+<h4 class="mb-4">
+Helpdesk Reports
+</h4>
+
+<div class="row">
+
+<div class="col-md-3">
+
+<div class="card text-center">
+
+<div class="card-body">
+
+<h5>Total Tickets</h5>
+
+<h2>{{ total_tickets }}</h2>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-3">
+
+<div class="card text-center">
+
+<div class="card-body">
+
+<h5>Open Tickets</h5>
+
+<h2>{{ open_tickets }}</h2>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-3">
+
+<div class="card text-center">
+
+<div class="card-body">
+
+<h5>Resolved Tickets</h5>
+
+<h2>{{ resolved_tickets }}</h2>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-3">
+
+<div class="card text-center">
+
+<div class="card-body">
+
+<h5>Closed Tickets</h5>
+
+<h2>{{ closed_tickets }}</h2>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<br>
+
+<div class="card">
+
+<div class="card-header">
+
+<h5>Tickets By Staff</h5>
+
+</div>
+
+<div class="card-body">
+
+<table class="table table-bordered">
+
+<thead>
+
+<tr>
+
+<th>Staff</th>
+<th>Total Tickets</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for item in tickets_by_staff %}
+
+<tr>
+
+<td>
+{{ item.assigned_to__First_name }}
+</td>
+
+<td>
+{{ item.total }}
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+</main>

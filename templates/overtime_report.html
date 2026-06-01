@@ -1,0 +1,113 @@
+{% include 'admin_navbar.html' %}
+
+<main id="main" class="main">
+
+<div class="card">
+
+<div class="card-header">
+<h4>Overtime Report</h4>
+</div>
+
+<div class="card-body">
+
+<form method="GET" class="row mt-3">
+
+<div class="col-md-3">
+
+<label>Month</label>
+
+<select name="month" class="form-control">
+
+<option value="">Select Month</option>
+
+{% for value,name in months %}
+
+<option value="{{ value }}">
+{{ name }}
+</option>
+
+{% endfor %}
+
+</select>
+
+</div>
+
+<div class="col-md-3">
+
+<label>Year</label>
+
+<input type="number"
+       name="year"
+       class="form-control">
+
+</div>
+
+<div class="col-md-2 mt-4">
+
+<button class="btn btn-primary">
+
+Generate
+
+</button>
+
+</div>
+
+</form>
+
+<hr>
+
+<table class="table table-bordered table-striped">
+
+<thead>
+
+<tr>
+
+<th>Employee ID</th>
+<th>Employee Name</th>
+<th>Overtime Hours</th>
+<th>Overtime Amount</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for row in report_data %}
+
+<tr>
+
+<td>{{ row.employee.Emp_Id }}</td>
+
+<td>{{ row.employee.First_name }}</td>
+
+<td>{{ row.hours }}</td>
+
+<td>₹ {{ row.amount }}</td>
+
+</tr>
+
+{% empty %}
+
+<tr>
+
+<td colspan="4"
+class="text-center">
+
+No Records Found
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</main>

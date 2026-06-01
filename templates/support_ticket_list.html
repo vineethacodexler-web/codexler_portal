@@ -23,6 +23,7 @@
 <th>Priority</th>
 <th>Status</th>
 <th>Assigned To</th>
+    <th>Action</th>
 </tr>
 
 </thead>
@@ -44,6 +45,12 @@
 <td>{{ ticket.status }}</td>
 
 <td>{{ ticket.assigned_to }}</td>
+    <td><a href="{% url 'ticket_resolution_add' ticket.id %}"
+   class="btn btn-sm btn-primary">
+
+Resolution
+
+</a></td>
 
 </tr>
 

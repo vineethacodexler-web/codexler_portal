@@ -1,0 +1,89 @@
+{% include 'admin_navbar.html' %}
+
+<main id="main" class="main">
+
+<div class="card">
+
+<div class="card-header">
+<h4>Assign Project Member</h4>
+</div>
+
+<div class="card-body mt-3">
+
+<form method="POST">
+
+{% csrf_token %}
+
+<div class="mb-3">
+
+<label>Project</label>
+
+<select name="project"
+        class="form-control"
+        required>
+
+<option value="">
+Select Project
+</option>
+
+{% for project in projects %}
+
+<option value="{{ project.id }}">
+{{ project.name }}
+</option>
+
+{% endfor %}
+
+</select>
+
+</div>
+
+<div class="mb-3">
+
+<label>Employee</label>
+
+<select name="employee"
+        class="form-control"
+        required>
+
+<option value="">
+Select Employee
+</option>
+
+{% for employee in employees %}
+
+<option value="{{ employee.id }}">
+{{ employee.First_name }}
+</option>
+
+{% endfor %}
+
+</select>
+
+</div>
+
+<div class="mb-3">
+
+<label>Role</label>
+
+<input type="text"
+       name="role"
+       class="form-control"
+       placeholder="Developer / Tester / Manager">
+
+</div>
+
+<button type="submit"
+        class="btn btn-primary">
+
+Assign Member
+
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+</main>

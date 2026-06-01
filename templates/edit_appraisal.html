@@ -1,0 +1,166 @@
+{% include 'admin_navbar.html' %}
+
+<main id="main" class="main">
+
+<div class="card">
+
+    <div class="card-header">
+        <h4>Edit Appraisal</h4>
+    </div>
+
+    <div class="card-body mt-3">
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="row">
+
+                <div class="col-md-6 mb-3">
+
+                    <label>Employee</label>
+
+                    <select name="employee"
+                            class="form-control">
+
+                        {% for employee in employees %}
+
+                        <option value="{{ employee.id }}"
+                        {% if appraisal.employee.id == employee.id %}
+                        selected
+                        {% endif %}>
+
+                            {{ employee.First_name }}
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-6 mb-3">
+
+                    <label>Review Date</label>
+
+                    <input type="date"
+                           name="review_date"
+                           value="{{ appraisal.review_date|date:'Y-m-d' }}"
+                           class="form-control">
+
+                </div>
+
+                <div class="col-md-6 mb-3">
+
+                    <label>Review Period</label>
+
+                    <input type="text"
+                           name="review_period"
+                           value="{{ appraisal.review_period }}"
+                           class="form-control">
+
+                </div>
+
+                <div class="col-md-6 mb-3">
+
+                    <label>Rating</label>
+
+                    <select name="rating"
+                            class="form-control">
+
+                        {% for i in "12345" %}
+
+                        <option value="{{ i }}"
+                        {% if appraisal.rating|stringformat:"s" == i %}
+                        selected
+                        {% endif %}>
+
+                        {{ i }}
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-6 mb-3">
+
+                    <label>Current Salary</label>
+
+                    <input type="number"
+                           name="current_salary"
+                           value="{{ appraisal.current_salary }}"
+                           class="form-control">
+
+                </div>
+
+                <div class="col-md-6 mb-3">
+
+                    <label>Proposed Salary</label>
+
+                    <input type="number"
+                           name="proposed_salary"
+                           value="{{ appraisal.proposed_salary }}"
+                           class="form-control">
+
+                </div>
+
+                <div class="col-md-6 mb-3">
+
+                    <label>Salary Hike</label>
+
+                    <input type="number"
+                           name="salary_hike"
+                           value="{{ appraisal.salary_hike }}"
+                           class="form-control">
+
+                </div>
+
+                <div class="col-md-6 mb-3 mt-4">
+
+                    <div class="form-check">
+
+                        <input class="form-check-input"
+                               type="checkbox"
+                               name="promotion"
+                               {% if appraisal.promotion %}
+                               checked
+                               {% endif %}>
+
+                        <label class="form-check-label">
+                            Promotion Recommended
+                        </label>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-12 mb-3">
+
+                    <label>Remarks</label>
+
+                    <textarea name="remarks"
+                              rows="4"
+                              class="form-control">{{ appraisal.remarks }}</textarea>
+
+                </div>
+
+            </div>
+
+            <button type="submit"
+                    class="btn btn-success">
+
+                Update Appraisal
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+</main>

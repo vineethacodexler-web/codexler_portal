@@ -1,0 +1,208 @@
+{% include 'admin_navbar.html' %}
+
+<main id="main" class="main">
+
+<div class="pagetitle">
+    <h1>Project Dashboard</h1>
+</div>
+
+<section class="section">
+
+<div class="row">
+
+<div class="col-lg-3 col-md-6">
+
+<div class="card info-card">
+
+<div class="card-body">
+
+<h5 class="card-title">
+Total Projects
+</h5>
+
+<h3>
+{{ total_projects }}
+</h3>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-lg-3 col-md-6">
+
+<div class="card info-card">
+
+<div class="card-body">
+
+<h5 class="card-title">
+Total Tasks
+</h5>
+
+<h3>
+{{ total_tasks }}
+</h3>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-lg-3 col-md-6">
+
+<div class="card info-card">
+
+<div class="card-body">
+
+<h5 class="card-title">
+Completed Tasks
+</h5>
+
+<h3>
+{{ completed_tasks }}
+</h3>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-lg-3 col-md-6">
+
+<div class="card info-card">
+
+<div class="card-body">
+
+<h5 class="card-title">
+Pending Tasks
+</h5>
+
+<h3>
+{{ pending_tasks }}
+</h3>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="row">
+
+<div class="col-lg-3 col-md-6">
+
+<div class="card">
+
+<div class="card-body">
+
+<h5 class="card-title">
+Total Bugs
+</h5>
+
+<h3>
+{{ total_bugs }}
+</h3>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-lg-3 col-md-6">
+
+<div class="card">
+
+<div class="card-body">
+
+<h5 class="card-title">
+Open Bugs
+</h5>
+
+<h3>
+{{ open_bugs }}
+</h3>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-lg-3 col-md-6">
+
+<div class="card">
+
+<div class="card-body">
+
+<h5 class="card-title">
+Total Milestones
+</h5>
+
+<h3>
+{{ total_milestones }}
+</h3>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-lg-3 col-md-6">
+
+<div class="card">
+
+<div class="card-body">
+
+<h5 class="card-title">
+Completed Milestones
+</h5>
+
+<h3>
+{{ completed_milestones }}
+</h3>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="card-header">
+
+<h5>
+Project Completion
+</h5>
+
+</div>
+
+<div class="card-body">
+
+<div class="progress mt-3">
+
+<div class="progress-bar bg-success"
+     style="width: {{ task_percentage }}%;">
+
+{{ task_percentage }}%
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+</main>

@@ -1,0 +1,74 @@
+{% include 'admin_navbar.html' %}
+
+<main id="main" class="main">
+
+<div class="container-fluid">
+
+<div class="card">
+
+<div class="card-header">
+<h4>Resolution History</h4>
+</div>
+
+<div class="card-body">
+
+<table class="table table-bordered">
+
+<thead>
+
+<tr>
+
+<th>Ticket</th>
+<th>Status</th>
+<th>Remarks</th>
+<th>Updated By</th>
+<th>Date</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for item in resolutions %}
+
+<tr>
+
+<td>{{ item.ticket.subject }}</td>
+
+<td>{{ item.status }}</td>
+
+<td>{{ item.remarks }}</td>
+
+<td>{{ item.updated_by }}</td>
+
+<td>{{ item.created_at }}</td>
+
+</tr>
+
+{% empty %}
+
+<tr>
+
+<td colspan="5"
+    class="text-center">
+
+No Records Found
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+</main>
