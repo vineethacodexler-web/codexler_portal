@@ -1,5 +1,5 @@
 {% load static %}
-{% include 'admin_nav.html' %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,7 +15,19 @@
   </style>
 </head>
 <body>
-  <main id="main" class="main">
+  <style>
+        .main-content{
+    margin-left:270px;
+    min-height:100vh;
+}
+    </style>
+{% include 'sidebar.html' %}
+
+<div class="main-content">
+
+    {% include 'topbar.html' %}
+
+<div class="container-fluid">
   <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center">
  

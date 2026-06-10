@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .main-content{
+    margin-left:270px;
+    min-height:100vh;
+}
+    </style>
+</head>
+<body style="background:#f8fafc;">
+
+{% include 'sidebar.html' %}
+
+<div class="main-content">
+
+    {% include 'topbar.html' %}
+
+    <div class="container-fluid p-4">
+    <div class="card border-0 shadow-lg mb-4 hero-card">
+    <div class="card-body p-4 bg-light" >
+
+        <div class="row align-items-center">
+
+            <div class="col-md-8">
+
+                <h2 class="fw-bold text-primary">
+                    👋 Welcome Back,
+                    {{ bok.First_name }}
+                </h2>
+
+                <p class="text-black mb-3">
+                    Have a productive day.
+                </p>
+
+                <div class="d-flex gap-2">
+
+                    <a href="#" class="btn btn-primary">
+                        Apply Leave
+                    </a>
+
+                    <a href="#" class="btn btn-outline-primary">
+                        My Timesheet
+                    </a>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-4 text-end">
+
+                <h5 class="text-muted">
+                    {{ now|date:"l, d M Y" }}
+                </h5>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+    <div class="row mb-4">
+
+    <div class="col-md-3">
+        <div class="card dashboard-stat">
+            <div class="card-body">
+                <h6>Worked Days</h6>
+                <h2>{{ total_working_days }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card dashboard-stat">
+            <div class="card-body">
+                <h6>Total Leave</h6>
+                <h2>{{ leave_total }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card dashboard-stat">
+            <div class="card-body">
+                <h6>Projects</h6>
+                <h2>{{ project_count }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card dashboard-stat">
+            <div class="card-body">
+                <h6>Work Hours</h6>
+                <h2>
+                    {% widthratio total_working_minutes 60 1 %}
+                </h2>
+            </div>
+        </div>
+    </div>
+
+</div>
+    <div class="row mb-4">
+
+    <div class="col-md-6">
+
+        <div class="card shadow-sm border-0">
+
+            <div class="card-header bg-white">
+                Attendance Today
+            </div>
+
+            <div class="card-body">
+
+                {% if open_attendance %}
+
+                <h3 class="text-success">
+                    Checked In
+                </h3>
+
+                <button class="btn btn-danger">
+                    Clock Out
+                </button>
+
+                {% else %}
+
+                <h3 class="text-warning">
+                    Not Checked In
+                </h3>
+
+                <button class="btn btn-success">
+                    Clock In
+                </button>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-6">
+
+        <div class="card shadow-sm border-0">
+
+            <div class="card-header bg-white">
+                Leave Balance
+            </div>
+
+            <div class="card-body">
+
+                <div class="mb-3">
+                    Casual Leave
+                    <span class="float-end">
+                        {{ leave_balance.casual_leaves }}
+                    </span>
+                </div>
+
+                <div class="mb-3">
+                    Sick Leave
+                    <span class="float-end">
+                        {{ leave_balance.sick_leaves }}
+                    </span>
+                </div>
+
+                <div>
+                    Comp Off
+                    <span class="float-end">
+                        {{ leave_balance.compensatory_leaves }}
+                    </span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+    <div class="card border-0 shadow-sm mb-4">
+
+    <div class="card-header bg-white">
+        Recent Projects
+    </div>
+
+    <div class="card-body">
+
+        <div class="row">
+
+            {% for project in recent_projects %}
+
+            <div class="col-md-6 mb-3">
+
+                <div class="border rounded p-3">
+
+                    <h6>
+                        {{ project.project_no }}
+                    </h6>
+
+                    <small>
+                        {{ project.project_name }}
+                    </small>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+    <div class="card border-0 shadow-sm">
+
+    <div class="card-header bg-white">
+        Recent Leave Applications
+    </div>
+
+    <div class="card-body">
+
+        {% for leave in leaves %}
+
+        <div class="border rounded p-3 mb-2">
+
+            <strong>
+                {{ leave.date_from }}
+            </strong>
+
+            -
+
+            <strong>
+                {{ leave.date_to }}
+            </strong>
+
+            <br>
+
+            <small>
+                {{ leave.reason }}
+            </small>
+
+        </div>
+
+        {% empty %}
+
+        <p>No leave applications found.</p>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+</div>
+    <style>
+
+.hero-card{
+    border-radius:20px;
+    background:linear-gradient(
+        135deg,
+        #4f46e5,
+        #7c3aed
+    );
+    color:white;
+}
+
+.dashboard-stat{
+    border:none;
+    border-radius:16px;
+    box-shadow:0 4px 15px rgba(0,0,0,.08);
+}
+
+.dashboard-stat h2{
+    font-size:32px;
+    font-weight:700;
+}
+
+.card{
+    border-radius:16px;
+}
+
+</style>
+</div>
+</body>
+
+</html>

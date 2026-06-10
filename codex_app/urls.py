@@ -29,6 +29,11 @@ urlpatterns = [
     path('register_employee', views.register_employee, name='register_employee'),
         path('employeess', views.employeess, name='employeess'),
         path('employee_home', views.employee_home, name='employee_home'),
+path(
+    'employee-home-v2/',
+    views.employee_home_v2,
+    name='employee_home_v2'
+),
         path('update_employee', views.update_employee, name='update_employee'),
         path('update_employeee', views.update_employeee, name='update_employeee'),
 path('view_staffs', views.view_staffs, name='view_staffs'),
@@ -481,6 +486,22 @@ path(
     views.helpdesk_report,
     name='helpdesk_report'
 ),
+path(
+    'my-attendance/',
+    views.my_attendance,
+    name='my_attendance'
+),
+path(
+    'my-tasks/',
+    views.my_tasks,
+    name='my_tasks'
+),
+path(
+    'my-projects/',
+    views.my_projects,
+    name='my_projects'
+),
+
 ]
 
 

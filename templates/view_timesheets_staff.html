@@ -1,12 +1,12 @@
 {% load static %}
-{% include 'admin_nav.html' %}
+
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Rowther | Manage Timesheets</title>
+  <title>Codexler</title>
 
   <link rel="icon" href="{% static 'logo.jpg' %}">
 
@@ -206,7 +206,19 @@
 
 <body>
 
-<main id="main" class="main">
+<style>
+        .main-content{
+    margin-left:270px;
+    min-height:100vh;
+}
+    </style>
+{% include 'sidebar.html' %}
+
+<div class="main-content">
+
+    {% include 'topbar.html' %}
+
+<div class="container-fluid">
 
   {% if messages %}
   <div id="popup-alert-container" class="popup-alert-container">
@@ -443,8 +455,7 @@
       </div>
     </div>
   </div>
-
-</main>
+</div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 

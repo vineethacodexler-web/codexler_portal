@@ -172,7 +172,7 @@ def login(request):
             elif usertype == 'employee':
                 request.session['logg'] = registration.id
                 registration.save()
-                return redirect('employee_home')
+                return redirect('employee_home_v2')
             elif usertype == 'accounts':
                 request.session['logg'] = registration.id
                 registration.save()
@@ -415,7 +415,56 @@ def employee_home(request):
 
     return render(request, 'employee_home.html', context)
 
+from django.shortcuts import render
+from django.utils.timezone import now
 
+def employee_home_v2(request):
+
+    bok = Registration.objects.get(id=request.session['logg'])
+
+    attendance_records = Attendance.objects.filter(employee=bok)
+
+    leaves = LeaveApplication.objects.filter(staff=bok.user)
+
+    leave_balance, _ = LeaveBalance.objects.get_or_create(
+        staff=bok.user
+    )
+
+    total_working_days = attendance_records.count()
+
+    total_working_minutes = sum(
+        (att.check_out_time - att.check_in_time).total_seconds() / 60
+        for att in attendance_records
+        if att.check_in_time and att.check_out_time
+    )
+
+    current_date = now().date()
+
+    open_attendance = Attendance.objects.filter(
+        employee=bok,
+        date=current_date,
+        check_out_time__isnull=True
+    ).last()
+
+    recent_projects = CreateProject.objects.order_by('-id')[:5]
+
+    context = {
+        'bok': bok,
+        'leave_balance': leave_balance,
+        'leave_total': leaves.count(),
+        'total_working_days': total_working_days,
+        'total_working_minutes': round(total_working_minutes, 2),
+        'recent_projects': recent_projects,
+        'open_attendance': open_attendance,
+        'leaves': leaves[:5],
+        'project_count': CreateProject.objects.count(),
+    }
+
+    return render(
+        request,
+        'employee_home_v2.html',
+        context
+    )
 
 from django.shortcuts import render
 from .models import Registration
@@ -6104,5 +6153,118 @@ def helpdesk_report(request):
     return render(
         request,
         'helpdesk_report.html',
+        context
+    )
+
+
+
+from django.utils.timezone import now
+from datetime import date
+
+
+def my_attendance(request):
+
+    employee = Registration.objects.get(
+        id=request.session['logg']
+    )
+
+    today = date.today()
+
+    attendance_today = Attendance.objects.filter(
+        employee=employee,
+        date=today
+    ).last()
+
+    attendance_history = Attendance.objects.filter(
+        employee=employee
+    ).order_by('-date')
+
+    total_present = Attendance.objects.filter(
+        employee=employee,
+        status='Present'
+    ).count()
+
+    total_leave = Attendance.objects.filter(
+        employee=employee,
+        status='Leave'
+    ).count()
+
+    total_absent = Attendance.objects.filter(
+        employee=employee,
+        status='Absent'
+    ).count()
+
+    context = {
+        'bok': employee,
+        'attendance_today': attendance_today,
+        'attendance_history': attendance_history,
+        'total_present': total_present,
+        'total_leave': total_leave,
+        'total_absent': total_absent,
+    }
+
+    return render(
+        request,
+        'my_attendance.html',
+        context
+    )
+
+
+
+def my_tasks(request):
+
+    employee = Registration.objects.get(
+        id=request.session['logg']
+    )
+
+    tasks = Task.objects.filter(
+        assigned_to=employee
+    ).order_by('due_date')
+
+    pending_count = tasks.filter(status='Pending').count()
+    progress_count = tasks.filter(status='In Progress').count()
+    completed_count = tasks.filter(status='Completed').count()
+    hold_count = tasks.filter(status='On Hold').count()
+
+    context = {
+        'bok': employee,
+        'tasks': tasks,
+        'pending_count': pending_count,
+        'progress_count': progress_count,
+        'completed_count': completed_count,
+        'hold_count': hold_count,
+    }
+
+    return render(
+        request,
+        'my_tasks.html',
+        context
+    )
+
+
+from django.shortcuts import render
+from .models import Registration, ProjectMember
+
+def my_projects(request):
+
+    employee = Registration.objects.get(
+        id=request.session['logg']
+    )
+
+    project_members = ProjectMember.objects.filter(
+        employee=employee
+    ).select_related('project')
+
+    total_projects = project_members.count()
+
+    context = {
+        'bok': employee,
+        'project_members': project_members,
+        'total_projects': total_projects,
+    }
+
+    return render(
+        request,
+        'my_projects.html',
         context
     )
