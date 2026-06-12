@@ -1,0 +1,78 @@
+
+    <style>
+        .main-content{
+    margin-left:270px;
+    min-height:100vh;
+}
+    </style>
+{% include 'sidebar.html' %}
+
+<div class="main-content">
+
+    {% include 'topbar.html' %}
+
+<div class="container-fluid">
+
+<div class="container-fluid mt-4">
+
+<div class="card border-0 shadow-sm">
+
+<div class="card-body p-4">
+
+<h3 class="mb-4">
+Request Certificate
+</h3>
+
+<form method="POST">
+
+{% csrf_token %}
+
+<div class="mb-3">
+
+<label class="form-label">
+Certificate Type
+</label>
+
+<select
+name="certificate_type"
+class="form-select">
+
+<option>
+Joining Letter
+</option>
+
+<option>
+Salary Certificate
+</option>
+
+</select>
+
+</div>
+
+<div class="mb-3">
+
+<label class="form-label">
+Reason
+</label>
+
+<textarea
+name="reason"
+class="form-control"
+rows="4"></textarea>
+
+</div>
+
+<button
+class="btn btn-primary">
+
+Submit Request
+
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+</div>

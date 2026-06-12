@@ -1147,3 +1147,97 @@ class ProjectFile(models.Model):
 
     def __str__(self):
         return self.title
+
+
+
+class EmployeeCertificateRequest(models.Model):
+
+    CERTIFICATE_CHOICES = (
+        ('Joining Letter', 'Joining Letter'),
+        ('Salary Certificate', 'Salary Certificate'),
+    )
+
+    STATUS_CHOICES = (
+        ('Pending', 'Pending'),
+        ('Approved', 'Approved'),
+        ('Rejected', 'Rejected'),
+    )
+
+    employee = models.ForeignKey(
+        Registration,
+        on_delete=models.CASCADE
+    )
+
+    certificate_type = models.CharField(
+        max_length=50,
+        choices=CERTIFICATE_CHOICES
+    )
+
+    reason = models.TextField(
+        blank=True,
+        null=True
+    )
+
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='Pending'
+    )
+
+    certificate_file = models.FileField(
+        upload_to='employee_certificates/',
+        blank=True,
+        null=True
+    )
+
+    requested_date = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    approved_date = models.DateTimeField(
+        null=True,
+        blank=True
+    )
+
+    def __str__(self):
+        return f"{self.employee.First_name} - {self.certificate_type}"
+
+
+
+class Announcement(models.Model):
+
+    PRIORITY_CHOICES = (
+        ('Low', 'Low'),
+        ('Medium', 'Medium'),
+        ('High', 'High'),
+    )
+
+    title = models.CharField(
+        max_length=200
+    )
+
+    message = models.TextField()
+
+    priority = models.CharField(
+        max_length=20,
+        choices=PRIORITY_CHOICES,
+        default='Medium'
+    )
+
+    
+    created_by = models.ForeignKey(
+        Registration,
+        on_delete=models.SET_NULL,
+        null=True
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    is_active = models.BooleanField(
+        default=True
+    )
+
+    def __str__(self):
+        return self.title

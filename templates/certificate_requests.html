@@ -1,0 +1,50 @@
+<table class="table">
+
+<tr>
+<th>Employee</th>
+<th>Certificate</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+
+{% for r in requests_data %}
+
+<tr>
+
+<td>
+{{ r.employee.First_name }}
+</td>
+
+<td>
+{{ r.certificate_type }}
+</td>
+
+<td>
+{{ r.status }}
+</td>
+
+<td>
+
+{% if r.status == 'Pending' %}
+
+<a href="{% url 'approve_certificate' r.id %}"
+   class="btn btn-success btn-sm">
+
+    Approve
+
+</a>
+
+{% elif r.status == 'Approved' %}
+
+<span class="badge bg-success">
+    Approved
+</span>
+
+{% endif %}
+
+</td>
+</tr>
+
+{% endfor %}
+
+</table>

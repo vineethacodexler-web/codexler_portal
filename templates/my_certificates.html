@@ -1,0 +1,106 @@
+
+    <style>
+        .main-content{
+    margin-left:270px;
+    min-height:100vh;
+}
+    </style>
+{% include 'sidebar.html' %}
+
+<div class="main-content">
+
+    {% include 'topbar.html' %}
+
+<div class="container-fluid">
+
+<div class="container-fluid mt-4">
+
+<div class="card border-0 shadow-sm">
+
+<div class="card-body">
+
+<h3>
+My Certificates
+</h3>
+
+<table class="table">
+
+<thead>
+
+<tr>
+<th>Certificate</th>
+<th>Status</th>
+<th>Date</th>
+<th>Action</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for c in certificates %}
+
+<tr>
+
+<td>
+{{ c.certificate_type }}
+</td>
+
+<td>
+
+{% if c.status == 'Approved' %}
+
+<span class="badge bg-success">
+Approved
+</span>
+
+{% elif c.status == 'Rejected' %}
+
+<span class="badge bg-danger">
+Rejected
+</span>
+
+{% else %}
+
+<span class="badge bg-warning">
+Pending
+</span>
+
+{% endif %}
+
+</td>
+
+<td>
+{{ c.requested_date }}
+</td>
+
+<td>
+
+{% if c.certificate_file %}
+
+<a
+href="{{ c.certificate_file.url }}"
+class="btn btn-sm btn-primary"
+target="_blank">
+
+Download
+
+</a>
+
+{% endif %}
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>

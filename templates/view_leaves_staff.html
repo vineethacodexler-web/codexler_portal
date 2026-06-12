@@ -1,4 +1,3 @@
-{% include 'admin_nav.html' %}
 {% load static %}
 
 <!DOCTYPE html>
@@ -36,7 +35,19 @@
 
 <body>
 
-<main id="main" class="main">
+    <style>
+        .main-content{
+    margin-left:270px;
+    min-height:100vh;
+}
+    </style>
+{% include 'sidebar.html' %}
+
+<div class="main-content">
+
+    {% include 'topbar.html' %}
+
+<div class="container-fluid">
   {% if messages %}
   <div id="popup-alert-container" class="popup-alert-container">
       {% for message in messages %}

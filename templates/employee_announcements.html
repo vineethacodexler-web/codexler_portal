@@ -1,0 +1,105 @@
+
+    <style>
+        .main-content{
+    margin-left:270px;
+    min-height:100vh;
+}
+    </style>
+{% include 'sidebar.html' %}
+
+<div class="main-content">
+
+    {% include 'topbar.html' %}
+
+<div class="container-fluid">
+
+<div class="container-fluid py-4">
+
+<div class="d-flex justify-content-between mb-4">
+
+<h3 class="fw-bold">
+Announcements
+</h3>
+
+</div>
+
+{% for a in announcements %}
+
+<div class="card border-0 shadow-sm mb-4">
+
+<div class="card-body">
+
+<div class="d-flex justify-content-between">
+
+<h5>
+
+{{ a.title }}
+
+</h5>
+
+{% if a.priority == 'High' %}
+
+<span class="badge bg-danger">
+Important
+</span>
+
+{% elif a.priority == 'Medium' %}
+
+<span class="badge bg-warning text-dark">
+Medium
+</span>
+
+{% else %}
+
+<span class="badge bg-success">
+Normal
+</span>
+
+{% endif %}
+
+</div>
+
+<p class="text-muted mt-3">
+
+{{ a.message }}
+
+</p>
+
+<small class="text-secondary">
+
+Posted on :
+{{ a.created_at }}
+
+</small>
+
+{% if a.attachment %}
+
+<hr>
+
+<a href="{{ a.attachment.url }}"
+   target="_blank"
+   class="btn btn-outline-primary btn-sm">
+
+Download Attachment
+
+</a>
+
+{% endif %}
+
+</div>
+
+</div>
+
+{% empty %}
+
+<div class="alert alert-info">
+
+No announcements available.
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</div>

@@ -1,0 +1,300 @@
+{% include 'sidebar.html' %}
+
+<style>
+.main-content{
+    margin-left:270px;
+    min-height:100vh;
+    background:#f8fafc;
+}
+
+.detail-card{
+    border:none;
+    border-radius:18px;
+    box-shadow:0 4px 15px rgba(0,0,0,.05);
+}
+
+.stat-card{
+    background:white;
+    border-radius:18px;
+    padding:20px;
+    text-align:center;
+    box-shadow:0 4px 15px rgba(0,0,0,.05);
+}
+
+.stat-card h3{
+    color:#4f46e5;
+    font-weight:700;
+    margin-bottom:5px;
+}
+
+.info-box{
+    background:#f8fafc;
+    padding:15px;
+    border-radius:12px;
+    margin-bottom:15px;
+}
+
+.timeline-item{
+    padding:12px;
+    border-left:3px solid #6366f1;
+    background:#f9fafb;
+    margin-bottom:10px;
+    border-radius:0 10px 10px 0;
+}
+
+.table-card{
+    border:none;
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 4px 15px rgba(0,0,0,.05);
+}
+
+.badge-soft{
+    background:#eef2ff;
+    color:#4f46e5;
+    padding:8px 12px;
+    border-radius:20px;
+}
+</style>
+
+<div class="main-content">
+
+    {% include 'topbar.html' %}
+
+    <div class="container-fluid py-4">
+
+        <!-- Header -->
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <div>
+                <h3 class="fw-bold mb-1">
+                    {{ project.project_name }}
+                </h3>
+
+                <p class="text-muted">
+                    Project Details
+                </p>
+            </div>
+
+            <a href="{% url 'my_projects' %}"
+               class="btn btn-outline-primary">
+                Back
+            </a>
+
+        </div>
+
+        <!-- Statistics -->
+
+        <div class="row mb-4">
+
+            <div class="col-md-4 mb-3">
+                <div class="stat-card">
+                    <h3>{{ total_hours }}</h3>
+                    <span>Total Hours Worked</span>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <div class="stat-card">
+                    <h3>{{ timesheets.count }}</h3>
+                    <span>Timesheet Entries</span>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <div class="stat-card">
+                    <h3>{{ project.week_no }}</h3>
+                    <span>Current Week</span>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            <!-- Project Info -->
+
+            <div class="col-lg-4">
+
+                <div class="card detail-card mb-4">
+
+                    <div class="card-body p-4">
+
+                        <h5 class="fw-bold mb-4">
+                            Project Information
+                        </h5>
+
+                        <div class="info-box">
+                            <small class="text-muted">
+                                Project Name
+                            </small>
+                            <h6>
+                                {{ project.project_name }}
+                            </h6>
+                        </div>
+
+                        <div class="info-box">
+                            <small class="text-muted">
+                                Project Number
+                            </small>
+                            <h6>
+                                {{ project.project_no }}
+                            </h6>
+                        </div>
+
+                        <div class="info-box">
+                            <small class="text-muted">
+                                Week Number
+                            </small>
+                            <h6>
+                                {{ project.week_no }}
+                            </h6>
+                        </div>
+
+                        <div class="info-box">
+                            <small class="text-muted">
+                                Remarks
+                            </small>
+                            <h6>
+                                {{ project.remarks }}
+                            </h6>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Activity -->
+
+            <div class="col-lg-8">
+
+                <div class="card detail-card mb-4">
+
+                    <div class="card-body p-4">
+
+                        <h5 class="fw-bold mb-4">
+                            Recent Activity
+                        </h5>
+
+                        {% for t in timesheets|slice:":5" %}
+
+                        <div class="timeline-item">
+
+                            <div class="d-flex justify-content-between">
+
+                                <strong>
+                                    {{ t.project_name }}
+                                </strong>
+
+                                <span class="badge-soft">
+                                    {{ t.total_hours_taken }} hrs
+                                </span>
+
+                            </div>
+
+                            <small class="text-muted">
+                                {{ t.date }}
+                            </small>
+
+                            <p class="mb-0 mt-2">
+                                {{ t.remarks }}
+                            </p>
+
+                        </div>
+
+                        {% empty %}
+
+                        <div class="alert alert-light">
+                            No activity found.
+                        </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Timesheet History -->
+
+        <div class="card table-card">
+
+            <div class="card-body p-4">
+
+                <h5 class="fw-bold mb-3">
+                    Timesheet History
+                </h5>
+
+                <div class="table-responsive">
+
+                    <table class="table align-middle">
+
+                        <thead>
+
+                            <tr>
+                                <th>Date</th>
+                                <th>Project</th>
+                                <th>Hours</th>
+                                <th>Remarks</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            {% for t in timesheets %}
+
+                            <tr>
+
+                                <td>
+                                    {{ t.date }}
+                                </td>
+
+                                <td>
+                                    {{ t.project_name }}
+                                </td>
+
+                                <td>
+                                    {{ t.total_hours_taken }}
+                                </td>
+
+                                <td>
+                                    {{ t.remarks }}
+                                </td>
+
+                            </tr>
+
+                            {% empty %}
+
+                            <tr>
+
+                                <td colspan="4"
+                                    class="text-center">
+
+                                    No timesheet records found
+
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

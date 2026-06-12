@@ -6244,27 +6244,617 @@ def my_tasks(request):
 
 from django.shortcuts import render
 from .models import Registration, ProjectMember
-
 def my_projects(request):
 
     employee = Registration.objects.get(
         id=request.session['logg']
     )
 
-    project_members = ProjectMember.objects.filter(
+    projects = CreateProject.objects.filter(
         employee=employee
-    ).select_related('project')
-
-    total_projects = project_members.count()
+    ).order_by('-id')
 
     context = {
         'bok': employee,
-        'project_members': project_members,
-        'total_projects': total_projects,
+        'projects': projects,
+        'total_projects': projects.count(),
     }
 
     return render(
         request,
         'my_projects.html',
         context
+    )
+
+
+from django.shortcuts import render,get_object_or_404
+from .models import *
+
+from django.shortcuts import render,get_object_or_404
+
+def project_detail(request,id):
+
+    employee = Registration.objects.get(
+        id=request.session['logg']
+    )
+
+    project = get_object_or_404(
+        CreateProject,
+        id=id,
+        employee=employee
+    )
+
+    timesheets = Create_Timesheet_Line.objects.filter(
+        project_no=project.project_no
+    ).order_by('-date')
+
+    total_hours = sum(
+        (t.total_hours_taken or 0)
+        for t in timesheets
+    )
+
+    context = {
+        'bok': employee,
+        'project': project,
+        'timesheets': timesheets,
+        'total_hours': total_hours,
+    }
+
+    return render(
+        request,
+        'project_detail.html',
+        context
+    )
+from django.shortcuts import render
+from .models import *
+
+def my_payslips(request):
+
+    employee = Registration.objects.get(
+        id=request.session['logg']
+    )
+
+    payslips = Payroll.objects.filter(
+        employee=employee
+    ).order_by('-year', '-month')
+
+    context = {
+        'bok': employee,
+        'payslips': payslips,
+        'total_payslips': payslips.count(),
+    }
+
+    return render(
+        request,
+        'my_payslips.html',
+        context
+    )
+
+from django.shortcuts import render,get_object_or_404
+from .models import *
+
+def view_payslip_employee(request,id):
+
+    employee = Registration.objects.get(
+        id=request.session['logg']
+    )
+
+    payslip = get_object_or_404(
+        Payroll,
+        id=id,
+        employee=employee
+    )
+
+    context = {
+        'bok': employee,
+        'payslip': payslip,
+    }
+
+    return render(
+        request,
+        'view_payslip_employee.html',
+        context
+    )
+
+from django.http import HttpResponse
+from reportlab.pdfgen import canvas
+from .models import *
+
+def download_payslip(request,id):
+
+    employee = Registration.objects.get(
+        id=request.session['logg']
+    )
+
+    payslip = Payroll.objects.get(
+        id=id,
+        employee=employee
+    )
+
+    response = HttpResponse(
+        content_type='application/pdf'
+    )
+
+    response['Content-Disposition'] = (
+        f'attachment; filename="Payslip_{payslip.month}_{payslip.year}.pdf"'
+    )
+
+    p = canvas.Canvas(response)
+
+    y = 800
+
+    p.setFont("Helvetica-Bold",16)
+    p.drawString(180,y,"CODEXLER TECHNOLOGIES")
+
+    y -= 40
+
+    p.setFont("Helvetica",12)
+
+    p.drawString(
+        50,
+        y,
+        f"Employee : {payslip.employee.First_name}"
+    )
+
+    y -= 25
+
+    p.drawString(
+        50,
+        y,
+        f"Employee ID : {payslip.employee.Emp_Id}"
+    )
+
+    y -= 25
+
+    p.drawString(
+        50,
+        y,
+        f"Month : {payslip.month}/{payslip.year}"
+    )
+
+    y -= 40
+
+    p.drawString(
+        50,
+        y,
+        f"Gross Salary : ₹ {payslip.gross_salary}"
+    )
+
+    y -= 25
+
+    p.drawString(
+        50,
+        y,
+        f"Overtime : ₹ {payslip.overtime_amount}"
+    )
+
+    y -= 25
+
+    p.drawString(
+        50,
+        y,
+        f"Bonus : ₹ {payslip.bonus}"
+    )
+
+    y -= 25
+
+    p.drawString(
+        50,
+        y,
+        f"Incentive : ₹ {payslip.incentive}"
+    )
+
+    y -= 25
+
+    p.drawString(
+        50,
+        y,
+        f"PF : ₹ {payslip.pf_amount}"
+    )
+
+    y -= 25
+
+    p.drawString(
+        50,
+        y,
+        f"ESI : ₹ {payslip.esi_amount}"
+    )
+
+    y -= 25
+
+    p.drawString(
+        50,
+        y,
+        f"Leave Deduction : ₹ {payslip.leave_deduction}"
+    )
+
+    y -= 25
+
+    p.drawString(
+        50,
+        y,
+        f"Total Deduction : ₹ {payslip.total_deduction}"
+    )
+
+    y -= 40
+
+    p.setFont("Helvetica-Bold",14)
+
+    p.drawString(
+        50,
+        y,
+        f"Net Salary : ₹ {payslip.net_salary}"
+    )
+
+    p.showPage()
+
+    p.save()
+
+    return response
+
+
+def request_certificate(request):
+
+    employee = Registration.objects.get(
+        id=request.session['logg']
+    )
+
+    if request.method == 'POST':
+
+        EmployeeCertificateRequest.objects.create(
+            employee=employee,
+            certificate_type=request.POST['certificate_type'],
+            reason=request.POST['reason']
+        )
+
+        return redirect('my_certificates')
+
+    context = {
+        'bok': employee
+    }
+
+    return render(
+        request,
+        'request_certificate.html',
+        context
+    )
+
+
+def my_certificates(request):
+
+    employee = Registration.objects.get(
+        id=request.session['logg']
+    )
+
+    certificates = EmployeeCertificateRequest.objects.filter(
+        employee=employee
+    ).order_by('-id')
+
+    context = {
+        'bok': employee,
+        'certificates': certificates
+    }
+
+    return render(
+        request,
+        'my_certificates.html',
+        context
+    )
+
+
+def certificate_requests(request):
+
+    requests_data = EmployeeCertificateRequest.objects.all(
+    ).order_by('-id')
+
+    context = {
+        'requests_data': requests_data
+    }
+
+    return render(
+        request,
+        'certificate_requests.html',
+        context
+    )
+
+
+import os
+
+from io import BytesIO
+
+from django.conf import settings
+
+from django.core.files.base import ContentFile
+
+from django.shortcuts import get_object_or_404, redirect
+
+from django.utils import timezone
+
+from reportlab.lib.pagesizes import A4
+
+from reportlab.pdfgen import canvas
+
+
+
+def approve_certificate(request, id):
+
+    certificate = get_object_or_404(
+        EmployeeCertificateRequest,
+        id=id
+    )
+
+    buffer = BytesIO()
+
+    p = canvas.Canvas(
+        buffer,
+        pagesize=A4
+    )
+
+    employee = certificate.employee
+
+    width, height = A4
+
+    # Heading
+
+    p.setFont(
+        "Helvetica-Bold",
+        20
+    )
+
+    p.drawCentredString(
+        width / 2,
+        800,
+        "CODEXLER TECHNOLOGIES"
+    )
+
+    p.setFont(
+        "Helvetica",
+        12
+    )
+
+    p.drawCentredString(
+        width / 2,
+        780,
+        "Official Certificate"
+    )
+
+    y = 700
+
+    if certificate.certificate_type == "Joining Letter":
+
+        p.setFont(
+            "Helvetica-Bold",
+            16
+        )
+
+        p.drawString(
+            70,
+            y,
+            "Joining Letter"
+        )
+
+        y -= 50
+
+        text = f"""
+This is to certify that
+{employee.First_name}
+(Employee ID : {employee.Emp_Id})
+
+is employed with Codexler Technologies.
+
+This certificate is issued upon the employee's request
+for official purposes.
+"""
+
+        text_object = p.beginText(
+            70,
+            y
+        )
+
+        text_object.setFont(
+            "Helvetica",
+            12
+        )
+
+        for line in text.strip().split('\n'):
+            text_object.textLine(line)
+
+        p.drawText(
+            text_object
+        )
+
+    else:
+
+        p.setFont(
+            "Helvetica-Bold",
+            16
+        )
+
+        p.drawString(
+            70,
+            y,
+            "Salary Certificate"
+        )
+
+        y -= 50
+
+        payroll = Payroll.objects.filter(
+            employee=employee
+        ).order_by('-year', '-month').first()
+
+        salary = payroll.net_salary if payroll else 0
+
+        text = f"""
+This is to certify that
+
+{employee.First_name}
+(Employee ID : {employee.Emp_Id})
+
+is working with Codexler Technologies.
+
+Current Monthly Salary :
+Rs. {salary}
+
+This certificate is issued upon request.
+"""
+
+        text_object = p.beginText(
+            70,
+            y
+        )
+
+        text_object.setFont(
+            "Helvetica",
+            12
+        )
+
+        for line in text.strip().split('\n'):
+            text_object.textLine(line)
+
+        p.drawText(
+            text_object
+        )
+
+    p.drawString(
+        70,
+        120,
+        f"Date : {timezone.now().date()}"
+    )
+
+    p.drawString(
+        70,
+        80,
+        "Authorized Signatory"
+    )
+
+    p.showPage()
+
+    p.save()
+
+    pdf = buffer.getvalue()
+
+    filename = (
+        f"{employee.Emp_Id}_"
+        f"{certificate.certificate_type.replace(' ','_')}.pdf"
+    )
+
+    certificate.certificate_file.save(
+        filename,
+        ContentFile(pdf),
+        save=False
+    )
+
+    certificate.status = "Approved"
+
+    certificate.approved_date = timezone.now()
+
+    certificate.save()
+
+    buffer.close()
+
+    return redirect(
+        'certificate_requests'
+    )
+def add_announcement(request):
+
+    employee = Registration.objects.get(
+        id=request.session['logg']
+    )
+
+    if request.method == 'POST':
+
+        Announcement.objects.create(
+            title=request.POST['title'],
+            message=request.POST['message'],
+            priority=request.POST['priority'],
+            attachment=request.FILES.get('attachment'),
+            created_by=employee
+        )
+
+        return redirect('announcement_list')
+
+    return render(
+        request,
+        'add_announcement.html'
+    )
+
+def employee_announcements(request):
+
+    employee = Registration.objects.get(
+        id=request.session['logg']
+    )
+
+    announcements = Announcement.objects.filter(
+        is_active=True
+    ).order_by('-created_at')
+
+    context = {
+        'bok': employee,
+        'announcements': announcements
+    }
+
+    return render(
+        request,
+        'employee_announcements.html',
+        context
+    )
+
+
+def announcement_list(request):
+
+    announcements = Announcement.objects.all().order_by(
+        '-created_at'
+    )
+
+    context = {
+        'announcements': announcements
+    }
+
+    return render(
+        request,
+        'announcement_list.html',
+        context
+    )
+
+
+def edit_announcement(request, id):
+
+    announcement = Announcement.objects.get(
+        id=id
+    )
+
+    if request.method == "POST":
+
+        announcement.title = request.POST['title']
+        announcement.message = request.POST['message']
+        announcement.priority = request.POST['priority']
+
+        announcement.save()
+
+        return redirect(
+            'announcement_list'
+        )
+
+    context = {
+        'announcement': announcement
+    }
+
+    return render(
+        request,
+        'edit_announcement.html',
+        context
+    )
+
+
+def delete_announcement(request, id):
+
+    announcement = Announcement.objects.get(
+        id=id
+
+    )
+
+    announcement.delete()
+
+    return redirect(
+        'announcement_list'
     )

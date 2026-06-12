@@ -31,6 +31,16 @@
             Dashboard
         </a>
     </li>
+    <li>
+    <a href="{% url 'employee_announcements' %}"
+       class="{% if request.resolver_match.url_name == 'employee_announcements' %}active{% endif %}">
+
+        <i class="bi bi-megaphone"></i>
+
+        Announcements
+
+    </a>
+</li>
 
     <li class="menu-title">
         WORKSPACE
@@ -99,24 +109,61 @@
             My Leaves
         </a>
     </li>
+    <!-- PAYROLL -->
+<li class="menu-title">
+    PAYROLL
+</li>
 
-    <li class="menu-title">
-        ACCOUNT
-    </li>
+<li>
+    <a href="{% url 'my_payslips' %}"
+       class="{% if request.resolver_match.url_name == 'my_payslips' %}active{% endif %}">
+        <i class="bi bi-wallet2"></i>
+        My Payslips
+    </a>
+</li>
 
-    <li>
-        <a href="{% url 'update_employee' %}">
-            <i class="bi bi-person-circle"></i>
-            Profile
-        </a>
-    </li>
 
-    <li>
-        <a href="{% url 'logout' %}">
-            <i class="bi bi-box-arrow-right"></i>
-            Logout
-        </a>
-    </li>
+<!-- DOCUMENTS -->
+<li class="menu-title">
+    DOCUMENTS
+</li>
+
+<li>
+    <a href="{% url 'request_certificate' %}"
+       class="{% if request.resolver_match.url_name == 'request_certificate' %}active{% endif %}">
+        <i class="bi bi-file-earmark-plus"></i>
+        Request Certificate
+    </a>
+</li>
+
+<li>
+    <a href="{% url 'my_certificates' %}"
+       class="{% if request.resolver_match.url_name == 'my_certificates' %}active{% endif %}">
+        <i class="bi bi-file-earmark-check"></i>
+        My Certificates
+    </a>
+</li>
+
+
+<!-- ACCOUNT -->
+<li class="menu-title">
+    ACCOUNT
+</li>
+
+<li>
+    <a href="{% url 'update_employee' %}"
+       class="{% if request.resolver_match.url_name == 'update_employee' %}active{% endif %}">
+        <i class="bi bi-person-circle"></i>
+        Profile
+    </a>
+</li>
+
+<li>
+    <a href="{% url 'logout' %}">
+        <i class="bi bi-box-arrow-right"></i>
+        Logout
+    </a>
+</li>
 
 </ul>
 <style>

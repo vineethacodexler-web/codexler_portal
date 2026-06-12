@@ -53,47 +53,48 @@
 
     <div class="row">
 
-        {% for member in project_members %}
+        {% for project in projects %}
 
-        <div class="col-lg-4 mb-4">
+    <div class="col-lg-4 mb-4">
 
-            <div class="card project-card">
+    <a href="{% url 'project_detail' project.id %}"
+       class="text-decoration-none">
 
-                <div class="card-body">
+        <div class="card project-card">
 
-                    <div class="project-icon">
+            <div class="card-body">
 
-                        <i class="bi bi-folder-fill"></i>
+                <div class="project-icon">
+                    <i class="bi bi-folder-fill"></i>
+                </div>
 
-                    </div>
+                <h5 class="mt-3 text-dark">
+                    {{ project.project_name }}
+                </h5>
 
-                    <h5 class="mt-3">
+                <p class="text-muted mb-1">
+                    Project No : {{ project.project_no }}
+                </p>
 
-                        {{ member.project.name }}
+                <p class="text-muted">
+                    Week : {{ project.week_no }}
+                </p>
 
-                    </h5>
+                <div class="project-footer">
 
-                    <p class="text-muted">
-
-                        Role :
-                        {{ member.role|default:"Team Member" }}
-
-                    </p>
-
-                    <div class="project-footer">
-
-                        <span class="badge bg-light text-dark">
-
-                            Assigned
-                        </span>
-
-                    </div>
+                    <span class="badge bg-primary">
+                        View Details
+                    </span>
 
                 </div>
 
             </div>
 
         </div>
+
+    </a>
+
+</div>
 
         {% empty %}
 

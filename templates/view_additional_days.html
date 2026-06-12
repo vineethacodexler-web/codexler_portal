@@ -1,5 +1,5 @@
 {% load static %}
-{% include 'admin_nav.html' %}
+
 
 <!-- Main Content -->
 <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|Nunito:300,400,600,700|Poppins:300,400,500,600,700" rel="stylesheet">
@@ -19,7 +19,20 @@
 <!-- SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<main id="main" class="main">
+
+    <style>
+        .main-content{
+    margin-left:270px;
+    min-height:100vh;
+}
+    </style>
+{% include 'sidebar.html' %}
+
+<div class="main-content">
+
+    {% include 'topbar.html' %}
+
+<div class="container-fluid">
     <h3 class="card-title">Manage Additional Working Days</h3>
 
     {% if messages %}

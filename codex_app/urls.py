@@ -501,6 +501,74 @@ path(
     views.my_projects,
     name='my_projects'
 ),
+path(
+    'project-detail/<int:id>/',
+    views.project_detail,
+    name='project_detail'
+),
+path(
+    'my-payslips/',
+    views.my_payslips,
+    name='my_payslips'
+),
+path(
+    'view-payslip-employee/<int:id>/',
+    views.view_payslip_employee,
+    name='view_payslip_employee'
+),
+
+path(
+    'download-payslip/<int:id>/',
+    views.download_payslip,
+    name='download_payslip'
+),
+path(
+    'request-certificate/',
+    views.request_certificate,
+    name='request_certificate'
+),
+path(
+    'my-certificates/',
+    views.my_certificates,
+    name='my_certificates'
+),
+path(
+    'certificate-requests/',
+    views.certificate_requests,
+    name='certificate_requests'
+),
+path(
+    'approve-certificate/<int:id>/',
+    views.approve_certificate,
+    name='approve_certificate'
+),
+path(
+    'add-announcement/',
+    views.add_announcement,
+    name='add_announcement'
+),
+path(
+    'announcements/',
+    views.employee_announcements,
+    name='employee_announcements'
+),
+path(
+    'announcement-list/',
+    views.announcement_list,
+    name='announcement_list'
+),
+
+path(
+    'edit-announcement/<int:id>/',
+    views.edit_announcement,
+    name='edit_announcement'
+),
+
+path(
+    'delete-announcement/<int:id>/',
+    views.delete_announcement,
+    name='delete_announcement'
+),
 
 ]
 

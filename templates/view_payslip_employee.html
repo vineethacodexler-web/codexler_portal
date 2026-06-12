@@ -1,0 +1,202 @@
+{% include 'sidebar.html' %}
+
+<style>
+.main-content{
+    margin-left:270px;
+    background:#f8fafc;
+    min-height:100vh;
+}
+
+.payslip-card{
+    background:white;
+    border-radius:20px;
+    padding:35px;
+    box-shadow:0 5px 20px rgba(0,0,0,.05);
+}
+
+.label{
+    color:#64748b;
+    font-size:14px;
+}
+
+.value{
+    font-weight:600;
+    font-size:16px;
+}
+
+.amount{
+    color:#4f46e5;
+    font-size:24px;
+    font-weight:700;
+}
+</style>
+
+<div class="main-content">
+
+{% include 'topbar.html' %}
+
+<div class="container-fluid py-4">
+
+<div class="card payslip-card">
+
+    <div class="text-center mb-4">
+
+        <h2>Codexler Technologies</h2>
+
+        <h5 class="text-muted">
+            Salary Payslip
+        </h5>
+
+    </div>
+
+    <hr>
+
+    <div class="row mb-4">
+
+        <div class="col-md-6">
+
+            <div class="label">
+                Employee Name
+            </div>
+
+            <div class="value">
+                {{ payslip.employee.First_name }}
+            </div>
+
+        </div>
+
+        <div class="col-md-6">
+
+            <div class="label">
+                Employee ID
+            </div>
+
+            <div class="value">
+                {{ payslip.employee.Emp_Id }}
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="row mb-4">
+
+        <div class="col-md-4">
+            <div class="label">Month</div>
+            <div class="value">{{ payslip.month }}</div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="label">Year</div>
+            <div class="value">{{ payslip.year }}</div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="label">Status</div>
+            <div class="value">{{ payslip.payment_status }}</div>
+        </div>
+
+    </div>
+
+    <hr>
+
+    <div class="row">
+
+        <div class="col-md-6">
+
+            <p>
+                Gross Salary
+                <span class="float-end">
+                    ₹ {{ payslip.gross_salary }}
+                </span>
+            </p>
+
+            <p>
+                Overtime
+                <span class="float-end">
+                    ₹ {{ payslip.overtime_amount }}
+                </span>
+            </p>
+
+            <p>
+                Bonus
+                <span class="float-end">
+                    ₹ {{ payslip.bonus }}
+                </span>
+            </p>
+
+            <p>
+                Incentive
+                <span class="float-end">
+                    ₹ {{ payslip.incentive }}
+                </span>
+            </p>
+
+        </div>
+
+        <div class="col-md-6">
+
+            <p>
+                PF
+                <span class="float-end">
+                    ₹ {{ payslip.pf_amount }}
+                </span>
+            </p>
+
+            <p>
+                ESI
+                <span class="float-end">
+                    ₹ {{ payslip.esi_amount }}
+                </span>
+            </p>
+
+            <p>
+                Leave Deduction
+                <span class="float-end">
+                    ₹ {{ payslip.leave_deduction }}
+                </span>
+            </p>
+
+            <p>
+                Total Deduction
+                <span class="float-end">
+                    ₹ {{ payslip.total_deduction }}
+                </span>
+            </p>
+
+        </div>
+
+    </div>
+
+    <hr>
+
+    <div class="text-center mt-4">
+
+        <h3 class="amount">
+
+            Net Salary
+
+            <br>
+
+            ₹ {{ payslip.net_salary }}
+
+        </h3>
+
+    </div>
+
+    <div class="text-center mt-4">
+
+        <a href="{% url 'download_payslip' payslip.id %}"
+           class="btn btn-primary">
+
+            Download PDF
+
+        </a>
+
+    </div>
+
+</div>
+
+</div>
+
+</div>
