@@ -3235,7 +3235,7 @@ def client_payments(request):
 
     incomes = Income.objects.filter(type='client').order_by('-date')
     clients = Client.objects.all()
-    projects = Project.objects.all()
+    projects = CreateProject.objects.all()
 
     return render(request, 'client_payments.html', {
         'incomes': incomes,
@@ -3383,7 +3383,7 @@ def project_expenses(request):
 
         return redirect('project_expenses')
 
-    projects = Project.objects.all()
+    projects = CreateProject.objects.all()
     expenses = ProjectExpense.objects.all().order_by('-date')
 
     return render(request, 'project_expenses.html', {
@@ -3394,7 +3394,7 @@ def project_expenses(request):
 
 def project_profit(request):
 
-    projects = Project.objects.all()
+    projects = CreateProject.objects.all()
 
     project_data = []
 
@@ -5183,7 +5183,7 @@ def delete_appraisal(request, id):
 
 def add_project_member(request):
 
-    projects = Project.objects.all()
+    projects = CreateProject.objects.all()
     employees = Registration.objects.all()
 
     if request.method == "POST":
@@ -5231,7 +5231,7 @@ def edit_project_member(request, id):
         id=id
     )
 
-    projects = Project.objects.all()
+    projects = CreateProject.objects.all()
     employees = Registration.objects.all()
 
     if request.method == "POST":
@@ -5281,7 +5281,7 @@ def delete_project_member(request, id):
 
 def add_task(request):
 
-    projects = Project.objects.all()
+    projects = CreateProject.objects.all()
     employees = Registration.objects.all()
 
     if request.method == "POST":
@@ -5361,7 +5361,7 @@ def edit_task(request, id):
         id=id
     )
 
-    projects = Project.objects.all()
+    projects = CreateProject.objects.all()
     employees = Registration.objects.all()
 
     if request.method == "POST":
@@ -5434,7 +5434,7 @@ def delete_task(request, id):
 
 def add_milestone(request):
 
-    projects = Project.objects.all()
+    projects = CreateProject.objects.all()
 
     if request.method == "POST":
 
@@ -5503,7 +5503,7 @@ def edit_milestone(request, id):
         id=id
     )
 
-    projects = Project.objects.all()
+    projects = CreateProject.objects.all()
 
     if request.method == "POST":
 
@@ -5570,7 +5570,7 @@ def delete_milestone(request, id):
 
 def add_bug(request):
 
-    projects = Project.objects.all()
+    projects = CreateProject.objects.all()
     tasks = Task.objects.all()
     employees = Registration.objects.all()
 
@@ -5658,7 +5658,7 @@ def edit_bug(request, id):
         id=id
     )
 
-    projects = Project.objects.all()
+    projects = CreateProject.objects.all()
     tasks = Task.objects.all()
     employees = Registration.objects.all()
 
@@ -5741,7 +5741,7 @@ def delete_bug(request, id):
 
 def add_project_file(request):
 
-    projects = Project.objects.all()
+    projects = CreateProject.objects.all()
     employees = Registration.objects.all()
 
     if request.method == "POST":
@@ -5805,7 +5805,7 @@ def edit_project_file(request, id):
         id=id
     )
 
-    projects = Project.objects.all()
+    projects = CreateProject.objects.all()
     employees = Registration.objects.all()
 
     if request.method == "POST":
@@ -5862,7 +5862,7 @@ def delete_project_file(request, id):
 
 def project_dashboard(request):
 
-    total_projects = Project.objects.count()
+    total_projects = CreateProject.objects.count()
 
     total_tasks = Task.objects.count()
 

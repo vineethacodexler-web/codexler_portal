@@ -103,6 +103,75 @@
           <i class="bi bi-house-door-fill"></i> Dashboard
         </a>
       </li>
+          <li class="nav-item">
+
+    <a class="nav-link collapsed"
+       data-bs-target="#hrms-nav"
+       data-bs-toggle="collapse"
+       href="#">
+
+        <i class="bi bi-diagram-3"></i>
+
+        <span>HRMS Setup</span>
+
+        <i class="bi bi-chevron-down ms-auto"></i>
+
+    </a>
+
+    <ul id="hrms-nav"
+        class="nav-content collapse"
+        data-bs-parent="#sidebar-nav">
+
+      <li>
+    <a href="{% url 'department_list' %}">
+        <i class="bi bi-circle"></i>
+        <span>Departments</span>
+    </a>
+</li>
+
+<li>
+    <a href="{% url 'designation_list' %}">
+        <i class="bi bi-circle"></i>
+        <span>Designations</span>
+    </a>
+</li>
+        <li>
+    <a href="{% url 'employee_document_list' %}">
+        <i class="bi bi-file-earmark-text"></i>
+        <span>Employee Documents</span>
+    </a>
+</li>
+        <li>
+    <a href="{% url 'experience_list' %}">
+        <i class="bi bi-briefcase"></i>
+        <span>Employee Experience</span>
+    </a>
+</li>
+        <li>
+    <a href="{% url 'appraisal_list' %}">
+        <i class="bi bi-graph-up-arrow"></i>
+        <span>Employee Appraisal</span>
+    </a>
+</li>
+
+    </ul>
+
+</li>
+ <!-- Add Staff -->
+      <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.url_name == 'register_employee' %}active{% endif %}" href="{% url 'register_employee' %}" >
+          <i class="bi bi-person-plus-fill"></i> Add Staff
+        </a>
+      </li>
+
+      <!-- Manage Staffs -->
+      <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.url_name == 'view_staffs' %}active{% endif %}" href="{% url 'view_staffs' %}">
+          <i class="bi bi-people-fill" ></i> Manage Staffs
+        </a>
+      </li>
+
+
         <!-- Announcements -->
 <li class="nav-item">
 
@@ -147,7 +216,64 @@
   </ul>
 
 </li>
-  
+  <li class="nav-item">
+
+<a class="nav-link collapsed"
+   data-bs-target="#project-nav"
+   data-bs-toggle="collapse"
+   href="#">
+
+<i class="bi bi-kanban"></i>
+
+<span>Project Management</span>
+
+<i class="bi bi-chevron-down ms-auto"></i>
+
+</a>
+
+<ul id="project-nav"
+    class="nav-content collapse"
+    data-bs-parent="#sidebar-nav">
+<li>
+    <a href="{% url 'project_dashboard' %}">
+        <i class="bi bi-speedometer2"></i>
+        <span>Project Dashboard</span>
+    </a>
+</li>
+<li>
+<a href="{% url 'project_member_list' %}">
+<i class="bi bi-people"></i>
+<span>Project Members</span>
+</a>
+</li>
+    <li>
+    <a href="{% url 'task_list' %}">
+        <i class="bi bi-list-task"></i>
+        <span>Task Management</span>
+    </a>
+</li>
+    <li>
+    <a href="{% url 'milestone_list' %}">
+        <i class="bi bi-flag"></i>
+        <span>Milestones</span>
+    </a>
+</li>
+    <li>
+    <a href="{% url 'bug_list' %}">
+        <i class="bi bi-bug"></i>
+        <span>Bug Tracking</span>
+    </a>
+</li>
+    <li>
+    <a href="{% url 'project_file_list' %}">
+        <i class="bi bi-folder2-open"></i>
+        <span>Project Files</span>
+    </a>
+</li>
+
+</ul>
+
+</li>
       <!-- Add Project -->
       <li class="nav-item">
         <a class="nav-link {% if request.resolver_match.url_name == 'add_project' %}active{% endif %}" href="{% url 'add_project' %}" >
@@ -379,12 +505,7 @@
             </a>
         </li>
 
-        <li>
-            <a href="{% url 'add_lead' %}">
-                <i class="bi bi-circle"></i>
-                <span>Add Lead</span>
-            </a>
-        </li>
+
         <li>
     <a href="{% url 'followup_list' %}">
         <i class="bi bi-circle"></i>
@@ -392,12 +513,7 @@
     </a>
 </li>
 
-<li>
-    <a href="{% url 'add_followup' %}">
-        <i class="bi bi-circle"></i>
-        <span>Add Follow Up</span>
-    </a>
-</li>
+
         <li>
     <a href="{% url 'communication_list' %}">
         <i class="bi bi-circle"></i>
@@ -405,203 +521,63 @@
     </a>
 </li>
 
-<li>
-    <a href="{% url 'add_communication' %}">
-        <i class="bi bi-circle"></i>
-        <span>Add Communication</span>
-    </a>
-</li>
+
         <li>
     <a href="{% url 'support_ticket_list' %}">
         <i class="bi bi-circle"></i>
         <span>Support Tickets</span>
     </a>
 </li>
-     <li>
-    <a href="{% url 'ticket_resolution_list' %}">
-        <i class="bi bi-clock-history"></i>
-        <span>Resolution History</span>
-    </a>
-</li>
-        <li>
-    <a href="{% url 'helpdesk_report' %}">
-        <i class="bi bi-bar-chart-fill"></i>
-        <span>Helpdesk Reports</span>
-    </a>
-</li>
 
-<li>
-    <a href="{% url 'add_support_ticket' %}">
-        <i class="bi bi-circle"></i>
-        <span>Create Ticket</span>
-    </a>
-</li>
+
+
 
     </ul>
 
 </li>
   
-      <!-- Add Staff -->
-      <li class="nav-item">
-        <a class="nav-link {% if request.resolver_match.url_name == 'register_employee' %}active{% endif %}" href="{% url 'register_employee' %}" >
-          <i class="bi bi-person-plus-fill"></i> Add Staff
+   <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.url_name == 'logout' %}active{% endif %}" href="{% url 'logout' %}" >
+          <i class="bi bi-clock-history" ></i> Logout
         </a>
       </li>
-  
-      <!-- Manage Staffs -->
-      <li class="nav-item">
-        <a class="nav-link {% if request.resolver_match.url_name == 'view_staffs' %}active{% endif %}" href="{% url 'view_staffs' %}">
-          <i class="bi bi-people-fill" ></i> Manage Staffs
-        </a>
-      </li>
-        <li class="nav-item">
 
-    <a class="nav-link collapsed"
-       data-bs-target="#hrms-nav"
-       data-bs-toggle="collapse"
-       href="#">
 
-        <i class="bi bi-diagram-3"></i>
-
-        <span>HRMS Setup</span>
-
-        <i class="bi bi-chevron-down ms-auto"></i>
-
-    </a>
-
-    <ul id="hrms-nav"
-        class="nav-content collapse"
-        data-bs-parent="#sidebar-nav">
-
-      <li>
-    <a href="{% url 'department_list' %}">
-        <i class="bi bi-circle"></i>
-        <span>Departments</span>
-    </a>
-</li>
-
-<li>
-    <a href="{% url 'designation_list' %}">
-        <i class="bi bi-circle"></i>
-        <span>Designations</span>
-    </a>
-</li>
-        <li>
-    <a href="{% url 'employee_document_list' %}">
-        <i class="bi bi-file-earmark-text"></i>
-        <span>Employee Documents</span>
-    </a>
-</li>
-        <li>
-    <a href="{% url 'experience_list' %}">
-        <i class="bi bi-briefcase"></i>
-        <span>Employee Experience</span>
-    </a>
-</li>
-        <li>
-    <a href="{% url 'appraisal_list' %}">
-        <i class="bi bi-graph-up-arrow"></i>
-        <span>Employee Appraisal</span>
-    </a>
-</li>
-
-    </ul>
-
-</li>
-
-        <li class="nav-item">
-
-<a class="nav-link collapsed"
-   data-bs-target="#project-nav"
-   data-bs-toggle="collapse"
-   href="#">
-
-<i class="bi bi-kanban"></i>
-
-<span>Project Management</span>
-
-<i class="bi bi-chevron-down ms-auto"></i>
-
-</a>
-
-<ul id="project-nav"
-    class="nav-content collapse"
-    data-bs-parent="#sidebar-nav">
-<li>
-    <a href="{% url 'project_dashboard' %}">
-        <i class="bi bi-speedometer2"></i>
-        <span>Project Dashboard</span>
-    </a>
-</li>
-<li>
-<a href="{% url 'project_member_list' %}">
-<i class="bi bi-people"></i>
-<span>Project Members</span>
-</a>
-</li>
-    <li>
-    <a href="{% url 'task_list' %}">
-        <i class="bi bi-list-task"></i>
-        <span>Task Management</span>
-    </a>
-</li>
-    <li>
-    <a href="{% url 'milestone_list' %}">
-        <i class="bi bi-flag"></i>
-        <span>Milestones</span>
-    </a>
-</li>
-    <li>
-    <a href="{% url 'bug_list' %}">
-        <i class="bi bi-bug"></i>
-        <span>Bug Tracking</span>
-    </a>
-</li>
-    <li>
-    <a href="{% url 'project_file_list' %}">
-        <i class="bi bi-folder2-open"></i>
-        <span>Project Files</span>
-    </a>
-</li>
-
-</ul>
-
-</li>
-      <!-- Admin Menu -->
-      <li class="nav-item">
-<!--         <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#components-nav" style="background-color: #161f2e; color:white">
-          <i class="bi bi-sliders" style="color:white"></i><span>Admin Menu</span><i class="bi bi-chevron-down ms-auto" style="background-color: #161f2e; color:white"></i>
-        </a> -->
-        <ul id="components-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-  
-          <li>
-            <a class="dropdown-item {% if request.resolver_match.url_name == 'view_timesheets_admin' %}active{% endif %}" href="{% url 'view_timesheets_admin' %}" >
-              <i class="bi bi-journal-text" ></i><span>My TimeSheet</span>
-            </a>
-          </li>
-          <li>
-            <a class="dropdown-item {% if request.resolver_match.url_name == 'submit_additional_day_admin' %}active{% endif %}" href="{% url 'submit_additional_day_admin' %}" >
-              <i class="bi bi-calendar-plus" ></i><span>Additional Work Day</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link {% if request.resolver_match.url_name == 'view_additional_days_a' %}active{% endif %}" href="{% url 'view_additional_days_a' %}" >
-              <i class="bi bi-calendar-plus" ></i> view Extra shifts
-            </a>
-          </li>
-          <li>
-            <a class="dropdown-item {% if request.resolver_match.url_name == 'apply_leave_admin' %}active{% endif %}" href="{% url 'apply_leave_admin' %}">
-              <i class="bi bi-calendar-event" ></i> Apply Leave
-            </a>
-          </li>
-          <li>
-            <a class="dropdown-item {% if request.resolver_match.url_name == 'view_leaves_admin' %}active{% endif %}" href="{% url 'view_leaves_admin' %}" >
-              <i class="bi bi-calendar2-week" ></i> View Leaves
-            </a>
-          </li>
-  
-        </ul>
-      </li>
+<!--      &lt;!&ndash; Admin Menu &ndash;&gt;-->
+<!--      <li class="nav-item">-->
+<!--&lt;!&ndash;         <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#components-nav" style="background-color: #161f2e; color:white">-->
+<!--          <i class="bi bi-sliders" style="color:white"></i><span>Admin Menu</span><i class="bi bi-chevron-down ms-auto" style="background-color: #161f2e; color:white"></i>-->
+<!--        </a> &ndash;&gt;-->
+<!--        <ul id="components-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">-->
+<!--  -->
+<!--          <li>-->
+<!--            <a class="dropdown-item {% if request.resolver_match.url_name == 'view_timesheets_admin' %}active{% endif %}" href="{% url 'view_timesheets_admin' %}" >-->
+<!--              <i class="bi bi-journal-text" ></i><span>My TimeSheet</span>-->
+<!--            </a>-->
+<!--          </li>-->
+<!--          <li>-->
+<!--            <a class="dropdown-item {% if request.resolver_match.url_name == 'submit_additional_day_admin' %}active{% endif %}" href="{% url 'submit_additional_day_admin' %}" >-->
+<!--              <i class="bi bi-calendar-plus" ></i><span>Additional Work Day</span>-->
+<!--            </a>-->
+<!--          </li>-->
+<!--          <li class="nav-item">-->
+<!--            <a class="nav-link {% if request.resolver_match.url_name == 'view_additional_days_a' %}active{% endif %}" href="{% url 'view_additional_days_a' %}" >-->
+<!--              <i class="bi bi-calendar-plus" ></i> view Extra shifts-->
+<!--            </a>-->
+<!--          </li>-->
+<!--          <li>-->
+<!--            <a class="dropdown-item {% if request.resolver_match.url_name == 'apply_leave_admin' %}active{% endif %}" href="{% url 'apply_leave_admin' %}">-->
+<!--              <i class="bi bi-calendar-event" ></i> Apply Leave-->
+<!--            </a>-->
+<!--          </li>-->
+<!--          <li>-->
+<!--            <a class="dropdown-item {% if request.resolver_match.url_name == 'view_leaves_admin' %}active{% endif %}" href="{% url 'view_leaves_admin' %}" >-->
+<!--              <i class="bi bi-calendar2-week" ></i> View Leaves-->
+<!--            </a>-->
+<!--          </li>-->
+<!--  -->
+<!--        </ul>-->
+<!--      </li>-->
   
     </ul>
   </aside>
