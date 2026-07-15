@@ -1,5 +1,8 @@
+{% if employee.User_role == "admin" %}
+{% include 'superadmin_navbar.html' %}
+{% else %}
 {% include 'admin_navbar.html' %}
-<style>
+{% endif %}<style>
 
 .main-content{
     margin-left:270px;

@@ -1,6 +1,10 @@
 <!-- templates/payslip_list.html -->
 
+{% if bok.User_role == "admin" %}
+{% include 'superadmin_navbar.html' %}
+{% else %}
 {% include 'admin_navbar.html' %}
+{% endif %}
 
 <main id="main" class="main">
 <div class="container-fluid mt-4">

@@ -569,6 +569,13 @@ path(
     views.delete_announcement,
     name='delete_announcement'
 ),
+    path(
+        "timesheet/update-status/<int:id>/",
+        views.update_timesheet_status,
+        name="update_timesheet_status"
+    ),
+    path("super_admin_home",views.super_admin_home,name="super_admin_home"),
+    path("project_manager_home",views.project_manager_home,name="project_manager_home")
 
 ]
 

@@ -1,4 +1,8 @@
+{% if bok.User_role == "admin" %}
+{% include 'superadmin_navbar.html' %}
+{% else %}
 {% include 'admin_navbar.html' %}
+{% endif %}
 
 <style>
 

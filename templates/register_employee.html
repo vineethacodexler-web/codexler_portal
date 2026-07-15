@@ -1,4 +1,8 @@
+{% if bok.User_role == "admin" %}
+{% include 'superadmin_navbar.html' %}
+{% else %}
 {% include 'admin_navbar.html' %}
+{% endif %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -153,11 +157,42 @@
                     <input type="text" name="ua" class="form-control" required>
                 </div>
 
-                <div class="col-md-6 form-group">
-                    <label>Designation: <span style="color:red;">*</span></label>
-                    <input type="text" name="designation" class="form-control" required>
-                </div>
             </div>
+            <div class="row">
+
+    <div class="col-md-6 form-group">
+        <label>Department <span style="color:red;">*</span></label>
+
+        <select name="department" id="department" class="form-control" required>
+            <option value="">Select Department</option>
+
+            {% for dept in departments %}
+                <option value="{{ dept.id }}">
+                    {{ dept.name }}
+                </option>
+            {% endfor %}
+
+        </select>
+    </div>
+
+    <div class="col-md-6 form-group">
+        <label>Designation <span style="color:red;">*</span></label>
+
+        <select name="designation" id="designation" class="form-control" required>
+
+            <option value="">Select Designation</option>
+
+            {% for des in designations %}
+                <option value="{{ des.id }}">
+                    {{ des.title }}
+                </option>
+            {% endfor %}
+
+        </select>
+
+    </div>
+
+</div>
 
             <div class="form-group">
                 <label>Gender:</label><br>

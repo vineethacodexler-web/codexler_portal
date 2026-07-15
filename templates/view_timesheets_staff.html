@@ -1,6 +1,4 @@
 {% load static %}
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -284,6 +282,7 @@
           <th style="background-color:#D3EEFF;color:black;">Project Name</th>
           <th style="background-color:#D3EEFF;color:black;">Description</th>
           <th style="background-color:#D3EEFF;color:black;">Total Hours</th>
+          <th style="background-color:#D3EEFF;color:black;">Status</th>
           <th style="background-color:#D3EEFF;color:black;">Actions</th>
         </tr>
       </thead>
@@ -297,33 +296,64 @@
           <td>{{ timesheet.project_name }}</td>
           <td>{{ timesheet.remarks }}</td>
           <td>{{ timesheet.total_hours_taken }}</td>
+          <td>{{ timesheet.status }}</td>
           <td>
-            <div class="d-flex gap-2">
-              <button
-                type="button"
-                class="btn btn-success btn-sm edit-timesheet-btn"
-                data-bs-toggle="modal"
-                data-bs-target="#editTimesheetModal"
-                data-url="{% url 'update_timesheet' timesheet.id %}"
-                data-date="{{ timesheet.date|date:'Y-m-d' }}"
-                data-project-no="{{ timesheet.project_no|escape }}"
-                data-project-name="{{ timesheet.project_name|escape }}"
-                data-total-hours-taken="{{ timesheet.total_hours_taken }}"
-                data-remarks="{{ timesheet.remarks|default_if_none:''|escape }}"
-                data-staff-list="{{ timesheet.staff_list.id }}"
-                data-week-no="{{ timesheet.week_no|default:'' }}"
-                data-location="{{ timesheet.location|default:''|escape }}">
-                Edit
-              </button>
 
-              <button
-                type="button"
-                class="btn btn-danger btn-sm"
-                onclick="confirmDelete('{% url 'delete_timesheet_staff' timesheet.id %}')">
-                Delete
-              </button>
-            </div>
+    <form method="POST"
+          action="{% url 'update_timesheet_status' timesheet.id %}">
+        {% csrf_token %}
+
+        <select name="status" class="form-select form-select-sm mb-2">
+            <option value="Pending"
+            {% if timesheet.status == "Pending" %}selected{% endif %}>
+                Pending
+            </option>
+
+            <option value="Ongoing"
+            {% if timesheet.status == "Ongoing" %}selected{% endif %}>
+                Ongoing
+            </option>
+
+            <option value="Completed"
+            {% if timesheet.status == "Completed" %}selected{% endif %}>
+                Completed
+            </option>
+        </select>
+
+        <button type="submit" class="btn btn-success btn-sm">
+            Update
+        </button>
+
+    </form>
+
           </td>
+<!--          <td>-->
+<!--            <div class="d-flex gap-2">-->
+<!--              <button-->
+<!--                type="button"-->
+<!--                class="btn btn-success btn-sm edit-timesheet-btn"-->
+<!--                data-bs-toggle="modal"-->
+<!--                data-bs-target="#editTimesheetModal"-->
+<!--                data-url="{% url 'update_timesheet' timesheet.id %}"-->
+<!--                data-date="{{ timesheet.date|date:'Y-m-d' }}"-->
+<!--                data-project-no="{{ timesheet.project_no|escape }}"-->
+<!--                data-project-name="{{ timesheet.project_name|escape }}"-->
+<!--                data-total-hours-taken="{{ timesheet.total_hours_taken }}"-->
+<!--                data-remarks="{{ timesheet.remarks|default_if_none:''|escape }}"-->
+<!--                data-staff-list="{{ timesheet.staff_list.id }}"-->
+<!--                data-week-no="{{ timesheet.week_no|default:'' }}"-->
+<!--                data-location="{{ timesheet.location|default:''|escape }}">-->
+<!--                Edit-->
+<!--              </button>-->
+
+<!--              <button-->
+<!--                type="button"-->
+<!--                class="btn btn-danger btn-sm"-->
+<!--                onclick="confirmDelete('{% url 'delete_timesheet_staff' timesheet.id %}')">-->
+<!--                Delete-->
+<!--              </button>-->
+<!--            </div>-->
+<!--          </td>-->
         </tr>
         {% empty %}
         <tr>
@@ -394,46 +424,48 @@
     </div>
   </div>
 
-  <h3 class="card-title mt-3">Create Time Sheet</h3>
 
-  <form action="{% url 'add_timesheet_staff' %}" method="post" class="form" novalidate>
-    {% csrf_token %}
 
-    <input type="hidden" id="staff_name" class="form-control" value="{{ request.user.first_name }} {{ request.user.last_name }}" readonly>
-    <input type="hidden" id="staff_list" value="{{ request.user.id }}" name="staff_list">
+<!--  <h3 class="card-title mt-3">Create Time Sheet</h3>-->
 
-    <div class="table-responsive mt-1 scrollable-table-box" style="background-color:#f8f8f8;">
-      <table class="table table-bordered table-hover compact-table" id="timesheet-table">
-        <thead>
-          <tr>
-            <th style="background-color:#D3EEFF;color:black;">Date</th>
-            <th style="background-color:#D3EEFF;color:black;">Project No</th>
-            <th style="background-color:#D3EEFF;color:black;">Project Name / Absence Code</th>
-            <th style="background-color:#D3EEFF;color:black;">Description</th>
-            <th style="background-color:#D3EEFF;color:black;width:100px;">Total (Hrs)</th>
-            <th style="background-color:#D3EEFF;color:black;">Action</th>
-          </tr>
-        </thead>
+<!--  <form action="{% url 'add_timesheet_staff' %}" method="post" class="form" novalidate>-->
+<!--    {% csrf_token %}-->
 
-        <tbody id="timesheet-lines">
-          <tr>
-            <td><input type="date" name="date" required></td>
-            <td><input type="text" class="project-search" name="project_no" placeholder="Search Code" required></td>
-            <td><input type="text" class="project-name" name="project_name" placeholder="Project Name" style="width:100%;"></td>
-            <td><input class="remarks" name="remarks" placeholder="Description" style="width:100%;"></td>
-            <td><input type="text" name="total_hours_taken" style="width:100%;" required></td>
-            <td><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Remove</button></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+<!--    <input type="hidden" id="staff_name" class="form-control" value="{{ request.user.first_name }} {{ request.user.last_name }}" readonly>-->
+<!--    <input type="hidden" id="staff_list" value="{{ request.user.id }}" name="staff_list">-->
 
-    <div class="d-flex mt-2">
-      <button type="button" class="btn btn-primary" onclick="addTimesheetLine()">Add More</button>
-      &nbsp;&nbsp;
-      <button type="submit" class="btn btn-success">Submit</button>
-    </div>
-  </form>
+<!--    <div class="table-responsive mt-1 scrollable-table-box" style="background-color:#f8f8f8;">-->
+<!--      <table class="table table-bordered table-hover compact-table" id="timesheet-table">-->
+<!--        <thead>-->
+<!--          <tr>-->
+<!--            <th style="background-color:#D3EEFF;color:black;">Date</th>-->
+<!--            <th style="background-color:#D3EEFF;color:black;">Project No</th>-->
+<!--            <th style="background-color:#D3EEFF;color:black;">Project Name / Absence Code</th>-->
+<!--            <th style="background-color:#D3EEFF;color:black;">Description</th>-->
+<!--            <th style="background-color:#D3EEFF;color:black;width:100px;">Total (Hrs)</th>-->
+<!--            <th style="background-color:#D3EEFF;color:black;">Action</th>-->
+<!--          </tr>-->
+<!--        </thead>-->
+
+<!--        <tbody id="timesheet-lines">-->
+<!--          <tr>-->
+<!--            <td><input type="date" name="date" required></td>-->
+<!--            <td><input type="text" class="project-search" name="project_no" placeholder="Search Code" required></td>-->
+<!--            <td><input type="text" class="project-name" name="project_name" placeholder="Project Name" style="width:100%;"></td>-->
+<!--            <td><input class="remarks" name="remarks" placeholder="Description" style="width:100%;"></td>-->
+<!--            <td><input type="text" name="total_hours_taken" style="width:100%;" required></td>-->
+<!--            <td><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Remove</button></td>-->
+<!--          </tr>-->
+<!--        </tbody>-->
+<!--      </table>-->
+<!--    </div>-->
+
+<!--    <div class="d-flex mt-2">-->
+<!--      <button type="button" class="btn btn-primary" onclick="addTimesheetLine()">Add More</button>-->
+<!--      &nbsp;&nbsp;-->
+<!--      <button type="submit" class="btn btn-success">Submit</button>-->
+<!--    </div>-->
+<!--  </form>-->
 
   <div class="modal fade" id="searchModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">

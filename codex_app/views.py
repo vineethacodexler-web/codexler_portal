@@ -19,8 +19,7 @@ from django.core.files.storage import FileSystemStorage, default_storage
 import json
 from django.shortcuts import render
 @login_required
-@logged_inn2
-
+@logged_inn4
 
 def admin_home(request):
     # Get the current logged-in user based on the session
@@ -62,18 +61,18 @@ def admin_home(request):
         'bok': bok,
         'attendance_records': attendance_records,
         'total_working_days': total_working_days,
-        'total_working_minutes':  round(total_working_minutes, 2),
-        'leave_total':leave_total,
-        'leaves':leaves,
-        'create_pro':create_pro,
-        'total_project':total_project,
-        'total_timesheet':total_timesheet,
-        'total_staffs':total_staffs,
-        'leave_balance':leave_balance,
-        'total_projects':total_projects,
+        'total_working_minutes': round(total_working_minutes, 2),
+        'leave_total': leave_total,
+        'leaves': leaves,
+        'create_pro': create_pro,
+        'total_project': total_project,
+        'total_timesheet': total_timesheet,
+        'total_staffs': total_staffs,
+        'leave_balance': leave_balance,
+        'total_projects': total_projects,
     }
 
-    return render(request, 'admin_home.html', context)
+    return render(request, 'admin_home.html',context)
 
 
 def all_view_timesheet(request):
@@ -157,38 +156,62 @@ def login(request):
     if request.method == 'POST':
         username = request.POST.get("user_name")
         password = request.POST.get("pword")
+
         user = auth.authenticate(username=username, password=password)
+
         if user is None:
             messages.error(request, 'Username or Password is Incorrect')
             return render(request, 'login.html')
+
         auth.login(request, user)
 
         try:
-            registration = Registration.objects.get(user=user, Password=password)
-            usertype = registration.User_role
-            if usertype == 'admin':
-                request.session['logg'] = registration.id
-                return redirect("admin_home")
-            elif usertype == 'employee':
-                request.session['logg'] = registration.id
-                registration.save()
-                return redirect('employee_home_v2')
-            elif usertype == 'accounts':
-                request.session['logg'] = registration.id
-                registration.save()
-                return redirect('f_dashboard')
-            else:
-                messages.error(request, 'Your access to the website is blocked. Please contact admin')
-                return render(request, 'login.html')
-        except Registration.DoesNotExist:
-            messages.error(request, 'Username or password entered is incorrect')
-            return render(request, 'login.html')
-        except MultipleObjectsReturned:
+            registration = Registration.objects.get(user=user)
 
-            registrations = Registration.objects.filter(user=user, Password=password)
-            return render(request, 'choose_account.html', {'registrations': registrations})
-    else:
-        return render(request, 'login.html')
+            request.session['logg'] = registration.id
+
+            if registration.User_role == 'admin':
+                return redirect("super_admin_home")
+
+            elif registration.User_role == 'accounts':
+                return redirect("f_dashboard")
+
+            elif registration.User_role == 'employee':
+
+                # HR Dashboard
+                if registration.designation and registration.designation.title.lower() == "hr":
+
+                    return redirect("admin_home")
+
+                # Project Manager Dashboard
+                elif registration.designation and registration.designation.title.lower() == "project manager":
+                    print("Project manager")
+                    return redirect("project_manager_home")
+
+                # Default Employee Dashboard
+                else:
+                    return redirect("employee_home_v2")
+
+            else:
+                messages.error(
+                    request,
+                    'Your access to the website is blocked. Please contact the administrator.'
+                )
+                return render(request, 'login.html')
+
+        except Registration.DoesNotExist:
+            messages.error(request, 'User registration not found.')
+            return render(request, 'login.html')
+
+        except MultipleObjectsReturned:
+            registrations = Registration.objects.filter(user=user)
+            return render(
+                request,
+                'choose_account.html',
+                {'registrations': registrations}
+            )
+
+    return render(request, 'login.html')
 
 
 
@@ -477,12 +500,19 @@ from datetime import datetime  # Correct import
 
 def register_employee(request):
     bok = Registration.objects.get(id=request.session['logg'])
+
     if request.method == 'POST':
         x = datetime.now()
         z = x.strftime("%Y-%m-%d")
+
         emp_id = request.POST.get('emp_id')
         first_name = request.POST.get('first_name')
-        designation = request.POST.get('designation')
+
+        department_id = request.POST.get('department')
+        designation_id = request.POST.get('designation')
+
+        department = Department.objects.get(id=department_id)
+        designation = Designation.objects.get(id=designation_id)
 
         mobile_number = request.POST.get('mobile_number')
         email = request.POST.get('email')
@@ -490,41 +520,57 @@ def register_employee(request):
         gender = request.POST.get('gender')
         ua = request.POST.get('ua')
         location = request.POST.get('location')
+
         photo = request.FILES['photo']
         fs = FileSystemStorage()
         fs.save(photo.name, photo)
+
         employee = request.POST.get('employee')
-        reg1 = Registration.objects.all()
-        for i in reg1:
-            if i.Email == email:
-                messages.success(request, 'Employee already Registered')
-                return render(request, 'register_employee.html')
+
+        if Registration.objects.filter(Email=email).exists():
+            messages.success(request, 'Employee already Registered')
+            return redirect('register_employee')
+
         user_name = request.POST.get('user_name')
-        for t in User.objects.all():
-            if t.username == user_name:
-                messages.success(request, 'Username taken. Please try another')
-                return render(request, 'register_employee.html')
-        user = User.objects.create_user(username=user_name, email=email, password=psw)
-        user.save()
-        t = Registration()
-        t.Emp_Id = emp_id
-        t.First_name = first_name
-        t.Designation = designation
-        t.Location = location
-        t.Email = email
-        t.Password = psw
-        t.Mobile_Number = mobile_number
-        t.Registration_date = z
-        t.Gender = gender
-        t.Image = photo
-        t.Address = ua
-        t.User_role = employee
-        t.user = user
-        t.save()
+
+        if User.objects.filter(username=user_name).exists():
+            messages.success(request, 'Username taken. Please try another')
+            return redirect('register_employee')
+
+        user = User.objects.create_user(
+            username=user_name,
+            email=email,
+            password=psw
+        )
+
+        Registration.objects.create(
+            Emp_Id=emp_id,
+            First_name=first_name,
+            department=department,
+            designation=designation,
+            Location=location,
+            Email=email,
+            Password=psw,
+            Mobile_Number=mobile_number,
+            Registration_date=z,
+            Gender=gender,
+            Image=photo,
+            Address=ua,
+            User_role=employee,
+            user=user
+        )
+
         messages.success(request, 'Staff Added Successfully')
         return redirect('register_employee')
-    else:
-        return render(request, 'register_employee.html',{'bok':bok})
+
+    departments = Department.objects.filter(status=True).order_by('name')
+    designations = Designation.objects.filter(status=True).order_by('title')
+
+    return render(request, 'register_employee.html', {
+        'bok': bok,
+        'departments': departments,
+        'designations': designations
+    })
 
 
 
@@ -4590,6 +4636,7 @@ def crm_dashboard(request):
 
 
 def add_department(request):
+    bok = Registration.objects.get(id=request.session['logg'])
 
     if request.method == "POST":
 
@@ -4603,15 +4650,17 @@ def add_department(request):
 
         return redirect('department_list')
 
-    return render(request, 'add_department.html')
+    return render(request, 'add_department.html',{"bok":bok})
 
 
 def department_list(request):
+    bok = Registration.objects.get(id=request.session['logg'])
 
     departments = Department.objects.all().order_by('-id')
 
     context = {
-        'departments': departments
+        'departments': departments,
+        "bok":bok
     }
 
     return render(
@@ -4622,6 +4671,7 @@ def department_list(request):
 
 
 def edit_department(request, id):
+    bok = Registration.objects.get(id=request.session['logg'])
 
     department = get_object_or_404(
         Department,
@@ -4638,7 +4688,8 @@ def edit_department(request, id):
         return redirect('department_list')
 
     context = {
-        'department': department
+        'department': department,
+        "bok":bok
     }
 
     return render(
@@ -4661,6 +4712,7 @@ def delete_department(request, id):
 
 
 def add_designation(request):
+    bok = Registration.objects.get(id=request.session['logg'])
 
     departments = Department.objects.filter(
         status=True
@@ -4694,11 +4746,13 @@ def add_designation(request):
         request,
         'add_designation.html',
         {
-            'departments': departments
+            'departments': departments,
+            "bok":bok
         }
     )
 
 def designation_list(request):
+    bok = Registration.objects.get(id=request.session['logg'])
 
     designations = Designation.objects.select_related(
         'department'
@@ -4708,12 +4762,14 @@ def designation_list(request):
         request,
         'designation_list.html',
         {
-            'designations': designations
+            'designations': designations,
+            "bok":bok
         }
     )
 
 
 def edit_designation(request, id):
+    bok = Registration.objects.get(id=request.session['logg'])
 
     designation = get_object_or_404(
         Designation,
@@ -4749,7 +4805,8 @@ def edit_designation(request, id):
         'edit_designation.html',
         {
             'designation': designation,
-            'departments': departments
+            'departments': departments,
+            "bok":bok
         }
     )
 
@@ -4769,6 +4826,7 @@ def delete_designation(request, id):
 
 
 def add_employee_document(request):
+    bok = Registration.objects.get(id=request.session['logg'])
 
     employees = Registration.objects.all()
 
@@ -4793,12 +4851,14 @@ def add_employee_document(request):
         request,
         'add_employee_document.html',
         {
-            'employees': employees
+            'employees': employees,
+            "bok":bok
         }
     )
 
 
 def employee_document_list(request):
+    bok = Registration.objects.get(id=request.session['logg'])
 
     documents = EmployeeDocument.objects.select_related(
         'employee'
@@ -4808,12 +4868,14 @@ def employee_document_list(request):
         request,
         'employee_document_list.html',
         {
-            'documents': documents
+            'documents': documents,
+            "bok":bok
         }
     )
 
 
 def edit_employee_document(request, id):
+    bok = Registration.objects.get(id=request.session['logg'])
 
     document = get_object_or_404(
         EmployeeDocument,
@@ -4845,7 +4907,8 @@ def edit_employee_document(request, id):
         'edit_employee_document.html',
         {
             'document': document,
-            'employees': employees
+            'employees': employees,
+            "bok":bok
         }
     )
 
@@ -4863,6 +4926,7 @@ def delete_employee_document(request, id):
     )
 
 def add_experience(request):
+    bok = Registration.objects.get(id=request.session['logg'])
 
     employees = Registration.objects.all()
 
@@ -4887,11 +4951,13 @@ def add_experience(request):
         request,
         'add_experience.html',
         {
-            'employees': employees
+            'employees': employees,
+            "bok":bok
         }
     )
 
 def experience_list(request):
+    bok = Registration.objects.get(id=request.session['logg'])
 
     experiences = EmployeeExperience.objects.select_related(
         'employee'
@@ -4901,12 +4967,14 @@ def experience_list(request):
         request,
         'experience_list.html',
         {
-            'experiences': experiences
+            'experiences': experiences,
+            "bok":bok
         }
     )
 
 
 def edit_experience(request, id):
+    bok = Registration.objects.get(id=request.session['logg'])
 
     experience = get_object_or_404(
         EmployeeExperience,
@@ -4955,7 +5023,8 @@ def edit_experience(request, id):
         experience.save()
 
         return redirect(
-            'experience_list'
+            'experience_list',
+
         )
 
     return render(
@@ -4963,7 +5032,8 @@ def edit_experience(request, id):
         'edit_experience.html',
         {
             'experience': experience,
-            'employees': employees
+            'employees': employees,
+            "bok":bok
         }
     )
 
@@ -4983,6 +5053,7 @@ def delete_experience(request, id):
 
 
 def add_appraisal(request):
+    bok = Registration.objects.get(id=request.session['logg'])
 
     employees = Registration.objects.all()
 
@@ -5007,12 +5078,14 @@ def add_appraisal(request):
         request,
         'add_appraisal.html',
         {
-            'employees': employees
+            'employees': employees,
+            "bok":bok
         }
     )
 
 
 def appraisal_list(request):
+    bok = Registration.objects.get(id=request.session['logg'])
 
     appraisals = Appraisal.objects.select_related(
         'employee'
@@ -5022,12 +5095,14 @@ def appraisal_list(request):
         request,
         'appraisal_list.html',
         {
-            'appraisals': appraisals
+            'appraisals': appraisals,
+            "bok":bok
         }
     )
 
 
 def edit_appraisal(request, id):
+    bok = Registration.objects.get(id=request.session['logg'])
 
     appraisal = get_object_or_404(
         Appraisal,
@@ -5086,7 +5161,8 @@ def edit_appraisal(request, id):
         'edit_appraisal.html',
         {
             'appraisal': appraisal,
-            'employees': employees
+            'employees': employees,
+            "bok":bok
         }
     )
 
@@ -5850,6 +5926,7 @@ def project_dashboard(request):
 
 
 def monthly_attendance_report(request):
+    bok = Registration.objects.get(id=request.session['logg'])
 
     employees = Registration.objects.all()
 
@@ -5903,7 +5980,8 @@ def monthly_attendance_report(request):
         'report_data': report_data,
 
         'month': month,
-        'year': year
+        'year': year,
+        "bok":bok
 
     }
 
@@ -5918,7 +5996,7 @@ from datetime import datetime, timedelta
 from django.db.models import Sum
 
 def weekly_attendance_report(request):
-
+    bok = Registration.objects.get(id=request.session['logg'])
     report_data = []
 
     week_start = request.GET.get('week_start')
@@ -5969,11 +6047,13 @@ def weekly_attendance_report(request):
         request,
         'weekly_attendance_report.html',
         {
-            'report_data': report_data
+            'report_data': report_data,
+            "bok":bok
         }
     )
 
 def overtime_report(request):
+    bok = Registration.objects.get(id=request.session['logg'])
 
     employees = Registration.objects.all()
 
@@ -6039,7 +6119,8 @@ def overtime_report(request):
         'overtime_report.html',
         {
             'report_data': report_data,
-            'months': months
+            'months': months,
+            "bok":bok
         }
     )
 
@@ -6775,7 +6856,7 @@ def add_announcement(request):
 
     return render(
         request,
-        'add_announcement.html'
+        'add_announcement.html',{"employee":employee}
     )
 
 def employee_announcements(request):
@@ -6801,13 +6882,16 @@ def employee_announcements(request):
 
 
 def announcement_list(request):
-
+    employee = Registration.objects.get(
+        id=request.session['logg']
+    )
     announcements = Announcement.objects.all().order_by(
         '-created_at'
     )
 
     context = {
-        'announcements': announcements
+        'announcements': announcements,
+        "employee":employee
     }
 
     return render(
@@ -6858,3 +6942,119 @@ def delete_announcement(request, id):
     return redirect(
         'announcement_list'
     )
+
+def update_timesheet_status(request, id):
+    line = get_object_or_404(Create_Timesheet_Line, id=id)
+
+    if request.method == "POST":
+        line.status = request.POST.get("status")
+        line.save()
+
+    return redirect("view_timesheets_staff")
+
+@login_required
+@logged_inn2
+def super_admin_home(request):
+    # Get the current logged-in user based on the session
+    bok = Registration.objects.get(id=request.session['logg'])
+    create_pro = CreateProject.objects.all()
+    # Get all employees
+    gtt = Registration.objects.filter(User_role='employee')
+    total_project = CreateProject.objects.count()
+    total_timesheet = Create_Timesheet_Line.objects.count()
+    total_staffs = Registration.objects.exclude(User_role='admin').count()
+    user = request.user
+    leave_balance, _ = LeaveBalance.objects.get_or_create(staff=user)
+    total_projects = CreateProject.objects.all()
+
+    # Get the first employee (can be replaced with specific logic)
+    df = Registration.objects.filter(User_role='employee').first()
+
+    # Get all Registration records (this is the complete list of employees)
+    k = Registration.objects.all()
+
+    # Get the attendance records for the current logged-in user
+    attendance_records = Attendance.objects.filter(employee=bok)
+
+    leave_total = LeaveApplication.objects.count()
+    leaves = LeaveApplication.objects.select_related('staff').all()
+
+    # If you need to display total working days and total working hours, you can aggregate that
+    total_working_days = attendance_records.count()
+    total_working_minutes = sum(
+        (att.check_out_time - att.check_in_time).total_seconds() / 60
+        for att in Attendance.objects.filter(employee=bok)
+        if att.check_in_time and att.check_out_time  # Ensure both times exist
+    )
+
+    context = {
+        'k': k,
+        'df': df,
+        'gtt': gtt,
+        'bok': bok,
+        'attendance_records': attendance_records,
+        'total_working_days': total_working_days,
+        'total_working_minutes': round(total_working_minutes, 2),
+        'leave_total': leave_total,
+        'leaves': leaves,
+        'create_pro': create_pro,
+        'total_project': total_project,
+        'total_timesheet': total_timesheet,
+        'total_staffs': total_staffs,
+        'leave_balance': leave_balance,
+        'total_projects': total_projects,
+    }
+    return render(request, "super_admin_home.html",context)
+
+
+def project_manager_home(request):
+    # Get the current logged-in user based on the session
+    bok = Registration.objects.get(id=request.session['logg'])
+    create_pro = CreateProject.objects.all()
+    # Get all employees
+    gtt = Registration.objects.filter(User_role='employee')
+    total_project = CreateProject.objects.count()
+    total_timesheet = Create_Timesheet_Line.objects.count()
+    total_staffs = Registration.objects.exclude(User_role='admin').count()
+    user = request.user
+    leave_balance, _ = LeaveBalance.objects.get_or_create(staff=user)
+    total_projects = CreateProject.objects.all()
+
+    # Get the first employee (can be replaced with specific logic)
+    df = Registration.objects.filter(User_role='employee').first()
+
+    # Get all Registration records (this is the complete list of employees)
+    k = Registration.objects.all()
+
+    # Get the attendance records for the current logged-in user
+    attendance_records = Attendance.objects.filter(employee=bok)
+
+    leave_total = LeaveApplication.objects.count()
+    leaves = LeaveApplication.objects.select_related('staff').all()
+
+    # If you need to display total working days and total working hours, you can aggregate that
+    total_working_days = attendance_records.count()
+    total_working_minutes = sum(
+        (att.check_out_time - att.check_in_time).total_seconds() / 60
+        for att in Attendance.objects.filter(employee=bok)
+        if att.check_in_time and att.check_out_time  # Ensure both times exist
+    )
+
+    context = {
+        'k': k,
+        'df': df,
+        'gtt': gtt,
+        'bok': bok,
+        'attendance_records': attendance_records,
+        'total_working_days': total_working_days,
+        'total_working_minutes': round(total_working_minutes, 2),
+        'leave_total': leave_total,
+        'leaves': leaves,
+        'create_pro': create_pro,
+        'total_project': total_project,
+        'total_timesheet': total_timesheet,
+        'total_staffs': total_staffs,
+        'leave_balance': leave_balance,
+        'total_projects': total_projects,
+    }
+    return render(request,"project_manager_home.html",context)

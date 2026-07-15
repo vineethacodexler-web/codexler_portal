@@ -1,6 +1,10 @@
 <!-- templates/payroll_list.html -->
 
+{% if bok.User_role == "admin" %}
+{% include 'superadmin_navbar.html' %}
+{% else %}
 {% include 'admin_navbar.html' %}
+{% endif %}
 
 <main class="main" id="main">
 

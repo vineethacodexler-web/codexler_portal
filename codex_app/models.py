@@ -414,6 +414,7 @@ class Create_Timesheet(models.Model):
     total_hours_taken = models.IntegerField(default=0, null=True, blank=True)
 
 
+
 # =========================
 # Timesheet Line
 # =========================
@@ -444,6 +445,17 @@ class Create_Timesheet_Line(models.Model):
 
     duration_hours = models.IntegerField(default=0, null=True, blank=True)
     duration_minutes = models.IntegerField(default=0, null=True, blank=True)
+    STATUS_CHOICES = (
+        ('Pending', 'Pending'),
+        ('Ongoing', 'Ongoing'),
+        ('Completed', 'Completed'),
+    )
+
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='Pending'
+    )
 
     def save(self, *args, **kwargs):
         if self.timesheet and not self.staff_list:
