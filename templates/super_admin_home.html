@@ -215,26 +215,26 @@
                     <!-- Recent Leaves -->
                     <div class="card mt-3 recent-sales overflow-auto">
                       <div class="card-body">
-                        <h5 class="card-title">Recent Leaves</h5>
+                        <h5 class="card-title">Recent Announcements</h5>
                         <div style="max-height:300px;overflow-y:auto;">
                           <table class="table table-borderless">
                             <thead>
                               <tr>
                                 <th>Sl No</th>
-                                <th>Staff</th>
-                                <th>Leave From</th>
-                                <th>Leave To</th>
-                                <th>Reason</th>
+                                <th>Title</th>
+                                <th>Message</th>
+                                <th>Priority</th>
+                                <th>Created By</th>
                               </tr>
                             </thead>
                             <tbody>
-                              {% for leave in leaves|dictsortreversed:"id" %}
+                              {% for announcement in announcements|dictsortreversed:"id" %}
                               <tr>
                                 <td>{{ forloop.counter }}</td>
-                                <td>{{ leave.staff.username }}</td>
-                                <td>{{ leave.date_from }}</td>
-                                <td>{{ leave.date_to }}</td>
-                                <td>{{ leave.reason }}</td>
+                                <td>{{ announcement.title }}</td>
+                                <td>{{ announcement.message }}</td>
+                                <td>{{ announcement.priority }}</td>
+                                <td>{{ announcement.created_by }}</td>
                               </tr>
                               {% endfor %}
                             </tbody>

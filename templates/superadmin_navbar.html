@@ -147,6 +147,92 @@
   </ul>
 
 </li>
+          <li class="nav-item">
+
+    <a class="nav-link collapsed"
+       data-bs-target="#hrms-nav"
+       data-bs-toggle="collapse"
+       href="#">
+
+        <i class="bi bi-diagram-3"></i>
+
+        <span>HRMS Setup</span>
+
+        <i class="bi bi-chevron-down ms-auto"></i>
+
+    </a>
+
+    <ul id="hrms-nav"
+        class="nav-content collapse"
+        data-bs-parent="#sidebar-nav">
+
+      <li>
+    <a href="{% url 'department_list' %}">
+        <i class="bi bi-circle"></i>
+        <span>Departments</span>
+    </a>
+</li>
+
+<li>
+    <a href="{% url 'designation_list' %}">
+        <i class="bi bi-circle"></i>
+        <span>Designations</span>
+    </a>
+</li>
+        <li>
+    <a href="{% url 'employee_document_list' %}">
+        <i class="bi bi-file-earmark-text"></i>
+        <span>Employee Documents</span>
+    </a>
+</li>
+        <li>
+    <a href="{% url 'experience_list' %}">
+        <i class="bi bi-briefcase"></i>
+        <span>Employee Experience</span>
+    </a>
+</li>
+        <li>
+    <a href="{% url 'appraisal_list' %}">
+        <i class="bi bi-graph-up-arrow"></i>
+        <span>Employee Appraisal</span>
+    </a>
+</li>
+
+    </ul>
+
+</li>
+        <li class="nav-item">
+
+  <a class="nav-link collapsed"
+     data-bs-toggle="collapse"
+     href="#employee-nav">
+
+    <i class="bi bi-megaphone-fill"></i>
+    <span>Staff</span>
+
+    <i class="bi bi-chevron-down ms-auto"></i>
+
+  </a>
+
+  <ul id="employee-nav"
+      class="nav-content collapse {% if request.resolver_match.url_name == 'add_staff' or request.resolver_match.url_name == 'announcement_list' or request.resolver_match.url_name == 'edit_announcement' %}show{% endif %}">
+
+      <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.url_name == 'register_employee' %}active{% endif %}" href="{% url 'register_employee' %}" >
+          <i class="bi bi-person-plus-fill"></i> Add Staff
+        </a>
+      </li>
+
+    <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.url_name == 'view_staffs' %}active{% endif %}" href="{% url 'view_staffs' %}">
+          <i class="bi bi-people-fill" ></i> Manage Staffs
+        </a>
+      </li>
+
+  </ul>
+
+</li>
+
 
      <li class="nav-item">
 
@@ -323,73 +409,8 @@
 </li>
 
   
-      <!-- Add Staff -->
-      <li class="nav-item">
-        <a class="nav-link {% if request.resolver_match.url_name == 'register_employee' %}active{% endif %}" href="{% url 'register_employee' %}" >
-          <i class="bi bi-person-plus-fill"></i> Add Staff
-        </a>
-      </li>
-  
-      <!-- Manage Staffs -->
-      <li class="nav-item">
-        <a class="nav-link {% if request.resolver_match.url_name == 'view_staffs' %}active{% endif %}" href="{% url 'view_staffs' %}">
-          <i class="bi bi-people-fill" ></i> Manage Staffs
-        </a>
-      </li>
-        <li class="nav-item">
 
-    <a class="nav-link collapsed"
-       data-bs-target="#hrms-nav"
-       data-bs-toggle="collapse"
-       href="#">
 
-        <i class="bi bi-diagram-3"></i>
-
-        <span>HRMS Setup</span>
-
-        <i class="bi bi-chevron-down ms-auto"></i>
-
-    </a>
-
-    <ul id="hrms-nav"
-        class="nav-content collapse"
-        data-bs-parent="#sidebar-nav">
-
-      <li>
-    <a href="{% url 'department_list' %}">
-        <i class="bi bi-circle"></i>
-        <span>Departments</span>
-    </a>
-</li>
-
-<li>
-    <a href="{% url 'designation_list' %}">
-        <i class="bi bi-circle"></i>
-        <span>Designations</span>
-    </a>
-</li>
-        <li>
-    <a href="{% url 'employee_document_list' %}">
-        <i class="bi bi-file-earmark-text"></i>
-        <span>Employee Documents</span>
-    </a>
-</li>
-        <li>
-    <a href="{% url 'experience_list' %}">
-        <i class="bi bi-briefcase"></i>
-        <span>Employee Experience</span>
-    </a>
-</li>
-        <li>
-    <a href="{% url 'appraisal_list' %}">
-        <i class="bi bi-graph-up-arrow"></i>
-        <span>Employee Appraisal</span>
-    </a>
-</li>
-
-    </ul>
-
-</li>
 
 
       <!-- Admin Menu -->

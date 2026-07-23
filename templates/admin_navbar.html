@@ -159,17 +159,36 @@
 </li>
  <!-- Add Staff -->
       <li class="nav-item">
+
+  <a class="nav-link collapsed"
+     data-bs-toggle="collapse"
+     href="#employee-nav">
+
+    <i class="bi bi-megaphone-fill"></i>
+    <span>Staff</span>
+
+    <i class="bi bi-chevron-down ms-auto"></i>
+
+  </a>
+
+  <ul id="employee-nav"
+      class="nav-content collapse {% if request.resolver_match.url_name == 'add_staff' or request.resolver_match.url_name == 'announcement_list' or request.resolver_match.url_name == 'edit_announcement' %}show{% endif %}">
+
+      <li class="nav-item">
         <a class="nav-link {% if request.resolver_match.url_name == 'register_employee' %}active{% endif %}" href="{% url 'register_employee' %}" >
           <i class="bi bi-person-plus-fill"></i> Add Staff
         </a>
       </li>
 
-      <!-- Manage Staffs -->
-      <li class="nav-item">
+    <li class="nav-item">
         <a class="nav-link {% if request.resolver_match.url_name == 'view_staffs' %}active{% endif %}" href="{% url 'view_staffs' %}">
           <i class="bi bi-people-fill" ></i> Manage Staffs
         </a>
       </li>
+
+  </ul>
+
+</li>
 
 
         <!-- Announcements -->
@@ -216,70 +235,7 @@
   </ul>
 
 </li>
-  <li class="nav-item">
 
-<a class="nav-link collapsed"
-   data-bs-target="#project-nav"
-   data-bs-toggle="collapse"
-   href="#">
-
-<i class="bi bi-kanban"></i>
-
-<span>Project Management</span>
-
-<i class="bi bi-chevron-down ms-auto"></i>
-
-</a>
-
-<ul id="project-nav"
-    class="nav-content collapse"
-    data-bs-parent="#sidebar-nav">
-<li>
-    <a href="{% url 'project_dashboard' %}">
-        <i class="bi bi-speedometer2"></i>
-        <span>Project Dashboard</span>
-    </a>
-</li>
-<li>
-<a href="{% url 'project_member_list' %}">
-<i class="bi bi-people"></i>
-<span>Project Members</span>
-</a>
-</li>
-    <li>
-    <a href="{% url 'task_list' %}">
-        <i class="bi bi-list-task"></i>
-        <span>Task Management</span>
-    </a>
-</li>
-    <li>
-    <a href="{% url 'milestone_list' %}">
-        <i class="bi bi-flag"></i>
-        <span>Milestones</span>
-    </a>
-</li>
-    <li>
-    <a href="{% url 'bug_list' %}">
-        <i class="bi bi-bug"></i>
-        <span>Bug Tracking</span>
-    </a>
-</li>
-    <li>
-    <a href="{% url 'project_file_list' %}">
-        <i class="bi bi-folder2-open"></i>
-        <span>Project Files</span>
-    </a>
-</li>
-
-</ul>
-
-</li>
-      <!-- Add Project -->
-      <li class="nav-item">
-        <a class="nav-link {% if request.resolver_match.url_name == 'add_project' %}active{% endif %}" href="{% url 'add_project' %}" >
-          <i class="bi bi-folder-plus" ></i> Add Project
-        </a>
-      </li>
   
       <!-- Timesheets -->
       <li class="nav-item">

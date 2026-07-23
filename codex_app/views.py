@@ -6978,6 +6978,7 @@ def super_admin_home(request):
 
     leave_total = LeaveApplication.objects.count()
     leaves = LeaveApplication.objects.select_related('staff').all()
+    announcements=Announcement.objects.all()
 
     # If you need to display total working days and total working hours, you can aggregate that
     total_working_days = attendance_records.count()
@@ -6992,6 +6993,7 @@ def super_admin_home(request):
         'df': df,
         'gtt': gtt,
         'bok': bok,
+        'announcements':announcements,
         'attendance_records': attendance_records,
         'total_working_days': total_working_days,
         'total_working_minutes': round(total_working_minutes, 2),
